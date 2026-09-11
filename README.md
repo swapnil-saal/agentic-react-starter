@@ -12,7 +12,41 @@ pnpm doctor        # installs/verifies the agent toolchain
 pnpm dev
 ```
 
-Open http://localhost:5173.
+Open http://localhost:5173 and look around.
+
+## Starting your own app
+
+The clone ships with example screens so you can see the patterns working.
+When you're ready to build, strip them:
+
+```bash
+pnpm reset --dry-run   # see exactly what it would change
+pnpm reset             # do it
+```
+
+That removes the example routes (`/users`, `/form-demo`), the marketing home
+page, the feature module behind them, and the tests that cover them — then
+leaves you a blank home. It keeps the parts that are infrastructure:
+
+| Kept                 | Why                                                |
+| -------------------- | -------------------------------------------------- |
+| `src/design-system/` | the whole point — your components and tokens       |
+| `/components`        | living style guide; how you see your design system |
+| `/brand`             | brand settings and the contrast audit              |
+| `src/mocks/`         | wiring intact, handlers emptied — add your own     |
+
+It refuses to run on a dirty tree, so `git checkout .` is always an undo.
+
+Then:
+
+1. **Rename the project in `package.json`** — the sidebar, header and browser
+   title all follow it.
+2. **Set your brand** at `/brand`, export, and save over
+   `src/design-system/brand.css`.
+3. `pnpm check && pnpm e2e`.
+
+Files that `pnpm reset` removes carry an `EXAMPLE` header, so it's obvious
+what is scaffolding even before you run it.
 
 ## The idea
 

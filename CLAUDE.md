@@ -45,6 +45,7 @@ src/
     ui/*.tsx         components
     index.ts         import from '@/design-system'
   routes/          file-based routes; __root.tsx is the app shell
+                   users.*, form-demo are EXAMPLES — `pnpm reset` removes them
   routeTree.gen.ts GENERATED — never edit
   styles/index.css layer 3: semantic tokens → Tailwind utilities
   features/        feature modules — queries, mutations, domain types
@@ -121,6 +122,7 @@ pnpm test          # vitest watch
 pnpm e2e           # Playwright against a production build
 pnpm lint:fix      # autofix
 pnpm format        # Prettier
+pnpm reset         # strip the example screens to start a real app
 pnpm doctor        # verify + repair the agent toolchain
 pnpm doctor:check  # report only (CI); exits non-zero on required failures
 ```
