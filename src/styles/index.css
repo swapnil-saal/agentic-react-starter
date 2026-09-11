@@ -1,0 +1,112 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Fragments + Tailwind, sharing one set of design tokens.
+
+   Two things here are deliberate and easy to break — read before editing:
+
+   1. Tailwind's Preflight is NOT imported. Preflight is a global element reset;
+      loading it strips Fragments' own styling off buttons, inputs and headings.
+      We import only Tailwind's `theme` and `utilities` layers.
+
+   2. Fragments is imported as the prebuilt stylesheet. Its component CSS lives
+      ONLY in that file — the JS modules export class-name maps and import no
+      CSS of their own. Drop this import and every component renders unstyled.
+
+   Layer order below is the cascade order. `utilities` is last, so a Tailwind
+   utility can always override a Fragments component style when you need it to.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer theme, fragments, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import '@usefragments/ui/styles' layer(fragments);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Where Tailwind scans for class names (v4 needs no PostCSS config). */
+@source "../**/*.{ts,tsx}";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Brand seeds — the one place brand colour is defined.
+
+   These are unlayered, so they beat the layered defaults above. `--fui-*`
+   tokens derive from them, so changing a seed re-colours every Fragments
+   component AND every bridged Tailwind utility at once.
+
+   Fragments derives its dark ramp separately, so set the dark accent alongside
+   the seed if you change the brand.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --fui-seed-brand: #f56138;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Token bridge: Tailwind's theme namespaces point at Fragments' `--fui-*`
+   variables. `bg-accent` and <Button tone="accent"> now resolve to the exact
+   same colour, and both follow the seeds above — including the light/dark flip,
+   because the Fragments values use CSS `light-dark()`.
+
+   Add a mapping here rather than hardcoding a value anywhere else.
+   ───────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  /* intent colours */
+  --color-accent: var(--fui-color-accent);
+  --color-danger: var(--fui-color-danger);
+  --color-success: var(--fui-color-success);
+  --color-warning: var(--fui-color-warning);
+  --color-info: var(--fui-color-info);
+
+  /* surfaces + text */
+  --color-bg: var(--fui-bg-primary);
+  --color-bg-subtle: var(--fui-bg-subtle);
+  --color-bg-elevated: var(--fui-bg-elevated);
+  --color-bg-hover: var(--fui-bg-hover);
+  --color-fg: var(--fui-text-primary);
+  --color-fg-muted: var(--fui-text-secondary);
+  --color-border: var(--fui-border-default);
+  --color-border-strong: var(--fui-border-strong);
+
+  /* typography */
+  --font-sans: var(--fui-font-sans);
+  --font-mono: var(--fui-font-mono);
+  --text-xs: var(--fui-font-size-xs);
+  --text-sm: var(--fui-font-size-sm);
+  --text-base: var(--fui-font-size-base);
+  --text-md: var(--fui-font-size-md);
+  --text-lg: var(--fui-font-size-lg);
+  --text-xl: var(--fui-font-size-xl);
+  --text-2xl: var(--fui-font-size-2xl);
+  --text-3xl: var(--fui-font-size-3xl);
+
+  /* radius */
+  --radius-sm: var(--fui-radius-sm);
+  --radius-md: var(--fui-radius-md);
+  --radius-lg: var(--fui-radius-lg);
+  --radius-full: var(--fui-radius-full);
+
+  /* spacing — Fragments' raw scale, so p-4 lines up with a Fragments gap */
+  --spacing-1: var(--fui-raw-space-2);
+  --spacing-2: var(--fui-raw-space-4);
+  --spacing-3: var(--fui-raw-space-6);
+  --spacing-4: var(--fui-raw-space-8);
+  --spacing-5: var(--fui-raw-space-10);
+  --spacing-6: var(--fui-raw-space-12);
+  --spacing-8: var(--fui-raw-space-16);
+  --spacing-10: var(--fui-raw-space-20);
+  --spacing-12: var(--fui-raw-space-24);
+  --spacing-16: var(--fui-raw-space-32);
+  --spacing-20: var(--fui-raw-space-40);
+  --spacing-24: var(--fui-raw-space-48);
+}
+
+/* Minimal page ground. Fragments owns everything else. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fui-bg-primary);
+  color: var(--fui-text-primary);
+  font-family: var(--fui-font-sans);
+}

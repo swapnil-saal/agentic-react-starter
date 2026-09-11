@@ -1,0 +1,10 @@
+dist
+coverage
+pnpm-lock.yaml
+playwright-report
+test-results
+.codegraph
+src/routeTree.gen.ts
+.claude/skills/fragments-ui/components.md
+data
+Claude outputs
