@@ -58,9 +58,13 @@ Everything is free and works offline. No account, no paid tier, no API key.
 
 ## Theming
 
-Brand colour lives in exactly one place — `--fui-seed-brand` in
-`src/styles/index.css`. Change it and every component and bridged Tailwind
-utility follows, in light and dark mode.
+All colour lives in exactly one file — **`src/styles/theme.css`**. The current
+theme is _Deep Sea_: cool green-tinted neutrals with a teal accent. Change the
+values there and every component and bridged Tailwind utility follows, in both
+light and dark mode.
+
+Each value is a CSS `light-dark(light, dark)` pair, so one declaration covers
+light mode, dark mode, and "follow the OS" — no media queries, no duplication.
 
 Never hardcode a colour or spacing value; use Fragments props
 (`<Button tone="accent">`) or bridged utilities (`bg-accent`, `p-4`).
@@ -80,6 +84,7 @@ src/
   routes/            file-based routes; __root.tsx is the app shell
   routeTree.gen.ts   generated — never edit
   styles/index.css   Fragments + Tailwind token bridge
+  styles/theme.css   the palette — all colour lives here
   lib/               validated env, query client
   components/
 e2e/                 Playwright specs

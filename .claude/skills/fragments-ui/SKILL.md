@@ -51,17 +51,38 @@ underlying tokens:
 properties, so `bg-accent` and `tone="accent"` are guaranteed to be the same
 colour, in light and dark mode alike.
 
-To change the brand, edit the single `--fui-seed-brand` declaration in
-`src/styles/index.css`. Never override individual component colours.
+All colour lives in **`src/styles/theme.css`** — one file, one `:root` block.
+To retheme the app, change the values there. Never override a component's
+colour at the call site.
 
-**The primary button is intentionally not accent-coloured.** Fragments sets
-`--fui-button-primary-base: var(--fui-bg-inverse)`, so
-`<Button variant="solid" tone="accent">` renders near-black in light mode and
-near-white in dark mode. That is the library's editorial design: the accent is
-reserved for badges, links and status, and the primary action gets maximum
-contrast instead. This is correct — do not "fix" it by hardcoding a colour. If
-a project genuinely needs an accent-filled primary button, override
-`--fui-button-primary-base` once in `src/styles/index.css`, not per component.
+Every value uses CSS `light-dark(light, dark)`. Fragments already sets
+`color-scheme` for system, `[data-theme=dark]` and `[data-theme=light]`, so a
+single declaration covers all three states. Keep the light value first.
+
+**Fragments only ships one neutral ramp.** Its Sass seed API accepts exactly
+one value for `$fui-neutral` ("paper", a warm cream/charcoal) and errors on
+anything else. This project therefore themes by overriding the `--fui-*`
+custom properties directly in `theme.css` rather than through Sass — that is
+deliberate, and it is what makes a cool palette possible at all.
+
+**Watch for tokens that carry hardcoded values.** `--fui-body-bg`,
+`--fui-main-bg`, `--fui-app-main-bg`, `--fui-app-sidebar-bg` and
+`--fui-code-bg` are not derived from `--fui-bg-*`; they hold literal colours
+in the base stylesheet. Miss them and the page and sidebar stay warm while
+everything else turns cool. They are all overridden in `theme.css` — if you
+add a new surface and it looks out of place, check for a token like these.
+
+**Status colours are retuned.** Setting `--fui-seed-danger` / `-success` /
+`-warning` / `-info` is enough: the tinted backgrounds, text and border stops
+are derived from those seeds with `color-mix`. Do not hand-set the derived
+stops.
+
+By default Fragments points `--fui-button-primary-base` at
+`--fui-bg-inverse`, rendering the primary button as a flat black or white
+block. To use an accent-filled primary button instead, override
+`--fui-button-primary-base` once in `src/styles/theme.css`, not per component.
+(This project already does exactly that, so the primary button carries the
+teal accent rather than a flat inverse block.)
 
 If you genuinely need a token that isn't bridged yet, add the mapping to the
 `@theme inline` block in `src/styles/index.css` — do not inline a raw value.

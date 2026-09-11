@@ -19,24 +19,12 @@
 
 @import 'tailwindcss/theme.css' layer(theme);
 @import '@usefragments/ui/styles' layer(fragments);
+@import './theme.css' layer(fragments);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
 /* Where Tailwind scans for class names (v4 needs no PostCSS config). */
 @source "../**/*.{ts,tsx}";
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   Brand seeds — the one place brand colour is defined.
-
-   These are unlayered, so they beat the layered defaults above. `--fui-*`
-   tokens derive from them, so changing a seed re-colours every Fragments
-   component AND every bridged Tailwind utility at once.
-
-   Fragments derives its dark ramp separately, so set the dark accent alongside
-   the seed if you change the brand.
-   ───────────────────────────────────────────────────────────────────────────── */
-:root {
-  --fui-seed-brand: #f56138;
-}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Token bridge: Tailwind's theme namespaces point at Fragments' `--fui-*`

@@ -36,6 +36,7 @@ src/
   routes/          file-based routes; __root.tsx is the app shell
   routeTree.gen.ts GENERATED — never edit
   styles/index.css Fragments + Tailwind token bridge
+  styles/theme.css THE palette — all colour lives here
   lib/             env.ts (validated), query-client.ts
   components/      shared components
   test/setup.ts
@@ -62,8 +63,8 @@ with `pnpm gen:catalog`.
 ## Hard rules
 
 1. **No hardcoded design values.** No hex codes, no magic pixels. Use Fragments
-   props or the bridged Tailwind utilities. Brand colour lives in one place:
-   `--fui-seed-brand` in `src/styles/index.css`.
+   props or the bridged Tailwind utilities. All colour lives in one file:
+   `src/styles/theme.css`.
 2. **Never edit `src/routeTree.gen.ts`.**
 3. **Don't touch the style imports** in `src/styles/index.css` without reading
    the comments there. Tailwind Preflight is excluded on purpose, and

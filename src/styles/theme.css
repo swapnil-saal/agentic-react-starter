@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Theme: Deep Sea — cool green-tinted neutrals with a teal accent.
+
+   THIS IS THE ONLY PLACE COLOUR IS DEFINED. Every Fragments component and
+   every bridged Tailwind utility (see index.css) resolves from the tokens
+   below, so changing a value here re-colours the entire app.
+
+   How it works
+   ------------
+   Fragments ships exactly one neutral ramp ("paper" — a warm cream/charcoal),
+   and its Sass seed API rejects any other. So instead of theming through Sass
+   we override its CSS custom properties directly, which gives full control
+   over the palette and needs no build step.
+
+   Every value uses CSS `light-dark()`. The base stylesheet already sets
+   `color-scheme` for all three states — `:root` (system), `[data-theme=dark]`
+   and `[data-theme=light]` — so one declaration covers light, dark, and
+   "follow the OS" with no duplication and no media queries.
+
+   To retheme: change the pairs below. Keep the light value first.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Brand ──────────────────────────────────────────────────────────────
+     The accent. Used for the primary action, links, focus rings and
+     selection. Keep it for interactive things; it stops meaning anything if
+     used decoratively. */
+  --fui-seed-brand: light-dark(#0d9488, #2dd4bf);
+  --fui-color-accent: light-dark(#0d9488, #2dd4bf);
+  --fui-color-accent-hover: light-dark(#0f766e, #5eead4);
+  --fui-color-accent-active: light-dark(#0f766e, #5eead4);
+
+  /* ── Surfaces ───────────────────────────────────────────────────────────
+     primary  the page itself
+     elevated cards, popovers, anything that sits above the page
+     subtle   the sidebar rail and other recessed chrome
+     tertiary pressed states and code blocks */
+  --fui-bg-primary: light-dark(#f7faf9, #06120f);
+  --fui-bg-secondary: light-dark(#f7faf9, #06120f);
+  --fui-bg-subtle: light-dark(#eef5f4, #0d1f1c);
+  --fui-bg-tertiary: light-dark(#ddebe9, #15302c);
+  --fui-bg-elevated: light-dark(#ffffff, #0d1f1c);
+  --fui-bg-hover: light-dark(#eef5f4, #122a26);
+  --fui-bg-active: light-dark(#ddebe9, #15302c);
+  --fui-bg-inverse: light-dark(#0b1a19, #e8f4f2);
+
+  /* AppShell keeps its own surface tokens, and they carry hardcoded warm
+     values in the base stylesheet. Without these the page and reading pane
+     stay cream while everything around them turns cool. */
+  --fui-body-bg: light-dark(#f7faf9, #06120f);
+  --fui-main-bg: light-dark(#f7faf9, #06120f);
+  --fui-app-main-bg: light-dark(#f7faf9, #06120f);
+  --fui-app-canvas-bg: light-dark(#f7faf9, #06120f);
+  --fui-app-sidebar-bg: light-dark(#edf4f3, #091815);
+  --fui-code-bg: light-dark(#ddebe9, #15302c);
+
+  /* ── Text ───────────────────────────────────────────────────────────────
+     primary   headings and emphasis
+     secondary body copy — this is the default for most prose
+     tertiary  metadata only; never for anything that must be read */
+  --fui-text-primary: light-dark(#0b1a19, #e8f4f2);
+  --fui-text-secondary: light-dark(#456260, #8fb0ab);
+  --fui-text-tertiary: light-dark(#8aa5a3, #658985);
+  --fui-text-inverse: light-dark(#ffffff, #06120f);
+
+  /* ── Borders ────────────────────────────────────────────────────────────  */
+  --fui-border: light-dark(#dae8e6, #1a3733);
+  --fui-border-default: light-dark(#dae8e6, #1a3733);
+  --fui-border-strong: light-dark(#b3cbc8, #2a544e);
+
+  /* ── Primary action ─────────────────────────────────────────────────────
+     Fragments defaults this to `--fui-bg-inverse`, which renders the primary
+     button as a flat black (or white) block. We point it at the accent so the
+     main action carries the brand colour instead. */
+  --fui-button-primary-base: light-dark(#0d9488, #2dd4bf);
+  --fui-button-primary-hover: light-dark(#0f766e, #5eead4);
+  --fui-button-primary-active: light-dark(#0f766e, #5eead4);
+  --fui-button-primary-color: light-dark(#ffffff, #04211c);
+
+  /* ── Status ─────────────────────────────────────────────────────────────
+     Retuned from Fragments' warm rust/forest/honey ramp to cleaner hues that
+     sit correctly against cool neutrals. The tinted backgrounds, text and
+     border stops are derived from these seeds via color-mix, so setting the
+     seed is enough — do not hand-set the derived stops. */
+  --fui-seed-danger: #dc2626;
+  --fui-color-danger: light-dark(#dc2626, #f87171);
+
+  --fui-seed-success: #10b981;
+  --fui-color-success: light-dark(#059669, #34d399);
+
+  --fui-seed-warning: #f59e0b;
+  --fui-color-warning: light-dark(#d97706, #fbbf24);
+
+  /* Info shares the accent family so it reads as neutral information rather
+     than a competing fourth hue. */
+  --fui-seed-info: #0d9488;
+  --fui-color-info: light-dark(#0e7490, #22d3ee);
+}

@@ -33,7 +33,10 @@ function RootLayout() {
         </Header>
       </AppShell.Header>
 
-      <AppShell.Sidebar>
+      {/* Paint the slot itself, not just the inner Sidebar: on a page taller
+          than the viewport the inner rail stops short and would otherwise
+          expose a strip of page background at the bottom. */}
+      <AppShell.Sidebar bg="var(--fui-app-sidebar-bg)">
         <Sidebar>
           <Sidebar.Nav>
             <Sidebar.Section>

@@ -121,8 +121,8 @@ function Components() {
         </Card.Header>
         <Card.Body>
           <Text color="secondary">
-            Every colour on this page derives from one seed in
-            <code> src/styles/index.css</code>.
+            Every colour on this page derives from one theme file:
+            <code> src/styles/theme.css</code>.
           </Text>
         </Card.Body>
       </Card>
