@@ -7,6 +7,13 @@ import {
 import type { User } from '@/mocks/handlers'
 import { env } from '@/lib/env'
 
+/**
+ * EXAMPLE — not part of the starter proper.
+ *
+ * Example feature module — the reference for typed queries and optimistic
+ * mutations. Removed by `pnpm reset`; copy the shape into your own features.
+ */
+
 const base = env.VITE_API_URL.replace(/\/$/, '')
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {

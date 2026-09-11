@@ -16,6 +16,13 @@ import {
 } from '@/design-system'
 import { userQuery } from '@/features/users/api'
 
+/**
+ * EXAMPLE — not part of the starter proper.
+ *
+ * A worked example of a detail route prefetched by a loader.
+ * Removed by `pnpm reset`.
+ */
+
 function UserDetail() {
   // `Route.useParams()` is typed from the filename — a typo here is a build error.
   const { userId } = Route.useParams()

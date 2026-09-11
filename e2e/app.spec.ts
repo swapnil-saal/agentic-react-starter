@@ -52,19 +52,6 @@ test.describe('app shell', () => {
     expect(utilityBg).toBe(componentBg)
   })
 
-  test('form shows validation errors from the Zod schema', async ({ page }) => {
-    await page.goto('/form-demo')
-    await page.getByRole('button', { name: 'Send' }).click()
-
-    await expect(
-      page.getByText('Name must be at least 2 characters'),
-    ).toBeVisible()
-    await expect(page.getByText('Enter a valid email address')).toBeVisible()
-    await expect(
-      page.getByText('Message must be at least 10 characters'),
-    ).toBeVisible()
-  })
-
   test('dialog opens, traps focus and closes', async ({ page }) => {
     await page.goto('/components')
     await page.getByRole('button', { name: 'Dialog' }).click()
@@ -208,35 +195,6 @@ test('every animated element obeys the single motion knob', async ({
   await page.waitForTimeout(150)
 
   expect(await countAnimating()).toBe(0)
-})
-
-test.describe('data layer', () => {
-  test('list loads, and a rejected mutation rolls back optimistically', async ({
-    page,
-  }) => {
-    await page.goto('/users')
-    await expect(page.getByRole('table')).toBeVisible()
-    await expect(page.locator('tbody tr')).toHaveCount(4)
-
-    // The mock API rejects this record on purpose, so the optimistic update
-    // must visibly apply and then revert.
-    const toggle = page
-      .locator('tr', { hasText: 'Grace Hopper' })
-      .getByRole('switch')
-
-    await expect(toggle).toHaveAttribute('aria-checked', 'false')
-    await toggle.click()
-    await expect(toggle).toHaveAttribute('aria-checked', 'true') // optimistic
-    await expect(toggle).toHaveAttribute('aria-checked', 'false') // rolled back
-    await expect(page.getByText('Change reverted')).toBeVisible()
-  })
-
-  test('detail route loads a single user', async ({ page }) => {
-    await page.goto('/users')
-    await page.getByRole('link', { name: 'Ada Lovelace' }).click()
-    await expect(page).toHaveURL(/\/users\/1$/)
-    await expect(page.getByText('ada@example.com')).toBeVisible()
-  })
 })
 
 test.describe('resilience', () => {

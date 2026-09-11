@@ -22,6 +22,13 @@ import {
 import { useToggleUserActive, usersQuery } from '@/features/users/api'
 
 /**
+ * EXAMPLE — not part of the starter proper.
+ *
+ * A worked example of server state: queries, an optimistic mutation with
+ * rollback, and every list state. Removed by `pnpm reset`.
+ */
+
+/**
  * The canonical server-state screen: every state a real list has, handled.
  *
  * Toggling "Grace Hopper" is rejected by the API on purpose, so the

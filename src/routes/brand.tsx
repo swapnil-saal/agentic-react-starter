@@ -212,7 +212,11 @@ function ContrastAudit({ signal }: { signal: string }) {
                   <TableCell>
                     <Badge
                       tone={
-                        r.ratio === null ? 'neutral' : pass ? 'success' : 'danger'
+                        r.ratio === null
+                          ? 'neutral'
+                          : pass
+                            ? 'success'
+                            : 'danger'
                       }
                       dot
                     >
@@ -231,10 +235,14 @@ function ContrastAudit({ signal }: { signal: string }) {
           </Alert>
         )}
         {unmeasured > 0 && (
-          <Alert tone="info" title="Some pairings could not be read" className="mt-4">
+          <Alert
+            tone="info"
+            title="Some pairings could not be read"
+            className="mt-4"
+          >
             {unmeasured} token{unmeasured > 1 ? 's' : ''} did not resolve to a
-            colour this browser can measure. This is a reporting limitation,
-            not a contrast failure.
+            colour this browser can measure. This is a reporting limitation, not
+            a contrast failure.
           </Alert>
         )}
       </CardBody>

@@ -17,6 +17,12 @@ import {
 } from '@/design-system'
 
 /**
+ * EXAMPLE — not part of the starter proper.
+ *
+ * A worked example of React Hook Form + Zod. Removed by `pnpm reset`.
+ */
+
+/**
  * The canonical form pattern for this repo.
  *
  * One Zod schema is the single source of truth for both runtime validation and

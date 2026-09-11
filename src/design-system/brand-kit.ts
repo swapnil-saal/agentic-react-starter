@@ -190,10 +190,7 @@ export function contrastRatio(a: string, b: string): number | null {
 }
 
 /** Contrast between two design tokens, resolved through the cascade first. */
-export function tokenContrast(
-  fgVar: string,
-  bgVar: string,
-): number | null {
+export function tokenContrast(fgVar: string, bgVar: string): number | null {
   const fg = resolveColorVar(fgVar)
   const bg = resolveColorVar(bgVar)
   if (!fg || !bg) return null
