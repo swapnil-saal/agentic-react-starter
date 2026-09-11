@@ -110,6 +110,7 @@
   --radius-full: 9999px;
 
   --border-width: var(--brand-border-width);
+  --field-border-width: var(--brand-field-border-width);
 
   /* ── Typography ──────────────────────────────────────────────────────────
      A modular scale: each step multiplies by --brand-type-ratio. Raising the

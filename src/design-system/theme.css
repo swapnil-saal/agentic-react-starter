@@ -28,6 +28,12 @@
   --ds-surface-active: light-dark(var(--neutral-200), var(--neutral-700));
   --ds-raised: light-dark(var(--neutral-0), var(--neutral-800));
 
+  /* Form control fill. Deliberately a step away from both the page and a
+     card, because a borderless brand (--brand-border-width: 0) leaves fill as
+     the ONLY thing marking where a field begins. With bg-surface an input was
+     white-on-near-white at 1.04:1 — invisible. */
+  --ds-field: light-dark(var(--neutral-200), var(--neutral-800));
+
   /* ── Foreground ──────────────────────────────────────────────────────────
      fg       headings and emphasis
      muted    body copy — the default for most prose
@@ -43,9 +49,17 @@
 
   /* ── Accent ──────────────────────────────────────────────────────────────
      Interactive things and the single primary action. Used decoratively it
-     stops signalling anything. */
-  --ds-accent: light-dark(var(--accent-600), var(--accent-400));
-  --ds-accent-hover: light-dark(var(--accent-700), var(--accent-300));
+     stops signalling anything.
+
+     The light stop is --accent-700 (OKLCH L 0.52), not 600 (L 0.60), and the
+     reason is measured: white text on an L 0.60 fill lands at 3.6–4.2:1 for
+     every hue in every preset, which fails WCAG AA for body-size text. At
+     L 0.52 it is 4.9–5.9:1 and passes for all of them. The same stop also
+     fixes `text-accent` on a light page, which was 3.79:1.
+
+     If you raise this stop, re-check the contrast of solid buttons. */
+  --ds-accent: light-dark(var(--accent-700), var(--accent-400));
+  --ds-accent-hover: light-dark(var(--accent-800), var(--accent-300));
   --ds-accent-subtle: light-dark(var(--accent-50), var(--accent-950));
   --ds-accent-border: light-dark(var(--accent-200), var(--accent-800));
   --ds-on-accent: light-dark(var(--neutral-0), var(--accent-950));

@@ -19,7 +19,7 @@ export function ComboboxInput({
     <div className="relative">
       <BaseCombobox.Input
         className={cn(
-          'flex h-control-md w-full rounded-md border border-border bg-surface px-3 pr-9',
+          'flex h-control-md w-full rounded-md field-edge border-border bg-field px-3 pr-9',
           'text-base text-fg placeholder:text-fg-subtle',
           'focus-ring hover:border-border-strong',
           className,

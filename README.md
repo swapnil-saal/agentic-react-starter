@@ -77,8 +77,18 @@ Same components, a different product.
 `deep-sea`, `brutalist`, `soft`, `technical`, `mono`. Copy one over the
 `:root` block in `brand.css` to adopt it.
 
-**Playground.** Run `pnpm dev` and open **`/brand`** to drag the knobs against
-the real component library, then copy the result out as CSS.
+**Settings page.** Run `pnpm dev` and open **`/brand`**. It drives the real
+component library — not a mock — and includes:
+
+- **A live WCAG contrast audit** of the pairings a brand can actually break,
+  measured from the resolved tokens. It caught a real AA failure in this
+  repo's own accent.
+- **Colour harmonies** (monochromatic, analogous, complementary, triadic) that
+  set the neutral hue in relation to the brand hue.
+- **Named type scales** from the musical modular scale — minor third, perfect
+  fourth, golden ratio.
+- **Download / copy a complete `brand.css`**, ready to save over the existing
+  one.
 
 **Enforced, not just documented.** `pnpm check:tokens` fails the build on hex
 codes, Tailwind palette classes, arbitrary pixel values, literal durations and

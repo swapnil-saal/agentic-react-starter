@@ -12,7 +12,7 @@ export function Textarea({
     <textarea
       rows={rows}
       className={cn(
-        'flex w-full rounded-md border border-border bg-surface px-3 py-2',
+        'flex w-full rounded-md field-edge border-border bg-field px-3 py-2',
         'text-base text-fg placeholder:text-fg-subtle',
         transitionColors,
         'focus-ring hover:border-border-strong',

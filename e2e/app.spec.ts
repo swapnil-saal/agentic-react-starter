@@ -139,18 +139,19 @@ test.describe('brand system', () => {
     const card = page.locator('table').first()
 
     const wrapper = card.locator('..')
-    expect(
-      await wrapper.evaluate((el) => getComputedStyle(el).borderTopWidth),
-    ).toBe('1px')
+    const width = () =>
+      wrapper.evaluate((el) => getComputedStyle(el).borderTopWidth)
 
-    await page.evaluate(() =>
-      document.documentElement.style.setProperty('--brand-border-width', '4px'),
-    )
-    await page.waitForTimeout(100)
-
-    expect(
-      await wrapper.evaluate((el) => getComputedStyle(el).borderTopWidth),
-    ).toBe('4px')
+    // Set both values explicitly rather than assuming whatever brand.css
+    // currently ships — the default is a brand decision and may change.
+    for (const px of ['1px', '4px']) {
+      await page.evaluate(
+        (v) =>
+          document.documentElement.style.setProperty('--brand-border-width', v),
+        px,
+      )
+      await expect.poll(width).toBe(px)
+    }
   })
 
   test('playground presets change the rendered UI', async ({ page }) => {

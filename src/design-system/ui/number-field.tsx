@@ -20,7 +20,7 @@ export function NumberField({
 }: React.ComponentProps<typeof BaseNumberField.Root>) {
   return (
     <BaseNumberField.Root className={cn('inline-flex', className)} {...props}>
-      <BaseNumberField.Group className="flex overflow-hidden rounded-md border border-border bg-surface focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring">
+      <BaseNumberField.Group className="flex overflow-hidden rounded-md field-edge border-border bg-field focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring">
         <BaseNumberField.Decrement
           className={cn(stepper, 'border-r border-border')}
         >

@@ -55,7 +55,20 @@ How far some of them reach is not obvious:
 - **Border width** works because `styles/index.css` redefines Tailwind's border
   utilities from the token; Tailwind hardcodes `1px` and exposes no variable.
 
-Try values live at `/brand` in the running app, then copy the result out.
+Try values live at `/brand`. It runs a WCAG contrast audit against the
+resolved tokens and can export a complete `brand.css`. **If the audit shows a
+failure, the brand is not shippable** — fix it there rather than overriding a
+colour at a call site.
+
+Two constraints the audit exists to catch:
+
+- The accent used for solid fills must be dark enough for its foreground.
+  `--ds-accent` deliberately uses `--accent-700` (OKLCH L 0.52), because white
+  text on an L 0.60 fill measures 3.6–4.2:1 for every hue — below AA.
+- A borderless brand (`--brand-border-width: 0`) leaves a field's fill as its
+  only boundary, which cannot reach 3:1 while staying subtle. Set
+  `--brand-field-border-width: 1px` to keep inputs bounded while everything
+  else stays borderless.
 
 ## Adding a component
 

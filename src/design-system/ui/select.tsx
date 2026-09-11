@@ -6,6 +6,11 @@ import { cn } from '../cn'
 import { transitionColors } from './_motion'
 import { popupItem, popupSurface } from './_popup'
 
+/**
+ * Pass `items` — a `{ value: label }` map — so the trigger shows the label
+ * rather than the raw value. Without it Base UI renders the value itself, so
+ * a select of `{ 'deep-sea': 'Deep Sea' }` displays "deep-sea".
+ */
 export const Select = BaseSelect.Root
 export const SelectValue = BaseSelect.Value
 
@@ -18,7 +23,7 @@ export function SelectTrigger({
     <BaseSelect.Trigger
       className={cn(
         'flex h-control-md w-full items-center justify-between gap-2 rounded-md',
-        'border border-border bg-surface px-3 text-base text-fg',
+        'field-edge border-border bg-field px-3 text-base text-fg',
         'focus-ring hover:border-border-strong',
         transitionColors,
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',

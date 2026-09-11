@@ -9,7 +9,7 @@ import { transitionColors } from './_motion'
  * any other uncontrolled form library work by spreading props directly.
  */
 export const inputClasses = [
-  'flex h-control-md w-full rounded-md border border-border bg-surface px-3',
+  'flex h-control-md w-full rounded-md field-edge border-border bg-field px-3',
   'text-base text-fg placeholder:text-fg-subtle',
   transitionColors,
   'focus-ring hover:border-border-strong',

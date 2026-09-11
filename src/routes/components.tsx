@@ -143,7 +143,10 @@ function Components() {
           <Stack gap={3}>
             <Field>
               <FieldLabel>Framework</FieldLabel>
-              <Select defaultValue="react">
+              <Select
+                defaultValue="react"
+                items={{ react: 'React', solid: 'Solid', svelte: 'Svelte' }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

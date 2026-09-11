@@ -1,0 +1,32 @@
+/* Verdant — the default. Vivid green on near-neutral cool greys, borderless
+   and heavily rounded, with springy motion. Surfaces are separated by fill
+   and a soft shadow rather than by lines. */
+:root {
+  --brand-hue: 112;
+  --brand-chroma: 0.195;
+  --neutral-hue: 250;
+  --neutral-chroma: 0.003;
+  --danger-hue: 27;
+  --success-hue: 155;
+  --warning-hue: 75;
+  --info-hue: 230;
+  --status-chroma: 0.15;
+
+  --brand-radius: 1.125rem;
+  --brand-border-width: 0px;
+
+  --brand-font:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --brand-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --brand-font-heading:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --brand-text-base: 0.8125rem;
+  --brand-type-ratio: 1.15;
+  --brand-heading-weight: 600;
+  --brand-heading-tracking: -0.01em;
+
+  --brand-density: 1;
+  --brand-shadow-strength: 0.6;
+  --brand-motion: 1.2;
+  --brand-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

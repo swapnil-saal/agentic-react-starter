@@ -30,6 +30,28 @@ const SANS = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
 const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace"
 
 export const PRESETS: Record<string, { label: string; knobs: BrandKnobs }> = {
+  verdant: {
+    label: 'Verdant',
+    knobs: {
+      '--brand-hue': '112',
+      '--brand-chroma': '0.195',
+      '--neutral-hue': '250',
+      '--neutral-chroma': '0.003',
+      '--status-chroma': '0.15',
+      '--brand-radius': '1.125rem',
+      '--brand-border-width': '0px',
+      '--brand-font': `'Inter', ${SANS}`,
+      '--brand-font-heading': `'Inter', ${SANS}`,
+      '--brand-text-base': '0.8125rem',
+      '--brand-type-ratio': '1.15',
+      '--brand-heading-weight': '600',
+      '--brand-heading-tracking': '-0.01em',
+      '--brand-density': '1',
+      '--brand-shadow-strength': '0.6',
+      '--brand-motion': '1.2',
+      '--brand-ease': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    },
+  },
   'deep-sea': {
     label: 'Deep Sea',
     knobs: {
@@ -143,7 +165,9 @@ export const PRESETS: Record<string, { label: string; knobs: BrandKnobs }> = {
   },
 }
 
-export const DEFAULT_PRESET = 'deep-sea'
+/** Must match the values shipped in brand.css, so /brand opens showing the
+ *  app's actual current brand rather than a different one. */
+export const DEFAULT_PRESET = 'verdant'
 
 /** Write knobs onto the document root as inline custom properties. */
 export function applyKnobs(knobs: Partial<BrandKnobs>) {

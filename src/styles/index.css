@@ -26,6 +26,7 @@
   --color-surface-hover: var(--ds-surface-hover);
   --color-surface-active: var(--ds-surface-active);
   --color-raised: var(--ds-raised);
+  --color-field: var(--ds-field);
   --color-overlay: var(--ds-overlay);
 
   /* foreground */
@@ -175,6 +176,13 @@
   .border-l {
     border-left-width: var(--border-width);
   }
+}
+
+/* Form controls use this instead of `border` so they can keep a boundary in a
+   borderless brand. See --brand-field-border-width. */
+@utility field-edge {
+  border-style: var(--tw-border-style, solid);
+  border-width: var(--field-border-width);
 }
 
 @utility focus-ring {
