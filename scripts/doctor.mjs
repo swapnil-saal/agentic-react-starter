@@ -230,7 +230,8 @@ check(
     if (!HAS_CLAUDE) return 'skipped — claude CLI missing'
     const entry = ponytailEntry()
     if (!entry) return 'not installed'
-    return entry.enabled ? true : 'installed but disabled'
+    if (!entry.enabled) return 'installed but disabled'
+    return true
   },
   {
     // Installing and enabling are different operations: `install` is a no-op
@@ -254,6 +255,7 @@ check(
         )
         return
       }
+
       // Present but disabled. A local-scope disable overrides the project
       // setting, so clear it at the same scope it was set.
       execFileSync(
@@ -264,6 +266,21 @@ check(
     },
   },
 )
+
+// The plugin is activated for a checkout by .claude/settings.json, not by
+// where it happened to be installed — that declaration is what makes the setup
+// survive a clone, a move, or a new teammate. Verify it is actually committed.
+check('ponytail declared in repo', RECOMMENDED, () => {
+  const file = join(ROOT, '.claude/settings.json')
+  if (!existsSync(file)) return '.claude/settings.json missing'
+  const cfg = json(readFileSync(file, 'utf8'))
+  if (!cfg?.extraKnownMarketplaces?.ponytail) {
+    return 'marketplace not declared in .claude/settings.json'
+  }
+  return cfg?.enabledPlugins?.['ponytail@ponytail']
+    ? true
+    : 'not listed under enabledPlugins in .claude/settings.json'
+})
 
 // ── 8. fragments catalogue freshness ────────────────────────────────────────
 check(

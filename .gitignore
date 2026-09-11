@@ -27,10 +27,6 @@ test-results
 !.vscode/extensions.json
 *.log
 
-# pre-existing local working folders (not part of the app)
-Claude outputs/
-data/
-
 # claude local overrides
 .claude/settings.local.json
 

@@ -71,8 +71,6 @@ with `pnpm gen:catalog`.
 4. **Bind forms with `<Controller>`**, not `register()` — Fragments inputs are
    value-first.
 5. **Validate at the edges** with Zod (env, API responses, search params).
-6. `data/` and `Claude outputs/` are the user's working folders. Leave them
-   alone.
 
 ## Tools available to you
 
