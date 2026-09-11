@@ -8,21 +8,20 @@ test.describe('app shell', () => {
       page.getByRole('heading', { name: 'AI Space', level: 1 }),
     ).toBeVisible()
 
-    await page.getByRole('link', { name: 'Components' }).first().click()
+    await page.getByRole('link', { name: 'Components', exact: true }).click()
     await expect(page).toHaveURL(/\/components$/)
     await expect(
       page.getByRole('heading', { name: 'Components', level: 1 }),
     ).toBeVisible()
   })
 
-  test('Fragments components are actually styled', async ({ page }) => {
-    // Guards the single most breakable part of the setup: if the Fragments
-    // stylesheet stops loading, components still render but lose all styling.
-    // A plain unstyled <button> has a transparent background, so asserting a
-    // real painted colour catches that regression.
+  test('components are actually styled', async ({ page }) => {
+    // Guards the token layer: if the stylesheet or the @theme bridge breaks,
+    // components still render but lose all styling. A plain unstyled <button>
+    // has a transparent background, so asserting a painted colour catches it.
     await page.goto('/components')
 
-    const button = page.getByRole('button', { name: 'Solid' })
+    const button = page.getByRole('button', { name: 'Solid', exact: true })
     await expect(button).toBeVisible()
 
     const bg = await button.evaluate(
@@ -32,9 +31,28 @@ test.describe('app shell', () => {
     expect(bg).not.toBe('transparent')
   })
 
+  test('Tailwind utilities and components share the same tokens', async ({
+    page,
+  }) => {
+    // The whole point of the three-layer token setup: a utility class and a
+    // component variant must resolve to the identical colour.
+    await page.goto('/components')
+
+    const utility = page.getByText('bg-accent', { exact: true })
+    const component = page.getByRole('button', { name: 'Solid', exact: true })
+
+    const utilityBg = await utility.evaluate(
+      (el) => getComputedStyle(el).backgroundColor,
+    )
+    const componentBg = await component.evaluate(
+      (el) => getComputedStyle(el).backgroundColor,
+    )
+
+    expect(utilityBg).toBe(componentBg)
+  })
+
   test('form shows validation errors from the Zod schema', async ({ page }) => {
     await page.goto('/form-demo')
-
     await page.getByRole('button', { name: 'Send' }).click()
 
     await expect(
@@ -45,32 +63,37 @@ test.describe('app shell', () => {
       page.getByText('Message must be at least 10 characters'),
     ).toBeVisible()
   })
-})
 
-test('theme toggle flips Fragments components and Tailwind utilities together', async ({
-  page,
-}) => {
-  // The token bridge's whole purpose: a Tailwind utility (bg-accent) and a
-  // Fragments component must read from the same tokens, so both must change
-  // when the theme changes. If the bridge breaks, the Tailwind element keeps
-  // its light-mode colour while the component moves.
-  await page.goto('/components')
+  test('dialog opens, traps focus and closes', async ({ page }) => {
+    await page.goto('/components')
+    await page.getByRole('button', { name: 'Dialog' }).click()
 
-  const body = page.locator('body')
-  const readBg = () =>
-    body.evaluate((el) => getComputedStyle(el).backgroundColor)
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(
+      dialog.getByRole('heading', { name: 'Publish changes' }),
+    ).toBeVisible()
 
-  const lightBg = await readBg()
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+  })
 
-  // ThemeToggle renders one button per mode ("Light mode" / "Dark mode"),
-  // so target the mode we want rather than the first match.
-  await page.getByRole('button', { name: 'Dark mode' }).click()
-  await expect.poll(readBg).not.toBe(lightBg)
+  test('theme toggle flips light and dark', async ({ page }) => {
+    await page.goto('/components')
 
-  const darkBg = await readBg()
-  expect(darkBg).not.toBe(lightBg)
+    const body = page.locator('body')
+    const readBg = () =>
+      body.evaluate((el) => getComputedStyle(el).backgroundColor)
 
-  // And back again, proving the flip is not one-way.
-  await page.getByRole('button', { name: 'Light mode' }).click()
-  await expect.poll(readBg).toBe(lightBg)
+    await page.getByRole('button', { name: 'Light' }).click()
+    await page.waitForTimeout(150)
+    const lightBg = await readBg()
+
+    await page.getByRole('button', { name: 'Dark' }).click()
+    await expect.poll(readBg).not.toBe(lightBg)
+
+    // …and back, proving the flip is not one-way.
+    await page.getByRole('button', { name: 'Light' }).click()
+    await expect.poll(readBg).toBe(lightBg)
+  })
 })

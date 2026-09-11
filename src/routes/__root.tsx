@@ -1,64 +1,61 @@
-import { AppShell, Header, Sidebar, Text, ThemeToggle } from '@usefragments/ui'
 import {
   Link,
   Outlet,
   createRootRoute,
   useRouterState,
 } from '@tanstack/react-router'
+import { Component, LayoutDashboard, SquarePen } from 'lucide-react'
 
+import {
+  AppHeader,
+  AppMain,
+  AppShell,
+  AppSidebar,
+  AppSidebarBrand,
+  Text,
+  ThemeToggle,
+  sidebarLinkClasses,
+} from '@/design-system'
 import { env } from '@/lib/env'
 
 const NAV = [
-  { to: '/', label: 'Home' },
-  { to: '/components', label: 'Components' },
-  { to: '/form-demo', label: 'Form demo' },
+  { to: '/', label: 'Home', icon: LayoutDashboard },
+  { to: '/components', label: 'Components', icon: Component },
+  { to: '/form-demo', label: 'Form demo', icon: SquarePen },
 ] as const
 
 function RootLayout() {
-  // Drives the active nav state. Reading it from the router (rather than
-  // tracking it in local state) keeps the sidebar correct on back/forward
-  // navigation and on a deep link.
+  // Read from the router rather than local state so the active item stays
+  // correct on back/forward and on a deep link.
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   return (
-    <AppShell layout="sidebar">
-      <AppShell.Header>
-        <Header>
-          <Header.Brand>
-            <Text weight="semibold">{env.VITE_APP_NAME}</Text>
-          </Header.Brand>
-          <Header.Actions>
-            <ThemeToggle />
-          </Header.Actions>
-        </Header>
-      </AppShell.Header>
+    <AppShell>
+      <AppSidebar>
+        <AppSidebarBrand>{env.VITE_APP_NAME}</AppSidebarBrand>
+        <nav className="flex flex-col gap-0.5">
+          {NAV.map(({ to, label, icon: Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className={sidebarLinkClasses(pathname === to)}
+            >
+              <Icon />
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </AppSidebar>
 
-      {/* Paint the slot itself, not just the inner Sidebar: on a page taller
-          than the viewport the inner rail stops short and would otherwise
-          expose a strip of page background at the bottom. */}
-      <AppShell.Sidebar bg="var(--fui-app-sidebar-bg)">
-        <Sidebar>
-          <Sidebar.Nav>
-            <Sidebar.Section>
-              {NAV.map((item) => (
-                // `no-underline` because Fragments' base styles underline bare
-                // anchors; the Sidebar.Item inside provides its own affordance.
-                <Link key={item.to} to={item.to} className="no-underline">
-                  <Sidebar.Item active={pathname === item.to}>
-                    {item.label}
-                  </Sidebar.Item>
-                </Link>
-              ))}
-            </Sidebar.Section>
-          </Sidebar.Nav>
-        </Sidebar>
-      </AppShell.Sidebar>
-
-      <AppShell.Main>
-        <div className="p-8">
+      <AppMain>
+        <AppHeader>
+          <Text weight="medium">{env.VITE_APP_NAME}</Text>
+          <ThemeToggle />
+        </AppHeader>
+        <div className="mx-auto w-full max-w-5xl p-6 md:p-8">
           <Outlet />
         </div>
-      </AppShell.Main>
+      </AppMain>
     </AppShell>
   )
 }

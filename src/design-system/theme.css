@@ -1,0 +1,96 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Layer 2 — SEMANTIC TOKENS
+
+   What each colour is *for*, mapped onto the primitive scales in tokens.css.
+   Components only ever reference this layer (through the Tailwind utilities
+   generated in styles/index.css), never a raw scale.
+
+   Every value is a CSS `light-dark(light, dark)` pair, and `color-scheme` is
+   set for all three states below — so one declaration covers light mode, dark
+   mode, and "follow the OS". No media queries, no duplicated blocks.
+
+   TO RETHEME THE APP: repoint the values here. To change the palette itself,
+   edit the scales in tokens.css. Neither requires touching a component.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light dark;
+
+  /* ── Surfaces ────────────────────────────────────────────────────────────
+     bg       the page
+     subtle   recessed chrome — sidebar rails, table headers
+     surface  anything sitting above the page — cards, popovers, menus
+     raised   a surface on top of a surface */
+  --ds-bg: light-dark(var(--neutral-50), var(--neutral-1000));
+  --ds-bg-subtle: light-dark(var(--neutral-100), var(--neutral-950));
+  --ds-surface: light-dark(var(--neutral-0), var(--neutral-900));
+  --ds-surface-hover: light-dark(var(--neutral-100), var(--neutral-800));
+  --ds-surface-active: light-dark(var(--neutral-200), var(--neutral-700));
+  --ds-raised: light-dark(var(--neutral-0), var(--neutral-800));
+
+  /* ── Foreground ──────────────────────────────────────────────────────────
+     fg       headings and emphasis
+     muted    body copy — the default for most prose
+     subtle   metadata only; never for text that must be read */
+  --ds-fg: light-dark(var(--neutral-900), var(--neutral-50));
+  --ds-fg-muted: light-dark(var(--neutral-600), var(--neutral-400));
+  --ds-fg-subtle: light-dark(var(--neutral-500), var(--neutral-500));
+  --ds-fg-inverted: light-dark(var(--neutral-0), var(--neutral-950));
+
+  /* ── Borders ─────────────────────────────────────────────────────────────  */
+  --ds-border: light-dark(var(--neutral-200), var(--neutral-800));
+  --ds-border-strong: light-dark(var(--neutral-300), var(--neutral-700));
+
+  /* ── Accent ──────────────────────────────────────────────────────────────
+     Interactive things and the single primary action. Used decoratively it
+     stops signalling anything. */
+  --ds-accent: light-dark(var(--accent-600), var(--accent-400));
+  --ds-accent-hover: light-dark(var(--accent-700), var(--accent-300));
+  --ds-accent-subtle: light-dark(var(--accent-50), var(--accent-950));
+  --ds-accent-border: light-dark(var(--accent-200), var(--accent-800));
+  --ds-on-accent: light-dark(var(--neutral-0), var(--accent-950));
+
+  /* ── Status ──────────────────────────────────────────────────────────────
+     Each has a solid, a tinted background, a border and a readable text stop
+     — the four values any badge, alert or toast needs. */
+  --ds-danger: light-dark(var(--danger-600), var(--danger-500));
+  --ds-danger-subtle: light-dark(var(--danger-100), var(--danger-950));
+  --ds-danger-border: light-dark(var(--danger-300), var(--danger-700));
+  --ds-danger-fg: light-dark(var(--danger-700), var(--danger-300));
+  --ds-on-danger: var(--neutral-0);
+
+  --ds-success: light-dark(var(--success-600), var(--success-500));
+  --ds-success-subtle: light-dark(var(--success-100), var(--success-950));
+  --ds-success-border: light-dark(var(--success-300), var(--success-700));
+  --ds-success-fg: light-dark(var(--success-700), var(--success-300));
+  --ds-on-success: var(--neutral-0);
+
+  --ds-warning: light-dark(var(--warning-600), var(--warning-500));
+  --ds-warning-subtle: light-dark(var(--warning-100), var(--warning-950));
+  --ds-warning-border: light-dark(var(--warning-300), var(--warning-700));
+  --ds-warning-fg: light-dark(var(--warning-700), var(--warning-300));
+  --ds-on-warning: var(--neutral-0);
+
+  --ds-info: light-dark(var(--info-600), var(--info-500));
+  --ds-info-subtle: light-dark(var(--info-100), var(--info-950));
+  --ds-info-border: light-dark(var(--info-300), var(--info-700));
+  --ds-info-fg: light-dark(var(--info-700), var(--info-300));
+  --ds-on-info: var(--neutral-0);
+
+  /* ── Focus ───────────────────────────────────────────────────────────────
+     One ring for the whole app. Never remove a focus ring without replacing
+     it with something at least as visible. */
+  --ds-ring: var(--ds-accent);
+
+  /* Scrim behind modals and drawers. */
+  --ds-overlay: light-dark(rgb(11 22 20 / 0.4), rgb(0 0 0 / 0.6));
+}
+
+/* Explicit user choice overrides the OS. The ThemeProvider sets data-theme. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}

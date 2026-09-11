@@ -1,16 +1,16 @@
-import { Button } from '@usefragments/ui'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { Button } from './button'
+
 /**
- * A worked example of the component-testing pattern for this repo, and a
- * regression guard that Fragments components still mount under jsdom.
+ * Worked example of the component-testing pattern for this repo.
  *
- * Query by accessible role and name rather than by class or test id — that
- * asserts the component is reachable the way a user (and a screen reader)
- * reaches it, and it does not break when Fragments changes its internal
- * class names.
+ * Query by accessible role and name — not class names, not test ids. That
+ * asserts the component is reachable the way a user and a screen reader reach
+ * it, and it survives restyling, which matters a lot when the whole design
+ * system is meant to be edited.
  */
 describe('Button', () => {
   it('renders with an accessible name', () => {
@@ -23,9 +23,7 @@ describe('Button', () => {
   it('calls its handler when clicked', async () => {
     const onClick = vi.fn()
     render(<Button onClick={onClick}>Submit</Button>)
-
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
     expect(onClick).toHaveBeenCalledOnce()
   })
 
@@ -36,20 +34,22 @@ describe('Button', () => {
         Submit
       </Button>,
     )
-
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
     expect(onClick).not.toHaveBeenCalled()
   })
 
-  it('exposes an accessible name on an icon-only button via aria-label', () => {
-    render(
-      <Button icon aria-label="Close dialog">
-        ×
-      </Button>,
+  it('defaults to type="button" so it cannot accidentally submit a form', () => {
+    render(<Button>Action</Button>)
+    expect(screen.getByRole('button', { name: 'Action' })).toHaveAttribute(
+      'type',
+      'button',
     )
-    expect(
-      screen.getByRole('button', { name: 'Close dialog' }),
-    ).toBeInTheDocument()
+  })
+
+  it('lets a caller override built-in classes', () => {
+    render(<Button className="rounded-none">Square</Button>)
+    expect(screen.getByRole('button', { name: 'Square' })).toHaveClass(
+      'rounded-none',
+    )
   })
 })

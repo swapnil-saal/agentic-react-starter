@@ -1,22 +1,30 @@
-import { Alert, Button, Card, Input, Stack, Text } from '@usefragments/ui'
-import { createFileRoute } from '@tanstack/react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { createFileRoute } from '@tanstack/react-router'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  Field,
+  FieldLabel,
+  Input,
+  Stack,
+  Text,
+  Textarea,
+} from '@/design-system'
 
 /**
  * The canonical form pattern for this repo.
  *
- * Two rules worth knowing before you copy this:
+ * One Zod schema is the single source of truth for both runtime validation and
+ * the TypeScript type — infer the type, never declare it twice.
  *
- * 1. One Zod schema is the single source of truth for both runtime validation
- *    and the TypeScript type. Infer the type — never declare it separately.
- *
- * 2. Fragments inputs are **value-first**: `onChange` receives a `string`, not
- *    a DOM event, and the native `onChange` is omitted from their props. That
- *    makes React Hook Form's `register()` spread incompatible, so bind fields
- *    with `<Controller>` instead. Spreading `register('x')` onto an <Input>
- *    type-errors, and would silently never update if forced through.
+ * Our Input and Textarea keep the native event-first `onChange`, so
+ * `register()` spreads onto them directly. That is deliberate: components that
+ * swap in a value-first callback break every uncontrolled form library.
  */
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -26,26 +34,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-const FIELDS = [
-  { name: 'name', label: 'Name', placeholder: 'Ada Lovelace' },
-  { name: 'email', label: 'Email', placeholder: 'ada@example.com' },
-  {
-    name: 'message',
-    label: 'Message',
-    placeholder: 'What would you like to build?',
-  },
-] as const satisfies ReadonlyArray<{
-  name: keyof FormValues
-  label: string
-  placeholder: string
-}>
-
 function FormDemo() {
   const {
-    control,
+    register,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', message: '' },
@@ -59,55 +53,74 @@ function FormDemo() {
   }
 
   return (
-    <Stack direction="column" gap="lg">
-      <Stack direction="column" gap="sm">
-        <Text as="h1" scale="2xl" weight="bold">
+    <Stack gap={8}>
+      <Stack gap={2}>
+        <Text as="h1" size="3xl" weight="bold">
           Form demo
         </Text>
-        <Text color="secondary">
+        <Text tone="muted">
           React Hook Form + Zod. Submit while empty to see validation.
         </Text>
       </Stack>
 
       {isSubmitSuccessful && (
-        <Alert tone="success">
-          <Alert.Title>Sent</Alert.Title>
-          <Alert.Content>Your message was submitted.</Alert.Content>
+        <Alert tone="success" title="Sent">
+          Your message was submitted.
         </Alert>
       )}
 
-      <Card>
-        <Card.Body>
+      <Card className="max-w-xl">
+        <CardBody className="pt-5">
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <Stack direction="column" gap="md">
-              {FIELDS.map((f) => (
-                <Controller
-                  key={f.name}
-                  name={f.name}
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <Input
-                      label={f.label}
-                      placeholder={f.placeholder}
-                      type={f.name === 'email' ? 'email' : 'text'}
-                      required
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      error={Boolean(fieldState.error)}
-                      helperText={fieldState.error?.message}
-                    />
-                  )}
+            <Stack gap={4}>
+              <Field>
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <Input
+                  id="name"
+                  placeholder="Ada Lovelace"
+                  aria-invalid={Boolean(errors.name)}
+                  {...register('name')}
                 />
-              ))}
+                {errors.name && (
+                  <Text size="sm" tone="danger" role="alert">
+                    {errors.name.message}
+                  </Text>
+                )}
+              </Field>
 
-              <Stack direction="row" gap="sm">
-                <Button
-                  type="submit"
-                  variant="solid"
-                  tone="accent"
-                  disabled={isSubmitting}
-                >
+              <Field>
+                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="ada@example.com"
+                  aria-invalid={Boolean(errors.email)}
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <Text size="sm" tone="danger" role="alert">
+                    {errors.email.message}
+                  </Text>
+                )}
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="message">Message</FieldLabel>
+                <Textarea
+                  id="message"
+                  placeholder="What would you like to build?"
+                  aria-invalid={Boolean(errors.message)}
+                  {...register('message')}
+                />
+                {errors.message && (
+                  <Text size="sm" tone="danger" role="alert">
+                    {errors.message.message}
+                  </Text>
+                )}
+              </Field>
+
+              <Stack direction="row" gap={2}>
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Sending…' : 'Send'}
                 </Button>
                 <Button type="button" variant="ghost" onClick={() => reset()}>
@@ -116,7 +129,7 @@ function FormDemo() {
               </Stack>
             </Stack>
           </form>
-        </Card.Body>
+        </CardBody>
       </Card>
     </Stack>
   )

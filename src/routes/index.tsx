@@ -1,16 +1,26 @@
-import { Badge, Button, Card, Grid, Stack, Text } from '@usefragments/ui'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
 
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Stack,
+  Text,
+} from '@/design-system'
 import { env } from '@/lib/env'
 
 const FEATURES = [
   {
-    title: 'Fragments UI',
-    body: '70 accessible components on Base UI primitives, themed from a single brand seed.',
+    title: 'Owned components',
+    body: 'Every component is source in this repo, built on Base UI primitives. Edit any of them.',
   },
   {
-    title: 'Typed routing',
-    body: 'TanStack Router generates the route tree, so a bad link is a type error.',
+    title: 'Three-layer tokens',
+    body: 'Primitives to semantics to utilities. Retheme the app without touching a component.',
   },
   {
     title: 'Code intelligence',
@@ -24,34 +34,36 @@ const FEATURES = [
 
 function Home() {
   return (
-    <Stack direction="column" gap="lg">
-      <Stack direction="column" gap="sm">
-        <Badge tone="accent">Boilerplate</Badge>
-        <Text as="h1" scale="2xl" weight="bold">
+    <Stack gap={8}>
+      <Stack gap={3}>
+        <Badge tone="accent">Starter</Badge>
+        <Text as="h1" size="3xl" weight="bold">
           {env.VITE_APP_NAME}
         </Text>
-        <Text color="secondary">
-          A Vite + React + TypeScript starter wired for agentic development.
+        <Text size="md" tone="muted" className="max-w-2xl">
+          A Vite + React + TypeScript starter with a design system you own,
+          wired for agentic development.
         </Text>
       </Stack>
 
-      <Grid columns={2} gap="md">
+      <div className="grid gap-4 sm:grid-cols-2">
         {FEATURES.map((feature) => (
           <Card key={feature.title}>
-            <Card.Header>
-              <Card.Title>{feature.title}</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <Text color="secondary">{feature.body}</Text>
-            </Card.Body>
+            <CardHeader>
+              <CardTitle>{feature.title}</CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Text tone="muted">{feature.body}</Text>
+            </CardBody>
           </Card>
         ))}
-      </Grid>
+      </div>
 
-      <Stack direction="row" gap="sm">
+      <Stack direction="row" gap={3}>
         <Link to="/components">
-          <Button variant="solid" tone="accent">
+          <Button>
             Browse components
+            <ArrowRight />
           </Button>
         </Link>
         <Link to="/form-demo">

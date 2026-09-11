@@ -282,34 +282,19 @@ check('ponytail declared in repo', RECOMMENDED, () => {
     : 'not listed under enabledPlugins in .claude/settings.json'
 })
 
-// ── 8. fragments catalogue freshness ────────────────────────────────────────
-check(
-  'component catalogue',
-  RECOMMENDED,
-  () => {
-    const out = join(ROOT, '.claude/skills/fragments-ui/components.md')
-    if (!existsSync(out)) return 'not generated'
+// The design system is owned source, so nothing reinstalls it. A missing
+// barrel or token file means the UI silently loses its styling.
+check('design system intact', REQUIRED, () => {
+  const required = [
+    'src/design-system/index.ts',
+    'src/design-system/tokens.css',
+    'src/design-system/theme.css',
+  ]
+  const missing = required.filter((f) => !existsSync(join(ROOT, f)))
+  return missing.length === 0 ? true : `missing: ${missing.join(', ')}`
+})
 
-    const pkgFile = join(ROOT, 'node_modules/@usefragments/ui/package.json')
-    if (!existsSync(pkgFile)) return 'skipped — @usefragments/ui not installed'
-
-    const installed = json(readFileSync(pkgFile, 'utf8'))?.version
-    const documented = readFileSync(out, 'utf8').match(
-      /@usefragments\/ui@([\d.]+)/,
-    )?.[1]
-
-    return installed === documented
-      ? true
-      : `catalogue is for ${documented}, installed is ${installed}`
-  },
-  {
-    describe: 'pnpm gen:catalog',
-    run: () =>
-      execFileSync('node', ['scripts/gen-catalog.mjs'], { stdio: 'ignore' }),
-  },
-)
-
-// ── 9. playwright browsers ──────────────────────────────────────────────────
+// ── 8. playwright browsers ──────────────────────────────────────────────────
 check(
   'playwright browsers',
   RECOMMENDED,
@@ -334,7 +319,7 @@ check(
   },
 )
 
-// ── 10. env ─────────────────────────────────────────────────────────────────
+// ── 9. env ─────────────────────────────────────────────────────────────────
 check('.env complete', REQUIRED, () => {
   const examplePath = join(ROOT, '.env.example')
   if (!existsSync(examplePath)) return true

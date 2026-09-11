@@ -5,8 +5,8 @@ description: Visual and interaction design standards for this app — hierarchy,
 
 # UI design standards
 
-Craft judgement for this app. `fragments-ui` covers _which_ component and
-_which_ token; this covers whether the result is actually good.
+Craft judgement for this app. The `design-system` skill covers _which_
+component and _which_ token; this covers whether the result is actually good.
 
 ## Hierarchy first
 
@@ -15,8 +15,8 @@ can I do here. Establish that with size, weight and spacing — in that order �
 before reaching for colour.
 
 - One `h1` per screen. Don't skip heading levels.
-- One primary action per view: exactly one `<Button variant="solid">`.
-  Everything else is `soft`, `outline` or `ghost`. Two competing primaries
+- One primary action per view: exactly one `<Button>` on its default solid
+  variant. Everything else is `outline`, `subtle` or `ghost`. Two competing primaries
   means neither reads as primary.
 - Group related things with proximity, not with borders. Reach for whitespace
   before a divider, and a divider before a box.
@@ -26,9 +26,9 @@ before reaching for colour.
 Use the scale, never arbitrary values. Spacing carries meaning: elements that
 belong together sit closer than elements that don't.
 
-- Within a component: `gap="xs"` / `gap="sm"`
-- Between related blocks: `gap="md"`
-- Between sections: `gap="lg"`
+- Within a component: `<Stack gap={2}>`
+- Between related blocks: `<Stack gap={4}>`
+- Between sections: `<Stack gap={8}>`
 - Be consistent — the same relationship gets the same gap everywhere.
 - Vertical rhythm beats horizontal cleverness; prefer a single column that
   reads top-to-bottom over a dense grid.
@@ -42,8 +42,8 @@ belong together sit closer than elements that don't.
 - Semantic tones mean what they say: `danger` for destructive and errors,
   `warning` for reversible risk, `success` for confirmation, `info` for
   neutral context. Never pick a tone because you liked the colour.
-- Body text uses `color="secondary"`; reserve `primary` for headings and
-  emphasis. Never use `tertiary`/`muted` for anything the user must read.
+- Body text uses `tone="muted"`; reserve the default `fg` for headings and
+  emphasis. Never use `tone="subtle"` for anything the user must read.
 
 ## Contrast and accessibility
 
@@ -59,16 +59,18 @@ Non-negotiable, and cheap to get right:
 - Respect `prefers-reduced-motion`.
 - Touch targets ≥ 44×44px.
 
-Lint catches a slice of this via `jsx-a11y`. Passing lint is the floor, not
-the goal.
+Lint catches a slice of this via `jsx-a11y`, and Base UI handles focus
+management and ARIA wiring inside the primitives. Passing lint is the floor,
+not the goal.
 
 ## Design every state
 
 An interface is not finished when the happy path renders. For each view, handle:
 
 1. **Empty** — first run, or a filter matching nothing. Say what this is and
-   give the action that fills it. Use `EmptyState`. Never show a bare blank.
-2. **Loading** — `Skeleton` matching the real content's shape for initial
+   give the action that fills it. Use `<EmptyState>`, which takes an
+   `action` prop for exactly this. Never show a bare blank.
+2. **Loading** — `<Skeleton>` matching the real content's shape for initial
    loads; a spinner only for short indeterminate waits. Never collapse layout
    height while loading; it causes content to jump.
 3. **Error** — say what failed, in plain language, and offer the next step.
@@ -96,7 +98,7 @@ An interface is not finished when the happy path renders. For each view, handle:
 
 Patterns that make an interface look machine-generated:
 
-- Emoji as UI icons — use the `Icon` component (Phosphor).
+- Emoji as UI icons — use `lucide-react`.
 - Gratuitous gradients, heavy drop shadows, and glow effects.
 - Every card carrying an icon, a badge, and a chevron whether or not they mean
   anything.
@@ -113,4 +115,5 @@ Patterns that make an interface look machine-generated:
 - Is the primary action unmistakable?
 - What does this look like with no data, with one item, and with 500 items?
 - What does it look like at 375px wide?
-- Did I introduce a raw colour or pixel value? (If so, tokenise it.)
+- Did I introduce a raw colour or pixel value, or a Tailwind palette class
+  like `bg-slate-800`? (If so, replace it with a semantic token.)

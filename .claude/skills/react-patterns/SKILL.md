@@ -109,6 +109,9 @@ React 19 is fast. Premature memoisation adds code and bugs for no gain.
 `@/` is aliased to `src/`. Use it for cross-directory imports; keep relative
 paths for siblings. Grouped and ordered: external → `@/` → relative.
 
+UI comes from the barrel: `import { Button } from '@/design-system'` — not
+from `@/design-system/ui/button`.
+
 ## Errors
 
 - Wrap route subtrees in an error boundary; don't let one failed component

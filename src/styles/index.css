@@ -1,100 +1,143 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Fragments + Tailwind, sharing one set of design tokens.
+   Layer 3 — UTILITIES
 
-   Two things here are deliberate and easy to break — read before editing:
+   Exposes the semantic tokens as Tailwind utilities. `bg-surface`, `text-fg`,
+   `border-border` and friends all resolve to the `--ds-*` variables defined in
+   design-system/theme.css, so a component styled with utilities and a token
+   referenced directly can never drift apart.
 
-   1. Tailwind's Preflight is NOT imported. Preflight is a global element reset;
-      loading it strips Fragments' own styling off buttons, inputs and headings.
-      We import only Tailwind's `theme` and `utilities` layers.
-
-   2. Fragments is imported as the prebuilt stylesheet. Its component CSS lives
-      ONLY in that file — the JS modules export class-name maps and import no
-      CSS of their own. Drop this import and every component renders unstyled.
-
-   Layer order below is the cascade order. `utilities` is last, so a Tailwind
-   utility can always override a Fragments component style when you need it to.
+   Tailwind's Preflight IS loaded here — we own the entire cascade now, so the
+   reset is ours to keep.
    ───────────────────────────────────────────────────────────────────────────── */
 
-@layer theme, fragments, components, utilities;
+@import 'tailwindcss';
 
-@import 'tailwindcss/theme.css' layer(theme);
-@import '@usefragments/ui/styles' layer(fragments);
-@import './theme.css' layer(fragments);
-@import 'tailwindcss/utilities.css' layer(utilities);
+@import '../design-system/tokens.css';
+@import '../design-system/theme.css';
 
-/* Where Tailwind scans for class names (v4 needs no PostCSS config). */
 @source "../**/*.{ts,tsx}";
 
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   Token bridge: Tailwind's theme namespaces point at Fragments' `--fui-*`
-   variables. `bg-accent` and <Button tone="accent"> now resolve to the exact
-   same colour, and both follow the seeds above — including the light/dark flip,
-   because the Fragments values use CSS `light-dark()`.
-
-   Add a mapping here rather than hardcoding a value anywhere else.
-   ───────────────────────────────────────────────────────────────────────────── */
 @theme inline {
-  /* intent colours */
-  --color-accent: var(--fui-color-accent);
-  --color-danger: var(--fui-color-danger);
-  --color-success: var(--fui-color-success);
-  --color-warning: var(--fui-color-warning);
-  --color-info: var(--fui-color-info);
+  /* surfaces */
+  --color-bg: var(--ds-bg);
+  --color-bg-subtle: var(--ds-bg-subtle);
+  --color-surface: var(--ds-surface);
+  --color-surface-hover: var(--ds-surface-hover);
+  --color-surface-active: var(--ds-surface-active);
+  --color-raised: var(--ds-raised);
+  --color-overlay: var(--ds-overlay);
 
-  /* surfaces + text */
-  --color-bg: var(--fui-bg-primary);
-  --color-bg-subtle: var(--fui-bg-subtle);
-  --color-bg-elevated: var(--fui-bg-elevated);
-  --color-bg-hover: var(--fui-bg-hover);
-  --color-fg: var(--fui-text-primary);
-  --color-fg-muted: var(--fui-text-secondary);
-  --color-border: var(--fui-border-default);
-  --color-border-strong: var(--fui-border-strong);
+  /* foreground */
+  --color-fg: var(--ds-fg);
+  --color-fg-muted: var(--ds-fg-muted);
+  --color-fg-subtle: var(--ds-fg-subtle);
+  --color-fg-inverted: var(--ds-fg-inverted);
+
+  /* borders */
+  --color-border: var(--ds-border);
+  --color-border-strong: var(--ds-border-strong);
+
+  /* accent */
+  --color-accent: var(--ds-accent);
+  --color-accent-hover: var(--ds-accent-hover);
+  --color-accent-subtle: var(--ds-accent-subtle);
+  --color-accent-border: var(--ds-accent-border);
+  --color-on-accent: var(--ds-on-accent);
+
+  /* status */
+  --color-danger: var(--ds-danger);
+  --color-danger-subtle: var(--ds-danger-subtle);
+  --color-danger-border: var(--ds-danger-border);
+  --color-danger-fg: var(--ds-danger-fg);
+  --color-on-danger: var(--ds-on-danger);
+
+  --color-success: var(--ds-success);
+  --color-success-subtle: var(--ds-success-subtle);
+  --color-success-border: var(--ds-success-border);
+  --color-success-fg: var(--ds-success-fg);
+  --color-on-success: var(--ds-on-success);
+
+  --color-warning: var(--ds-warning);
+  --color-warning-subtle: var(--ds-warning-subtle);
+  --color-warning-border: var(--ds-warning-border);
+  --color-warning-fg: var(--ds-warning-fg);
+  --color-on-warning: var(--ds-on-warning);
+
+  --color-info: var(--ds-info);
+  --color-info-subtle: var(--ds-info-subtle);
+  --color-info-border: var(--ds-info-border);
+  --color-info-fg: var(--ds-info-fg);
+  --color-on-info: var(--ds-on-info);
+
+  --color-ring: var(--ds-ring);
 
   /* typography */
-  --font-sans: var(--fui-font-sans);
-  --font-mono: var(--fui-font-mono);
-  --text-xs: var(--fui-font-size-xs);
-  --text-sm: var(--fui-font-size-sm);
-  --text-base: var(--fui-font-size-base);
-  --text-md: var(--fui-font-size-md);
-  --text-lg: var(--fui-font-size-lg);
-  --text-xl: var(--fui-font-size-xl);
-  --text-2xl: var(--fui-font-size-2xl);
-  --text-3xl: var(--fui-font-size-3xl);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+  --text-xs: var(--size-xs);
+  --text-sm: var(--size-sm);
+  --text-base: var(--size-base);
+  --text-md: var(--size-md);
+  --text-lg: var(--size-lg);
+  --text-xl: var(--size-xl);
+  --text-2xl: var(--size-2xl);
+  --text-3xl: var(--size-3xl);
 
   /* radius */
-  --radius-sm: var(--fui-radius-sm);
-  --radius-md: var(--fui-radius-md);
-  --radius-lg: var(--fui-radius-lg);
-  --radius-full: var(--fui-radius-full);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 
-  /* spacing — Fragments' raw scale, so p-4 lines up with a Fragments gap */
-  --spacing-1: var(--fui-raw-space-2);
-  --spacing-2: var(--fui-raw-space-4);
-  --spacing-3: var(--fui-raw-space-6);
-  --spacing-4: var(--fui-raw-space-8);
-  --spacing-5: var(--fui-raw-space-10);
-  --spacing-6: var(--fui-raw-space-12);
-  --spacing-8: var(--fui-raw-space-16);
-  --spacing-10: var(--fui-raw-space-20);
-  --spacing-12: var(--fui-raw-space-24);
-  --spacing-16: var(--fui-raw-space-32);
-  --spacing-20: var(--fui-raw-space-40);
-  --spacing-24: var(--fui-raw-space-48);
+  /* elevation + motion */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --ease-out: var(--ease-out);
+
+  /* control heights, so h-control-md works on any interactive element */
+  --height-control-sm: var(--control-sm);
+  --height-control-md: var(--control-md);
+  --height-control-lg: var(--control-lg);
+
+  /* layout */
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-header: var(--header-height);
 }
 
-/* Minimal page ground. Fragments owns everything else. */
-html,
-body,
-#root {
-  height: 100%;
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--ds-bg);
+    color: var(--ds-fg);
+    font-family: var(--font-sans-stack);
+    font-size: var(--size-base);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* One focus treatment for the whole app. Components opt into it with
+     `focus-ring` rather than each inventing their own. */
+  :focus-visible {
+    outline: 2px solid var(--ds-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--ds-accent);
+    color: var(--ds-on-accent);
+  }
 }
 
-body {
-  margin: 0;
-  background: var(--fui-bg-primary);
-  color: var(--fui-text-primary);
-  font-family: var(--fui-font-sans);
+@utility focus-ring {
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-ring);
+    outline-offset: 2px;
+  }
 }

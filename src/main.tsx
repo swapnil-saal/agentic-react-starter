@@ -1,9 +1,14 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { ThemeProvider } from '@usefragments/ui'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
+import {
+  ThemeProvider,
+  ToastProvider,
+  Toaster,
+  TooltipProvider,
+} from '@/design-system'
 import { queryClient } from '@/lib/query-client'
 import { routeTree } from './routeTree.gen'
 import './styles/index.css'
@@ -27,8 +32,13 @@ if (!rootElement) throw new Error('Root element #root not found in index.html')
 createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultMode="system">
-        <RouterProvider router={router} />
+      <ThemeProvider>
+        <TooltipProvider>
+          <ToastProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </ToastProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,

@@ -47,6 +47,14 @@ export default tseslint.config(
     },
   },
 
+  // Design-system modules intentionally export variant builders and class
+  // helpers (buttonVariants, inputClasses) next to their components — that is
+  // the pattern that lets callers compose them. Fast refresh does not apply.
+  {
+    files: ['src/design-system/**/*.{ts,tsx}'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+
   // Route files must export a `Route` object alongside their component —
   // that is the TanStack Router contract, so the fast-refresh rule does not
   // apply here.
