@@ -15,9 +15,28 @@
  * bracket form emits invalid CSS and silently does nothing.
  */
 
-/** Colour/background/border changes: hover, focus, selection. */
+/**
+ * Colour/background/border changes: hover, focus, selection.
+ *
+ * Uses the monotonic --ease-state, never --ease-out. An overshooting brand
+ * curve would push the colour past its target and back, which reads as a
+ * flicker every time you hover.
+ */
 export const transitionColors =
-  'transition-colors duration-(--duration-fast) ease-(--ease-out)'
+  'transition-colors duration-(--duration-fast) ease-(--ease-state)'
+
+/**
+ * Colour AND transform together, for controls that tint on hover and depress
+ * on click — buttons, toggles, steppers.
+ *
+ * This exists because `transition-colors` and `transition-transform` are the
+ * same Tailwind group: put both on one element and `cn` keeps only the last,
+ * silently dropping the other. One combined property list avoids that.
+ */
+export const transitionControl = [
+  'transition-[color,background-color,border-color,box-shadow,transform]',
+  'duration-(--duration-fast) ease-(--ease-state)',
+].join(' ')
 
 /** Movement and scaling: thumbs, indicators, chevrons. */
 export const transitionTransform =
@@ -29,11 +48,12 @@ export const transitionAll =
 
 /** Opacity only. */
 export const transitionOpacity =
-  'transition-opacity duration-(--duration-base) ease-(--ease-out)'
+  'transition-opacity duration-(--duration-base) ease-(--ease-state)'
 
 /**
  * Tactile feedback on press. Deliberately subtle — a button that visibly
- * shrinks reads as a toy. Paired with `transitionTransform` by the caller.
+ * shrinks reads as a toy. Requires a transition that includes `transform`;
+ * pair it with `transitionControl` or `transitionTransform`.
  */
 export const pressable = 'active:scale-[0.97]'
 

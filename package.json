@@ -2,7 +2,7 @@
   "name": "agentic-react-starter",
   "description": "Vite + React + TypeScript starter wired for Claude-powered agentic development",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

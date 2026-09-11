@@ -154,6 +154,13 @@
   --duration-slow: calc(240ms * var(--brand-motion));
   --ease-out: var(--brand-ease);
 
+  /* Deliberately NOT brand-configurable. A curve that overshoots (any
+     cubic-bezier with y > 1, like the playful one) travels past its target and
+     comes back — lovely on a transform, but on a colour it reads as a flicker
+     on every hover. State changes therefore always use a monotonic curve;
+     --brand-ease shapes entrances and movement, where overshoot belongs. */
+  --ease-state: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* ── Layout ──────────────────────────────────────────────────────────────  */
   --sidebar-width: calc(15rem * var(--brand-density));
   --header-height: calc(3.5rem * var(--brand-density));

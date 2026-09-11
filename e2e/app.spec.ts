@@ -247,3 +247,34 @@ test('the contrast audit reports real measurements, not collapsed ones', async (
   // if that reads low, the measurement is wrong rather than the brand.
   expect(Math.max(...ratios)).toBeGreaterThan(10)
 })
+
+test('no colour transition uses an overshooting easing', async ({ page }) => {
+  // Regression guard. A cubic-bezier whose y exceeds 1 travels past its target
+  // and returns — pleasant on a transform, but on a background colour it reads
+  // as a flicker on every hover. Expressive easing belongs on movement only.
+  await page.goto('/components')
+  await expect(
+    page.getByRole('button', { name: 'Solid', exact: true }),
+  ).toBeVisible()
+
+  const offenders = await page.evaluate(() => {
+    const overshoots = (ease: string) =>
+      [...ease.matchAll(/cubic-bezier\(([^)]+)\)/g)].some((m) => {
+        const [, y1, , y2] = m[1].split(',').map((n) => parseFloat(n))
+        return y1 > 1 || y2 > 1
+      })
+
+    return [...document.querySelectorAll<HTMLElement>('body *')]
+      .filter((el) => {
+        const cs = getComputedStyle(el)
+        return (
+          /color/.test(cs.transitionProperty) &&
+          overshoots(cs.transitionTimingFunction)
+        )
+      })
+      .slice(0, 5)
+      .map((el) => `${el.tagName.toLowerCase()}.${el.className.split(' ')[0]}`)
+  })
+
+  expect(offenders).toEqual([])
+})
