@@ -103,39 +103,101 @@ export const EASINGS: { value: string; label: string; hint: string }[] = [
 ]
 
 /* ── Contrast ────────────────────────────────────────────────────────────────
-   WCAG 2.2 relative luminance. Colours are rasterised through a canvas so any
-   colour space — including the OKLCH the ramps are generated in — resolves to
-   real sRGB before measuring. Parsing the string directly is the trap: a
-   computed `oklch(...)` value read as `rgb(...)` produces plausible-looking
-   nonsense. */
+   WCAG 2.2 relative luminance.
+
+   Two traps, both of which produced confidently wrong numbers before:
+
+   1. Never read a custom property with `getPropertyValue` and treat it as a
+      colour. In a development build it comes back unresolved — literally
+      `light-dark(oklch(...), oklch(...))` — because nothing has forced it
+      through the cascade yet. Resolve it by assigning it to a real element and
+      reading the *computed* `background-color`, which the browser always
+      reduces to a single concrete colour.
+
+   2. Never assume canvas parsed what you gave it. `ctx.fillStyle = <garbage>`
+      is silently ignored and keeps the previous value, so two unparseable
+      colours measure as identical and every pairing reports a perfect 1.00
+      "Fail". Assignments are sentinel-checked, and an unparseable colour
+      returns null so the UI can say "can't measure" instead of lying.
+   ───────────────────────────────────────────────────────────────────────── */
 
 let ctx: CanvasRenderingContext2D | null = null
 
-function toRgb(color: string): [number, number, number] {
+function getCtx() {
   if (!ctx) {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 1
     ctx = canvas.getContext('2d', { willReadFrequently: true })
   }
-  if (!ctx) return [0, 0, 0]
-  ctx.clearRect(0, 0, 1, 1)
-  ctx.fillStyle = color
-  ctx.fillRect(0, 0, 1, 1)
-  const d = ctx.getImageData(0, 0, 1, 1).data
+  return ctx
+}
+
+const SENTINEL = '#123456'
+
+function toRgb(color: string): [number, number, number] | null {
+  const c = getCtx()
+  if (!c || !color) return null
+
+  // If the colour is unparseable the assignment is a no-op, so the sentinel
+  // survives and we know not to trust the pixel.
+  c.fillStyle = SENTINEL
+  c.fillStyle = color
+  if (c.fillStyle === SENTINEL && color.toLowerCase() !== SENTINEL) return null
+
+  c.clearRect(0, 0, 1, 1)
+  c.fillRect(0, 0, 1, 1)
+  const d = c.getImageData(0, 0, 1, 1).data
   return [d[0], d[1], d[2]]
 }
 
-function luminance(color: string) {
-  const [r, g, b] = toRgb(color).map((v) => {
+/**
+ * Resolve a custom property to a concrete colour by rendering it.
+ *
+ * Returns null when the token is missing or resolves to transparent, so a
+ * caller can distinguish "nothing to measure" from "measured badly".
+ */
+export function resolveColorVar(varName: string): string | null {
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:absolute;width:0;height:0;opacity:0;pointer-events:none'
+  probe.style.backgroundColor = `var(${varName})`
+  document.body.append(probe)
+  const value = getComputedStyle(probe).backgroundColor
+  probe.remove()
+  if (!value || value === 'rgba(0, 0, 0, 0)' || value === 'transparent') {
+    return null
+  }
+  return value
+}
+
+function luminance(color: string): number | null {
+  const rgb = toRgb(color)
+  if (!rgb) return null
+  const [r, g, b] = rgb.map((v) => {
     const s = v / 255
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)
   })
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-export function contrastRatio(a: string, b: string) {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
+/** Contrast ratio between two colours, or null if either cannot be measured. */
+export function contrastRatio(a: string, b: string): number | null {
+  const la = luminance(a)
+  const lb = luminance(b)
+  if (la === null || lb === null) return null
+  const [hi, lo] = [la, lb].sort((x, y) => y - x)
   return (hi + 0.05) / (lo + 0.05)
+}
+
+/** Contrast between two design tokens, resolved through the cascade first. */
+export function tokenContrast(
+  fgVar: string,
+  bgVar: string,
+): number | null {
+  const fg = resolveColorVar(fgVar)
+  const bg = resolveColorVar(bgVar)
+  if (!fg || !bg) return null
+  return contrastRatio(fg, bg)
 }
 
 export type ContrastLevel = 'AAA' | 'AA' | 'AA Large' | 'Fail'
@@ -148,7 +210,8 @@ export function gradeText(ratio: number): ContrastLevel {
   return 'Fail'
 }
 
-/** Read a resolved custom property off the document root. */
+/** Read a resolved custom property off the document root. Fine for numbers
+ *  like --border-width; do NOT use it for colours (see the note above). */
 export function tokenValue(name: string) {
   return getComputedStyle(document.documentElement)
     .getPropertyValue(name)

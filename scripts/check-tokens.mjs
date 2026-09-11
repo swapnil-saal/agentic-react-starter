@@ -16,12 +16,19 @@ import { extname, join, relative } from 'node:path'
 
 const ROOT = process.cwd()
 
-/** Files allowed to contain literal design values — the token layer itself. */
-const TOKEN_LAYER = [
+/**
+ * Files allowed to contain literal colour values.
+ *
+ * Two kinds qualify: the token layer, which is where literals are supposed to
+ * live, and the measurement machinery, whose colour literals are a canvas
+ * sentinel and a transparency comparison rather than anything the UI renders.
+ */
+const EXEMPT = [
   'src/design-system/brand.css',
   'src/design-system/tokens.css',
   'src/design-system/presets',
   'src/design-system/presets.ts',
+  'src/design-system/brand-kit.ts',
 ]
 
 const SCAN_DIRS = ['src']
@@ -93,7 +100,7 @@ function walk(dir, out = []) {
 }
 
 function isExempt(rel) {
-  return TOKEN_LAYER.some((p) => rel === p || rel.startsWith(`${p}/`))
+  return EXEMPT.some((p) => rel === p || rel.startsWith(`${p}/`))
 }
 
 /** Strip comments so a rule cited in prose doesn't trip the rule itself. */

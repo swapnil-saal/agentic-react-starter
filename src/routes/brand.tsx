@@ -36,10 +36,10 @@ import {
   EASINGS,
   HARMONIES,
   TYPE_RATIOS,
-  contrastRatio,
   generateBrandCss,
   gradeText,
   neutralHueFor,
+  tokenContrast,
   tokenValue,
   type Harmony,
 } from '@/design-system/brand-kit'
@@ -109,61 +109,55 @@ function Knob({
 /** Live WCAG audit of the pairings a brand can realistically break. */
 function ContrastAudit({ signal }: { signal: string }) {
   const [rows, setRows] = React.useState<
-    { label: string; ratio: number; need: number }[]
+    { label: string; ratio: number | null; need: number }[]
   >([])
 
   React.useEffect(() => {
-    // Read back resolved tokens after the browser has applied the knobs.
+    // Deferred a frame so the knobs applied by the parent effect have been
+    // committed before anything is measured.
     const id = requestAnimationFrame(() => {
+      const borderless = parseFloat(tokenValue('--border-width')) === 0
+
       const pairs: { label: string; fg: string; bg: string; need: number }[] = [
         {
           label: 'Primary button text',
-          fg: tokenValue('--ds-on-accent'),
-          bg: tokenValue('--ds-accent'),
+          fg: '--ds-on-accent',
+          bg: '--ds-accent',
           need: 4.5,
         },
         {
           label: 'Accent text on page',
-          fg: tokenValue('--ds-accent'),
-          bg: tokenValue('--ds-bg'),
+          fg: '--ds-accent',
+          bg: '--ds-bg',
           need: 4.5,
         },
-        {
-          label: 'Body text',
-          fg: tokenValue('--ds-fg-muted'),
-          bg: tokenValue('--ds-bg'),
-          need: 4.5,
-        },
-        {
-          label: 'Heading text',
-          fg: tokenValue('--ds-fg'),
-          bg: tokenValue('--ds-bg'),
-          need: 4.5,
-        },
+        { label: 'Body text', fg: '--ds-fg-muted', bg: '--ds-bg', need: 4.5 },
+        { label: 'Heading text', fg: '--ds-fg', bg: '--ds-bg', need: 4.5 },
         // A field's boundary can come from its border OR its fill. Only hold
         // the fill to 3:1 when the brand is borderless and fill is all there
-        // is — otherwise every bordered brand would fail a check it passes.
-        ...(parseFloat(tokenValue('--border-width')) === 0
+        // is — otherwise every bordered brand fails a check it passes.
+        ...(borderless
           ? [
               {
                 label: 'Field fill vs page (borderless)',
-                fg: tokenValue('--ds-field'),
-                bg: tokenValue('--ds-bg'),
+                fg: '--ds-field',
+                bg: '--ds-bg',
                 need: 3,
               },
             ]
           : []),
         {
           label: 'Danger text',
-          fg: tokenValue('--ds-danger-fg'),
-          bg: tokenValue('--ds-danger-subtle'),
+          fg: '--ds-danger-fg',
+          bg: '--ds-danger-subtle',
           need: 4.5,
         },
       ]
+
       setRows(
         pairs.map((p) => ({
           label: p.label,
-          ratio: contrastRatio(p.fg, p.bg),
+          ratio: tokenContrast(p.fg, p.bg),
           need: p.need,
         })),
       )
@@ -171,7 +165,12 @@ function ContrastAudit({ signal }: { signal: string }) {
     return () => cancelAnimationFrame(id)
   }, [signal])
 
-  const failing = rows.filter((r) => r.ratio < r.need).length
+  // A pairing that could not be measured is not a failure — saying so is more
+  // honest than reporting a confident 1.00.
+  const failing = rows.filter(
+    (r) => r.ratio !== null && r.ratio < r.need,
+  ).length
+  const unmeasured = rows.filter((r) => r.ratio === null).length
 
   return (
     <Card>
@@ -179,7 +178,7 @@ function ContrastAudit({ signal }: { signal: string }) {
         <CardTitle>Contrast audit</CardTitle>
         <Text size="sm" tone="muted">
           WCAG 2.2 — 4.5:1 for text, 3:1 for a UI boundary. Measured live from
-          the resolved tokens.
+          the rendered tokens.
         </Text>
       </CardHeader>
       <CardBody>
@@ -193,19 +192,30 @@ function ContrastAudit({ signal }: { signal: string }) {
           </TableHeader>
           <TableBody>
             {rows.map((r) => {
-              const pass = r.ratio >= r.need
+              const pass = r.ratio !== null && r.ratio >= r.need
               const grade =
-                r.need === 3 ? (pass ? 'Pass' : 'Fail') : gradeText(r.ratio)
+                r.ratio === null
+                  ? 'No reading'
+                  : r.need === 3
+                    ? pass
+                      ? 'Pass'
+                      : 'Fail'
+                    : gradeText(r.ratio)
               return (
                 <TableRow key={r.label}>
                   <TableCell>{r.label}</TableCell>
                   <TableCell>
                     <Text mono size="sm">
-                      {r.ratio.toFixed(2)}
+                      {r.ratio === null ? '—' : r.ratio.toFixed(2)}
                     </Text>
                   </TableCell>
                   <TableCell>
-                    <Badge tone={pass ? 'success' : 'danger'} dot>
+                    <Badge
+                      tone={
+                        r.ratio === null ? 'neutral' : pass ? 'success' : 'danger'
+                      }
+                      dot
+                    >
                       {grade}
                     </Badge>
                   </TableCell>
@@ -218,6 +228,13 @@ function ContrastAudit({ signal }: { signal: string }) {
           <Alert tone="warning" title="Not shippable yet" className="mt-4">
             {failing} pairing{failing > 1 ? 's' : ''} below the threshold.
             Darkening the accent or raising text contrast usually fixes it.
+          </Alert>
+        )}
+        {unmeasured > 0 && (
+          <Alert tone="info" title="Some pairings could not be read" className="mt-4">
+            {unmeasured} token{unmeasured > 1 ? 's' : ''} did not resolve to a
+            colour this browser can measure. This is a reporting limitation,
+            not a contrast failure.
           </Alert>
         )}
       </CardBody>

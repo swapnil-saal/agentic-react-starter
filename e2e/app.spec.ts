@@ -263,3 +263,29 @@ test.describe('resilience', () => {
     await expect(page).toHaveURL(/\/components$/)
   })
 })
+
+test('the contrast audit reports real measurements, not collapsed ones', async ({
+  page,
+}) => {
+  // Regression guard. When a token cannot be parsed, canvas silently keeps its
+  // previous fill, so both sides of a pairing measure identical and every row
+  // reports a confident 1.00 "Fail". That looked like a broken brand when it
+  // was a broken measurement.
+  await page.goto('/brand')
+  await expect(page.getByRole('table').first()).toBeVisible()
+
+  const ratios = await page
+    .locator('tbody tr')
+    .evaluateAll((rows) =>
+      rows
+        .map((r) => parseFloat(r.querySelectorAll('td')[1]?.textContent ?? ''))
+        .filter((n) => !Number.isNaN(n)),
+    )
+
+  expect(ratios.length).toBeGreaterThan(4)
+  // Every value collapsing to 1.00 is the signature of the bug.
+  expect(ratios.every((r) => r === 1)).toBe(false)
+  // Dark heading text on a near-white page is unambiguously high contrast;
+  // if that reads low, the measurement is wrong rather than the brand.
+  expect(Math.max(...ratios)).toBeGreaterThan(10)
+})
