@@ -1,0 +1,28 @@
+/* Soft — rounded, roomy, warm, gentle. Consumer and marketing surfaces. */
+:root {
+  --brand-hue: 300;
+  --brand-chroma: 0.14;
+  --neutral-hue: 300;
+  --neutral-chroma: 0.012;
+  --danger-hue: 20;
+  --success-hue: 155;
+  --warning-hue: 70;
+  --info-hue: 255;
+  --status-chroma: 0.12;
+
+  --brand-radius: 1rem;
+  --brand-border-width: 1px;
+
+  --brand-font: ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+  --brand-font-mono: ui-monospace, Menlo, monospace;
+  --brand-font-heading: var(--brand-font);
+  --brand-text-base: 0.9375rem;
+  --brand-type-ratio: 1.25;
+  --brand-heading-weight: 700;
+  --brand-heading-tracking: -0.015em;
+
+  --brand-density: 1.15;
+  --brand-shadow-strength: 1.6;
+  --brand-motion: 1.3;
+  --brand-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

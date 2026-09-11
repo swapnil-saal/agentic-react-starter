@@ -97,3 +97,77 @@ test.describe('app shell', () => {
     await expect.poll(readBg).toBe(lightBg)
   })
 })
+
+test.describe('brand system', () => {
+  test('one knob restyles the whole app', async ({ page }) => {
+    // The core promise: a single custom property changes every component at
+    // once. If a knob stops propagating, this fails.
+    await page.goto('/components')
+
+    const button = page.getByRole('button', { name: 'Solid', exact: true })
+    const read = (prop: string) =>
+      button.evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop)
+
+    const before = {
+      bg: await read('background-color'),
+      radius: await read('border-radius'),
+      height: await read('height'),
+      duration: await read('transition-duration'),
+    }
+
+    // Motion must be live before we assert we can switch it off.
+    expect(before.duration).not.toBe('0s')
+
+    await page.evaluate(() => {
+      const s = document.documentElement.style
+      s.setProperty('--brand-hue', '300')
+      s.setProperty('--brand-radius', '0px')
+      s.setProperty('--brand-density', '1.3')
+      s.setProperty('--brand-motion', '0')
+    })
+    await page.waitForTimeout(150)
+
+    expect(await read('background-color')).not.toBe(before.bg)
+    expect(await read('border-radius')).toBe('0px')
+    expect(await read('height')).not.toBe(before.height)
+    expect(await read('transition-duration')).toBe('0s')
+  })
+
+  test('border width is brand-driven, not hardcoded', async ({ page }) => {
+    await page.goto('/components')
+    const card = page.locator('table').first()
+
+    const wrapper = card.locator('..')
+    expect(
+      await wrapper.evaluate((el) => getComputedStyle(el).borderTopWidth),
+    ).toBe('1px')
+
+    await page.evaluate(() =>
+      document.documentElement.style.setProperty('--brand-border-width', '4px'),
+    )
+    await page.waitForTimeout(100)
+
+    expect(
+      await wrapper.evaluate((el) => getComputedStyle(el).borderTopWidth),
+    ).toBe('4px')
+  })
+
+  test('playground presets change the rendered UI', async ({ page }) => {
+    await page.goto('/brand')
+
+    const button = page
+      .getByRole('button', { name: 'Primary', exact: true })
+      .first()
+    const radius = () =>
+      button.evaluate((el) => getComputedStyle(el).borderRadius)
+
+    const deepSea = await radius()
+
+    await page.getByRole('button', { name: 'Brutalist', exact: true }).click()
+    await expect.poll(radius).toBe('0px')
+
+    await page.getByRole('button', { name: 'Soft', exact: true }).click()
+    await expect.poll(radius).not.toBe('0px')
+    expect(await radius()).not.toBe(deepSea)
+  })
+})

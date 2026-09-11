@@ -36,8 +36,10 @@ following the `design-system` skill.
 ```
 src/
   design-system/   the UI library — you own every line
-    tokens.css       layer 1: primitive scales
-    theme.css        layer 2: semantic tokens (ALL colour lives here)
+    brand.css        layer 0: THE knobs — edit this to restyle the app
+    presets/         ready-made brand looks
+    tokens.css       layer 1: scales, derived from brand.css
+    theme.css        layer 2: semantic tokens
     ui/*.tsx         components
     index.ts         import from '@/design-system'
   routes/          file-based routes; __root.tsx is the app shell
@@ -58,20 +60,27 @@ scripts/           doctor.mjs
 | `react-patterns` | Writing any component, hook, or test.                  |
 | `add-route`      | Adding a page or wiring navigation.                    |
 
+Try brand values live at `/brand` in the running app.
+
 ## Hard rules
 
 1. **No hardcoded design values.** No hex codes, no magic pixels, and no raw
    Tailwind palette classes (`bg-slate-800`, `text-red-500`) — they bypass the
    token system and will not respond to a retheme. Use semantic utilities
    (`bg-surface`, `text-fg-muted`) or component variants.
-2. **All colour lives in `src/design-system/theme.css`.** Retheme there; never
-   at a call site.
+2. **To restyle the app, edit `src/design-system/brand.css` — that file only.**
+   ~17 knobs (hue, radius, border width, fonts, type scale, density, shadow,
+   motion) drive everything else. `tokens.css` is derived output; do not put
+   literal values in it. Never restyle at a call site.
 3. **Never edit `src/routeTree.gen.ts`.**
 4. **Keep `Input`/`Textarea` event-first.** Their native `onChange` is what
    makes `register()` from React Hook Form work. A value-first callback would
    break every uncontrolled form library.
 5. **Import UI from `@/design-system`**, not from `ui/*` directly.
 6. **Validate at the edges** with Zod (env, API responses, search params).
+7. **Tailwind v4 variables use parentheses:** `duration-(--x)`, not
+   `duration-[--x]`. The bracket form emits invalid CSS and silently does
+   nothing.
 
 ## Tools available to you
 

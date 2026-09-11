@@ -10,7 +10,7 @@ import { cn } from '../cn'
 export const inputClasses = [
   'flex h-control-md w-full rounded-md border border-border bg-surface px-3',
   'text-base text-fg placeholder:text-fg-subtle',
-  'transition-colors duration-[--duration-fast]',
+  'transition-colors duration-(--duration-fast)',
   'focus-ring hover:border-border-strong',
   'disabled:cursor-not-allowed disabled:opacity-50',
   'aria-invalid:border-danger aria-invalid:focus-visible:outline-danger',

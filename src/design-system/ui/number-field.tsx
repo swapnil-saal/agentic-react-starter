@@ -6,7 +6,7 @@ import { cn } from '../cn'
 
 const stepper = [
   'flex h-control-md w-9 items-center justify-center text-fg-muted',
-  'transition-colors duration-[--duration-fast] focus-ring',
+  'transition-colors duration-(--duration-fast) focus-ring',
   'hover:bg-surface-hover hover:text-fg',
   'disabled:pointer-events-none disabled:opacity-50',
 ]

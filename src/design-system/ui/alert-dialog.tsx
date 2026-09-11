@@ -21,7 +21,7 @@ export function AlertDialogContent({
     <BaseAlertDialog.Portal>
       <BaseAlertDialog.Backdrop
         className={cn(
-          'fixed inset-0 z-50 bg-overlay transition-opacity duration-[--duration-base]',
+          'fixed inset-0 z-50 bg-overlay transition-opacity duration-(--duration-base)',
           'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
         )}
       />
@@ -29,7 +29,7 @@ export function AlertDialogContent({
         className={cn(
           'fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2',
           'rounded-xl border border-border bg-surface p-6 shadow-lg',
-          'transition-all duration-[--duration-base] ease-[--ease-out]',
+          'transition-all duration-(--duration-base) ease-(--ease-out)',
           'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
           'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
           className,

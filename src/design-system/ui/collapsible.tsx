@@ -14,7 +14,7 @@ export function CollapsiblePanel({
     <BaseCollapsible.Panel
       className={cn(
         'overflow-hidden',
-        'h-[var(--collapsible-panel-height)] transition-[height] duration-[--duration-base] ease-[--ease-out]',
+        'h-[var(--collapsible-panel-height)] transition-[height] duration-(--duration-base) ease-(--ease-out)',
         'data-[starting-style]:h-0 data-[ending-style]:h-0',
         className,
       )}

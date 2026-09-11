@@ -28,7 +28,7 @@ export function ToggleItem({
       className={cn(
         'inline-flex h-7 items-center justify-center gap-2 rounded px-2.5',
         'text-sm font-medium text-fg-muted focus-ring',
-        'transition-colors duration-[--duration-fast]',
+        'transition-colors duration-(--duration-fast)',
         'hover:text-fg data-[pressed]:bg-surface data-[pressed]:text-fg data-[pressed]:shadow-sm',
         '[&_svg]:size-4',
         className,

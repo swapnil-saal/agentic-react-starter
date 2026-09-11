@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BrandRouteImport } from './routes/brand'
 import { Route as ComponentsRouteImport } from './routes/components'
 import { Route as FormDemoRouteImport } from './routes/form-demo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComponentsRoute = ComponentsRouteImport.update({
@@ -31,30 +37,34 @@ const FormDemoRoute = FormDemoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/components' | '/form-demo'
+  fullPaths: '/' | '/brand' | '/components' | '/form-demo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/components' | '/form-demo'
-  id: '__root__' | '/' | '/components' | '/form-demo'
+  to: '/' | '/brand' | '/components' | '/form-demo'
+  id: '__root__' | '/' | '/brand' | '/components' | '/form-demo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BrandRoute: typeof BrandRoute
   ComponentsRoute: typeof ComponentsRoute
   FormDemoRoute: typeof FormDemoRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/components': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BrandRoute: BrandRoute,
   ComponentsRoute: ComponentsRoute,
   FormDemoRoute: FormDemoRoute,
 }

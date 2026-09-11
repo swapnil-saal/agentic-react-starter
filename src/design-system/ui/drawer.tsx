@@ -19,14 +19,14 @@ export function DrawerContent({
     <BaseDrawer.Portal>
       <BaseDrawer.Backdrop
         className={cn(
-          'fixed inset-0 z-50 bg-overlay transition-opacity duration-[--duration-base]',
+          'fixed inset-0 z-50 bg-overlay transition-opacity duration-(--duration-base)',
           'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
         )}
       />
       <BaseDrawer.Popup
         className={cn(
           'fixed z-50 border-border bg-surface shadow-lg',
-          'transition-transform duration-[--duration-base] ease-[--ease-out]',
+          'transition-transform duration-(--duration-base) ease-(--ease-out)',
           side === 'right' &&
             'inset-y-0 right-0 w-80 max-w-[90vw] border-l data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full',
           side === 'left' &&

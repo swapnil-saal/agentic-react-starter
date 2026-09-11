@@ -21,7 +21,7 @@ export function TabsList({
         className={cn(
           'absolute bottom-0 left-0 h-0.5 bg-accent',
           'w-[var(--active-tab-width)] translate-x-[var(--active-tab-left)]',
-          'transition-all duration-[--duration-base] ease-[--ease-out]',
+          'transition-all duration-(--duration-base) ease-(--ease-out)',
         )}
       />
     </BaseTabs.List>
@@ -36,7 +36,7 @@ export function TabsTab({
     <BaseTabs.Tab
       className={cn(
         'px-3 py-2 text-base font-medium text-fg-muted',
-        'transition-colors duration-[--duration-fast] focus-ring',
+        'transition-colors duration-(--duration-fast) focus-ring',
         'hover:text-fg data-[selected]:text-fg',
         className,
       )}

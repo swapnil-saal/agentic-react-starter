@@ -21,7 +21,7 @@ export function TooltipContent({
         <BaseTooltip.Popup
           className={cn(
             'z-50 rounded-md bg-fg px-2 py-1 text-xs font-medium text-fg-inverted shadow-md',
-            'transition-all duration-[--duration-fast] ease-[--ease-out]',
+            'transition-all duration-(--duration-fast) ease-(--ease-out)',
             'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
             'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
             className,

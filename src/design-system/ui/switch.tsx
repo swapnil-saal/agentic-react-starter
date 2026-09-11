@@ -12,7 +12,7 @@ export function Switch({
     <BaseSwitch.Root
       className={cn(
         'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent',
-        'bg-surface-active transition-colors duration-[--duration-base] focus-ring',
+        'bg-surface-active transition-colors duration-(--duration-base) focus-ring',
         'data-[checked]:bg-accent',
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
         className,
@@ -22,7 +22,7 @@ export function Switch({
       <BaseSwitch.Thumb
         className={cn(
           'block size-4 rounded-full bg-surface shadow-sm',
-          'translate-x-0.5 transition-transform duration-[--duration-base] ease-[--ease-out]',
+          'translate-x-0.5 transition-transform duration-(--duration-base) ease-(--ease-out)',
           'data-[checked]:translate-x-4.5',
         )}
       />

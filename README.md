@@ -32,7 +32,7 @@ it to build your design system on top; there is nothing to fight.
 
 - Vite 8, React 19, TypeScript 6
 - ~30 owned components on Base UI primitives, styled with Tailwind v4 + CVA
-- A three-layer token system: primitives → semantics → utilities
+- A brand layer: ~17 knobs in one file restyle the entire app
 - Light, dark and follow-the-OS themes from a single set of declarations
 - TanStack Router (file-based, fully typed) + TanStack Query
 - React Hook Form + Zod, including boot-time environment validation
@@ -51,22 +51,46 @@ it to build your design system on top; there is nothing to fight.
 
 Everything is free and works offline. No account, no paid tier, no API key.
 
-## Theming
+## One file defines the look
 
-Three layers, each referencing only the one above it:
+`src/design-system/brand.css` is the only file a new project needs to edit.
+Around 17 knobs drive the entire UI:
 
-| Layer          | File                           | Holds                                     |
-| -------------- | ------------------------------ | ----------------------------------------- |
-| 1 — primitives | `src/design-system/tokens.css` | raw scales: `--neutral-800`, `--space-4`  |
-| 2 — semantics  | `src/design-system/theme.css`  | meaning: `--ds-surface`, `--ds-accent`    |
-| 3 — utilities  | `src/styles/index.css`         | Tailwind classes: `bg-surface`, `text-fg` |
+```css
+--brand-hue: 175; /* colour ramps generated in OKLCH */
+--brand-chroma: 0.13; /* 0 grey · 0.13 vivid · 0.25 neon  */
+--brand-radius: 0.5rem; /* 0 sharp → 1.5rem pillowy         */
+--brand-border-width: 1px;
+--brand-font: …;
+--brand-type-ratio: 1.2; /* modular scale for every heading  */
+--brand-density: 1; /* control heights AND all spacing  */
+--brand-shadow-strength: 1; /* 0 flat → 2 floating              */
+--brand-motion: 1; /* 0 disables every transition      */
+--brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+```
 
-**All colour lives in layer 2.** Change it and every component and utility
-follows, in light and dark, without touching a component. To change the palette
-itself, edit the scales in layer 1.
+Change one number and the whole app follows — in light and dark together.
+Same components, a different product.
 
-Each value is a CSS `light-dark(light, dark)` pair, so one declaration covers
-light mode, dark mode and "follow the OS" — no media queries, no duplication.
+**Presets.** `src/design-system/presets/` ships five complete looks —
+`deep-sea`, `brutalist`, `soft`, `technical`, `mono`. Copy one over the
+`:root` block in `brand.css` to adopt it.
+
+**Playground.** Run `pnpm dev` and open **`/brand`** to drag the knobs against
+the real component library, then copy the result out as CSS.
+
+### How it layers
+
+| Layer          | File                       | Holds                                     |
+| -------------- | -------------------------- | ----------------------------------------- |
+| 0 — brand      | `design-system/brand.css`  | the knobs you edit                        |
+| 1 — primitives | `design-system/tokens.css` | scales _derived_ from the knobs           |
+| 2 — semantics  | `design-system/theme.css`  | meaning: `--ds-surface`, `--ds-accent`    |
+| 3 — utilities  | `styles/index.css`         | Tailwind classes: `bg-surface`, `text-fg` |
+
+Each layer references only the one above. Semantic values are CSS
+`light-dark(light, dark)` pairs, so one declaration covers light mode, dark
+mode and "follow the OS" — no media queries, no duplication.
 
 Never hardcode a colour or spacing value, and avoid raw Tailwind palette
 classes like `bg-slate-800` — they bypass the tokens and won't retheme.
@@ -107,6 +131,7 @@ secrets, and only fails on genuinely required problems.
 src/
   design-system/     the UI library — you own every line
   routes/            file-based routes; __root.tsx is the app shell
+                     /brand is a live playground for the knobs
   routeTree.gen.ts   generated — never edit
   styles/index.css   semantic tokens → Tailwind utilities
   lib/               validated env, query client

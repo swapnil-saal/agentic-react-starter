@@ -16,7 +16,9 @@ from the outside. This one is meant to be edited.
 
 ```
 src/design-system/
-  tokens.css      layer 1 — primitive scales (neutral-500, space-4, radius-lg)
+  brand.css       layer 0 — THE knobs. Edit this to change how the app looks.
+  presets/        ready-made brand.css blocks (brutalist, soft, technical, mono)
+  tokens.css      layer 1 — primitive scales, DERIVED from brand.css
   theme.css       layer 2 — semantic meaning (--ds-bg, --ds-accent, --ds-fg)
   cn.ts           class merger
   theme-provider.tsx
@@ -32,13 +34,38 @@ Always import from the barrel, never from `ui/*` directly:
 import { Button, Card, Stack } from '@/design-system'
 ```
 
-## The three token layers
+## The brand layer — start here
+
+`brand.css` is the single override file. It holds ~17 knobs — brand hue and
+chroma, radius, border width, fonts, type scale, density, shadow strength,
+motion speed and easing — and **everything else is computed from them**.
+
+Changing `--brand-radius` reshapes every component. Changing `--brand-density`
+rescales every control height _and_ the entire Tailwind spacing scale, because
+Tailwind derives `p-4`, `gap-6` and friends from one `--spacing` base that we
+feed from this number. Setting `--brand-motion: 0` makes every transition in
+the app instant.
+
+Colour ramps are generated in OKLCH from a hue plus a chroma, so you choose two
+numbers and get eleven perceptually even stops — no hand-picked hex codes.
+
+**To restyle a project, edit `brand.css` and nothing else.** Copy a file from
+`presets/` over its `:root` block to start from a ready-made look. Open `/brand`
+in the running app to try values live against the real components and copy the
+result out as CSS.
+
+Do not add literal colours or sizes to `tokens.css` — it is derived output.
+If you need a new knob, add it to `brand.css` and consume it in `tokens.css`.
+
+## The token layers
 
 Each layer may only reference the one above it. Keeping that discipline is what
 lets you retheme without touching a single component.
 
-1. **Primitives** (`tokens.css`) — raw values, no meaning. `--neutral-800` is a
-   colour, not a purpose. Nothing outside `theme.css` may reference these.
+0. **Brand** (`brand.css`) — the knobs. The only file a new project edits.
+1. **Primitives** (`tokens.css`) — scales computed from the knobs.
+   `--neutral-800` is a colour, not a purpose. Nothing outside `theme.css`
+   may reference these.
 2. **Semantics** (`theme.css`) — what a colour is _for_. `--ds-surface`,
    `--ds-fg-muted`, `--ds-danger-subtle`. This is the layer you retheme.
 3. **Utilities** (`styles/index.css`) — the `@theme inline` block turns the
@@ -55,10 +82,10 @@ will not respond to a retheme.
 
 ### Retheming
 
-Change the semantic values in `theme.css`. To change the palette itself, edit
-the scales in `tokens.css`. Neither requires touching a component.
+Edit `brand.css`. Only reach into `theme.css` when you need to change what a
+token _means_ (e.g. make cards use a different surface), not what colour it is.
 
-Every value is a CSS `light-dark(light, dark)` pair, and `color-scheme` is set
+Semantic values is a CSS `light-dark(light, dark)` pair, and `color-scheme` is set
 for all three states, so one declaration covers light mode, dark mode and
 "follow the OS". Keep the light value first. Do not add
 `@media (prefers-color-scheme)` blocks — that is what `light-dark()` is for.
@@ -139,6 +166,19 @@ Rules this encodes, all of which matter:
   The last two drive enter/exit transitions.
 - To style a child based on a parent's state, put `group` on the parent and use
   `group-data-[…]` on the child. Forgetting `group` fails silently.
+
+## Tailwind v4 gotcha: variables use parentheses
+
+To reference a CSS variable in a utility, use `(--var)`, **not** `[--var]`:
+
+```
+duration-(--duration-fast)   ✓  emits transition-duration: var(--duration-fast)
+duration-[--duration-fast]   ✗  emits transition-duration: --duration-fast
+```
+
+The bracket form is Tailwind v3 syntax. In v4 it is treated as a literal value,
+producing invalid CSS that the browser drops — so the style silently does
+nothing. This is easy to miss because nothing errors.
 
 ## Forms
 

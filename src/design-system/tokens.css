@@ -1,145 +1,166 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   Layer 1 — PRIMITIVES
+   Layer 1 — PRIMITIVES (derived)
 
-   Raw values with no meaning attached. A primitive says "this is teal-600",
-   never "this is the accent colour". Nothing in the app should reference these
-   directly — components read the semantic tokens in theme.css, which in turn
-   point here.
+   Nothing here is a literal design decision. Every value is computed from the
+   knobs in brand.css, which is why changing one number there re-proportions
+   the entire system coherently.
 
-   Why the split: it lets you swap an entire palette by repointing the semantic
-   layer, without hunting through components. Change a scale here and every
-   semantic token built on it moves together.
+   You should rarely need to edit this file. Edit brand.css instead.
    ───────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* ── Neutral ─────────────────────────────────────────────────────────────
-     Slightly cool and green-tinted so it sits with the accent rather than
-     fighting it. 0 and 1000 are the extremes used for surfaces in each mode. */
-  --neutral-0: #ffffff;
-  --neutral-50: #f7faf9;
-  --neutral-100: #eef4f3;
-  --neutral-200: #dde7e5;
-  --neutral-300: #c2d1cf;
-  --neutral-400: #92a5a3;
-  --neutral-500: #6a7d7b;
-  --neutral-600: #4f615f;
-  --neutral-700: #3a4a48;
-  --neutral-800: #212f2d;
-  --neutral-900: #131f1d;
-  --neutral-950: #0b1614;
-  --neutral-1000: #06100e;
+  /* ── Colour ramps ────────────────────────────────────────────────────────
+     Generated in OKLCH. Lightness is fixed per stop so the ramp stays
+     perceptually even; hue and chroma come from brand.css.
 
-  /* ── Accent — teal ───────────────────────────────────────────────────────  */
-  --accent-50: #f0fdfa;
-  --accent-100: #ccfbf1;
-  --accent-200: #99f6e4;
-  --accent-300: #5eead4;
-  --accent-400: #2dd4bf;
-  --accent-500: #14b8a6;
-  --accent-600: #0d9488;
-  --accent-700: #0f766e;
-  --accent-800: #115e59;
-  --accent-900: #134e4a;
-  --accent-950: #042f2e;
+     Chroma is tapered at the extremes on purpose — near-white and near-black
+     cannot hold full saturation, and forcing it is what makes generated
+     palettes look muddy at the ends. */
 
-  /* ── Status ──────────────────────────────────────────────────────────────  */
-  --danger-100: #fee2e2;
-  --danger-300: #fca5a5;
-  --danger-500: #ef4444;
-  --danger-600: #dc2626;
-  --danger-700: #b91c1c;
-  --danger-950: #2a0d0d;
+  --accent-50: oklch(0.97 calc(var(--brand-chroma) * 0.18) var(--brand-hue));
+  --accent-100: oklch(0.94 calc(var(--brand-chroma) * 0.32) var(--brand-hue));
+  --accent-200: oklch(0.88 calc(var(--brand-chroma) * 0.55) var(--brand-hue));
+  --accent-300: oklch(0.82 calc(var(--brand-chroma) * 0.78) var(--brand-hue));
+  --accent-400: oklch(0.75 calc(var(--brand-chroma) * 0.94) var(--brand-hue));
+  --accent-500: oklch(0.68 var(--brand-chroma) var(--brand-hue));
+  --accent-600: oklch(0.6 var(--brand-chroma) var(--brand-hue));
+  --accent-700: oklch(0.52 calc(var(--brand-chroma) * 0.94) var(--brand-hue));
+  --accent-800: oklch(0.44 calc(var(--brand-chroma) * 0.82) var(--brand-hue));
+  --accent-900: oklch(0.36 calc(var(--brand-chroma) * 0.68) var(--brand-hue));
+  --accent-950: oklch(0.26 calc(var(--brand-chroma) * 0.5) var(--brand-hue));
 
-  --success-100: #d1fae5;
-  --success-300: #6ee7b7;
-  --success-500: #10b981;
-  --success-600: #059669;
-  --success-700: #047857;
-  --success-950: #052e20;
+  --neutral-0: oklch(1 0 0);
+  --neutral-50: oklch(0.985 var(--neutral-chroma) var(--neutral-hue));
+  --neutral-100: oklch(0.96 var(--neutral-chroma) var(--neutral-hue));
+  --neutral-200: oklch(
+    0.92 calc(var(--neutral-chroma) * 1.4) var(--neutral-hue)
+  );
+  --neutral-300: oklch(
+    0.86 calc(var(--neutral-chroma) * 1.8) var(--neutral-hue)
+  );
+  --neutral-400: oklch(
+    0.72 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+  );
+  --neutral-500: oklch(
+    0.6 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+  );
+  --neutral-600: oklch(0.5 calc(var(--neutral-chroma) * 2) var(--neutral-hue));
+  --neutral-700: oklch(
+    0.41 calc(var(--neutral-chroma) * 1.8) var(--neutral-hue)
+  );
+  --neutral-800: oklch(
+    0.31 calc(var(--neutral-chroma) * 1.6) var(--neutral-hue)
+  );
+  --neutral-900: oklch(
+    0.24 calc(var(--neutral-chroma) * 1.4) var(--neutral-hue)
+  );
+  --neutral-950: oklch(
+    0.19 calc(var(--neutral-chroma) * 1.2) var(--neutral-hue)
+  );
+  --neutral-1000: oklch(0.15 var(--neutral-chroma) var(--neutral-hue));
 
-  --warning-100: #fef3c7;
-  --warning-300: #fcd34d;
-  --warning-500: #f59e0b;
-  --warning-600: #d97706;
-  --warning-700: #b45309;
-  --warning-950: #2e1e05;
+  --danger-100: oklch(0.93 calc(var(--status-chroma) * 0.3) var(--danger-hue));
+  --danger-300: oklch(0.8 calc(var(--status-chroma) * 0.7) var(--danger-hue));
+  --danger-500: oklch(0.64 var(--status-chroma) var(--danger-hue));
+  --danger-600: oklch(0.56 var(--status-chroma) var(--danger-hue));
+  --danger-700: oklch(0.48 calc(var(--status-chroma) * 0.9) var(--danger-hue));
+  --danger-950: oklch(0.24 calc(var(--status-chroma) * 0.5) var(--danger-hue));
 
-  --info-100: #cffafe;
-  --info-300: #67e8f9;
-  --info-500: #06b6d4;
-  --info-600: #0891b2;
-  --info-700: #0e7490;
-  --info-950: #072f38;
+  --success-100: oklch(
+    0.93 calc(var(--status-chroma) * 0.3) var(--success-hue)
+  );
+  --success-300: oklch(0.8 calc(var(--status-chroma) * 0.7) var(--success-hue));
+  --success-500: oklch(0.68 var(--status-chroma) var(--success-hue));
+  --success-600: oklch(0.58 var(--status-chroma) var(--success-hue));
+  --success-700: oklch(0.5 calc(var(--status-chroma) * 0.9) var(--success-hue));
+  --success-950: oklch(
+    0.24 calc(var(--status-chroma) * 0.5) var(--success-hue)
+  );
 
-  /* ── Spacing — 4px base ──────────────────────────────────────────────────
-     Referenced by Tailwind's spacing scale in styles/index.css, so p-4 here
-     means the same thing as gap-4 in a component. */
-  --space-px: 1px;
-  --space-0: 0;
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
+  --warning-100: oklch(
+    0.94 calc(var(--status-chroma) * 0.3) var(--warning-hue)
+  );
+  --warning-300: oklch(
+    0.84 calc(var(--status-chroma) * 0.7) var(--warning-hue)
+  );
+  --warning-500: oklch(0.75 var(--status-chroma) var(--warning-hue));
+  --warning-600: oklch(0.66 var(--status-chroma) var(--warning-hue));
+  --warning-700: oklch(
+    0.56 calc(var(--status-chroma) * 0.9) var(--warning-hue)
+  );
+  --warning-950: oklch(
+    0.25 calc(var(--status-chroma) * 0.5) var(--warning-hue)
+  );
 
-  /* ── Radius ──────────────────────────────────────────────────────────────
-     Change --radius-base to reshape the whole UI at once. */
-  --radius-base: 0.5rem;
-  --radius-sm: calc(var(--radius-base) - 0.25rem);
-  --radius-md: calc(var(--radius-base) - 0.125rem);
-  --radius-lg: var(--radius-base);
-  --radius-xl: calc(var(--radius-base) + 0.25rem);
+  --info-100: oklch(0.93 calc(var(--status-chroma) * 0.3) var(--info-hue));
+  --info-300: oklch(0.8 calc(var(--status-chroma) * 0.7) var(--info-hue));
+  --info-500: oklch(0.68 var(--status-chroma) var(--info-hue));
+  --info-600: oklch(0.58 var(--status-chroma) var(--info-hue));
+  --info-700: oklch(0.5 calc(var(--status-chroma) * 0.9) var(--info-hue));
+  --info-950: oklch(0.24 calc(var(--status-chroma) * 0.5) var(--info-hue));
+
+  /* ── Shape ───────────────────────────────────────────────────────────────
+     Smaller radii are clamped at 0 so a sharp brand (radius: 0) cannot
+     produce negative values. */
+  --radius-base: var(--brand-radius);
+  --radius-sm: max(0px, calc(var(--brand-radius) - 0.25rem));
+  --radius-md: max(0px, calc(var(--brand-radius) - 0.125rem));
+  --radius-lg: var(--brand-radius);
+  --radius-xl: calc(var(--brand-radius) + 0.25rem);
   --radius-full: 9999px;
 
-  /* ── Typography ──────────────────────────────────────────────────────────  */
-  --font-sans-stack:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono-stack:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --border-width: var(--brand-border-width);
 
-  --size-xs: 0.75rem;
-  --size-sm: 0.8125rem;
-  --size-base: 0.875rem;
-  --size-md: 1rem;
-  --size-lg: 1.125rem;
-  --size-xl: 1.375rem;
-  --size-2xl: 1.75rem;
-  --size-3xl: 2.25rem;
+  /* ── Typography ──────────────────────────────────────────────────────────
+     A modular scale: each step multiplies by --brand-type-ratio. Raising the
+     ratio makes headings dramatic without touching body copy. */
+  --font-sans-stack: var(--brand-font);
+  --font-mono-stack: var(--brand-font-mono);
+  --font-heading-stack: var(--brand-font-heading);
 
-  /* ── Control heights ─────────────────────────────────────────────────────
-     Shared by every interactive control so buttons, inputs and selects line
-     up on a row without per-component fudging. */
-  --control-sm: 2rem;
-  --control-md: 2.25rem;
-  --control-lg: 2.75rem;
+  --size-base: var(--brand-text-base);
+  --size-sm: calc(var(--size-base) / var(--brand-type-ratio));
+  --size-xs: calc(var(--size-sm) / var(--brand-type-ratio));
+  --size-md: calc(var(--size-base) * var(--brand-type-ratio));
+  --size-lg: calc(var(--size-md) * var(--brand-type-ratio));
+  --size-xl: calc(var(--size-lg) * var(--brand-type-ratio));
+  --size-2xl: calc(var(--size-xl) * var(--brand-type-ratio));
+  --size-3xl: calc(var(--size-2xl) * var(--brand-type-ratio));
 
-  /* ── Elevation ───────────────────────────────────────────────────────────  */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  /* ── Density ─────────────────────────────────────────────────────────────
+     Control heights scale with density so buttons, inputs and selects keep
+     lining up. The Tailwind spacing scale is scaled alongside them in
+     styles/index.css, from this same number. */
+  --control-sm: calc(2rem * var(--brand-density));
+  --control-md: calc(2.25rem * var(--brand-density));
+  --control-lg: calc(2.75rem * var(--brand-density));
+
+  /* ── Elevation ───────────────────────────────────────────────────────────
+     Strength scales the alpha, so 0 gives genuinely flat surfaces rather than
+     faint smudges. */
+  --shadow-sm: 0 1px 2px 0
+    rgb(0 0 0 / calc(0.05 * var(--brand-shadow-strength)));
   --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+    0 4px 6px -1px rgb(0 0 0 / calc(0.08 * var(--brand-shadow-strength))),
+    0 2px 4px -2px rgb(0 0 0 / calc(0.06 * var(--brand-shadow-strength)));
   --shadow-lg:
-    0 12px 20px -4px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.08);
+    0 12px 20px -4px rgb(0 0 0 / calc(0.12 * var(--brand-shadow-strength))),
+    0 4px 8px -4px rgb(0 0 0 / calc(0.08 * var(--brand-shadow-strength)));
 
-  /* ── Motion ──────────────────────────────────────────────────────────────
-     Short and ease-out. Motion should explain a change, not decorate it. */
-  --duration-fast: 120ms;
-  --duration-base: 160ms;
-  --duration-slow: 240ms;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* ── Motion ──────────────────────────────────────────────────────────────  */
+  --duration-fast: calc(120ms * var(--brand-motion));
+  --duration-base: calc(160ms * var(--brand-motion));
+  --duration-slow: calc(240ms * var(--brand-motion));
+  --ease-out: var(--brand-ease);
 
   /* ── Layout ──────────────────────────────────────────────────────────────  */
-  --sidebar-width: 15rem;
-  --header-height: 3.5rem;
+  --sidebar-width: calc(15rem * var(--brand-density));
+  --header-height: calc(3.5rem * var(--brand-density));
 }
 
-/* Respect the user's motion preference everywhere, once. */
+/* A user's OS-level motion preference is not a brand decision. This overrides
+   --brand-motion unconditionally, so no preset can re-enable animation for
+   someone who has asked for less of it. */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-fast: 1ms;

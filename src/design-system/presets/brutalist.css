@@ -1,0 +1,29 @@
+/* Brutalist — sharp corners, heavy borders, no shadow, instant motion.
+   Structure does the work that elevation usually does. */
+:root {
+  --brand-hue: 55;
+  --brand-chroma: 0.19;
+  --neutral-hue: 0;
+  --neutral-chroma: 0;
+  --danger-hue: 27;
+  --success-hue: 155;
+  --warning-hue: 75;
+  --info-hue: 230;
+  --status-chroma: 0.18;
+
+  --brand-radius: 0;
+  --brand-border-width: 2px;
+
+  --brand-font: 'Helvetica Neue', Arial, sans-serif;
+  --brand-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --brand-font-heading: var(--brand-font);
+  --brand-text-base: 0.875rem;
+  --brand-type-ratio: 1.333;
+  --brand-heading-weight: 800;
+  --brand-heading-tracking: -0.04em;
+
+  --brand-density: 1;
+  --brand-shadow-strength: 0;
+  --brand-motion: 0;
+  --brand-ease: linear;
+}

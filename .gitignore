@@ -30,6 +30,10 @@ test-results
 # claude local overrides
 .claude/settings.local.json
 
+# scratch/probe directories used during development
+.probe
+.tmp
+
 # editor swap files
 *.swp
 *.swo

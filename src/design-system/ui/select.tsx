@@ -18,7 +18,7 @@ export function SelectTrigger({
       className={cn(
         'flex h-control-md w-full items-center justify-between gap-2 rounded-md',
         'border border-border bg-surface px-3 text-base text-fg',
-        'transition-colors duration-[--duration-fast] focus-ring hover:border-border-strong',
+        'transition-colors duration-(--duration-fast) focus-ring hover:border-border-strong',
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
         className,
       )}

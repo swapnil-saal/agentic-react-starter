@@ -14,7 +14,7 @@ function ToastItem({ toast }: { toast: BaseToast.Root.ToastObject }) {
       toast={toast}
       className={cn(
         'flex w-80 items-start gap-3 rounded-lg border border-border bg-raised p-4 shadow-lg',
-        'transition-all duration-[--duration-base] ease-[--ease-out]',
+        'transition-all duration-(--duration-base) ease-(--ease-out)',
         'data-[starting-style]:translate-x-4 data-[starting-style]:opacity-0',
         'data-[ending-style]:translate-x-4 data-[ending-style]:opacity-0',
       )}

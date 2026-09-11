@@ -31,7 +31,7 @@ export function AccordionTrigger({
           // data-panel-open state.
           'group flex w-full items-center justify-between gap-4 py-4',
           'text-base font-medium text-fg focus-ring hover:text-accent',
-          'transition-colors duration-[--duration-fast]',
+          'transition-colors duration-(--duration-fast)',
           className,
         )}
         {...props}
@@ -40,7 +40,7 @@ export function AccordionTrigger({
         <ChevronDown
           className={cn(
             'size-4 shrink-0 text-fg-muted',
-            'transition-transform duration-[--duration-base] ease-[--ease-out]',
+            'transition-transform duration-(--duration-base) ease-(--ease-out)',
             'group-data-[panel-open]:rotate-180',
           )}
         />
@@ -58,7 +58,7 @@ export function AccordionPanel({
     <BaseAccordion.Panel
       className={cn(
         'overflow-hidden text-base text-fg-muted',
-        'h-[var(--accordion-panel-height)] transition-[height] duration-[--duration-base] ease-[--ease-out]',
+        'h-[var(--accordion-panel-height)] transition-[height] duration-(--duration-base) ease-(--ease-out)',
         'data-[starting-style]:h-0 data-[ending-style]:h-0',
         className,
       )}

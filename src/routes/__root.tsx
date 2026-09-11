@@ -4,7 +4,7 @@ import {
   createRootRoute,
   useRouterState,
 } from '@tanstack/react-router'
-import { Component, LayoutDashboard, SquarePen } from 'lucide-react'
+import { Component, LayoutDashboard, Palette, SquarePen } from 'lucide-react'
 
 import {
   AppHeader,
@@ -22,6 +22,7 @@ const NAV = [
   { to: '/', label: 'Home', icon: LayoutDashboard },
   { to: '/components', label: 'Components', icon: Component },
   { to: '/form-demo', label: 'Form demo', icon: SquarePen },
+  { to: '/brand', label: 'Brand', icon: Palette },
 ] as const
 
 function RootLayout() {

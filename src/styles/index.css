@@ -12,6 +12,7 @@
 
 @import 'tailwindcss';
 
+@import '../design-system/brand.css';
 @import '../design-system/tokens.css';
 @import '../design-system/theme.css';
 
@@ -100,6 +101,16 @@
   --height-control-md: var(--control-md);
   --height-control-lg: var(--control-lg);
 
+  /* Density: Tailwind derives its entire numeric spacing scale (p-4, gap-6,
+     m-2 …) from this single base, so scaling it here rescales every spacing
+     utility in the app at once. */
+  --spacing: calc(0.25rem * var(--brand-density));
+
+  /* Tailwind's own transition defaults, so a bare `transition` class obeys the
+     brand's motion setting too — including being instant at 0. */
+  --default-transition-duration: var(--duration-base);
+  --default-transition-timing-function: var(--ease-out);
+
   /* layout */
   --spacing-sidebar: var(--sidebar-width);
   --spacing-header: var(--header-height);
@@ -127,9 +138,42 @@
     outline-offset: 2px;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading-stack);
+    font-weight: var(--brand-heading-weight);
+    letter-spacing: var(--brand-heading-tracking);
+  }
+
   ::selection {
     background-color: var(--ds-accent);
     color: var(--ds-on-accent);
+  }
+}
+
+/* Tailwind hardcodes 1px on its border utilities and exposes no variable for
+   it, so we redefine them from the brand token. These land after Tailwind's
+   own rules in the same layer, so they win. Widths set explicitly by a
+   utility (border-2, border-0) are untouched. */
+@layer utilities {
+  .border {
+    border-width: var(--border-width);
+  }
+  .border-t {
+    border-top-width: var(--border-width);
+  }
+  .border-r {
+    border-right-width: var(--border-width);
+  }
+  .border-b {
+    border-bottom-width: var(--border-width);
+  }
+  .border-l {
+    border-left-width: var(--border-width);
   }
 }
 

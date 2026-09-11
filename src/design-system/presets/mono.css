@@ -1,0 +1,29 @@
+/* Mono — greyscale, monospaced, hairline. Documentation and developer tools.
+   The only colour left is status, so state reads instantly. */
+:root {
+  --brand-hue: 0;
+  --brand-chroma: 0;
+  --neutral-hue: 0;
+  --neutral-chroma: 0;
+  --danger-hue: 27;
+  --success-hue: 155;
+  --warning-hue: 75;
+  --info-hue: 230;
+  --status-chroma: 0.13;
+
+  --brand-radius: 0.125rem;
+  --brand-border-width: 1px;
+
+  --brand-font: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  --brand-font-mono: var(--brand-font);
+  --brand-font-heading: var(--brand-font);
+  --brand-text-base: 0.8125rem;
+  --brand-type-ratio: 1.2;
+  --brand-heading-weight: 700;
+  --brand-heading-tracking: -0.01em;
+
+  --brand-density: 0.95;
+  --brand-shadow-strength: 0;
+  --brand-motion: 0.6;
+  --brand-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}

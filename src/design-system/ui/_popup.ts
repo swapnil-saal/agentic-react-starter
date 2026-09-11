@@ -8,7 +8,7 @@
 export const popupSurface = [
   'z-50 min-w-[var(--anchor-width)] overflow-hidden rounded-lg',
   'border border-border bg-raised p-1 shadow-lg',
-  'transition-all duration-[--duration-fast] ease-[--ease-out]',
+  'transition-all duration-(--duration-fast) ease-(--ease-out)',
   'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
   'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
 ]

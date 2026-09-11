@@ -1,0 +1,116 @@
+/* ═════════════════════════════════════════════════════════════════════════════
+   BRAND — the one file you edit to make this project look like itself.
+
+   Everything below is a knob. Nothing else in the design system needs to
+   change: the token scales, every component, and every Tailwind utility are
+   derived from these values. Change a number here and the whole app follows,
+   in light mode and dark mode together.
+
+   The components stay identical across projects; only this file differs.
+
+   Ready-made looks live in `presets/` — copy one over this file's :root block
+   to start from it. Run `pnpm dev` and open /brand to try values live.
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ───────────────────────────────────────────────────────────────────────────
+     1. COLOUR
+
+     Colours are generated in OKLCH from a hue and a chroma, so you pick two
+     numbers and get a complete, perceptually even ramp — no hand-tuning eleven
+     hex codes, and no muddy mid-tones.
+
+     hue     0–360°.  20 red · 60 amber · 140 green · 175 teal · 230 blue
+                      270 violet · 330 pink
+     chroma  0–0.3.   0 = grey · 0.06 = muted · 0.13 = vivid · 0.2+ = neon
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-hue: 175;
+  --brand-chroma: 0.13;
+
+  /* The greys. Give them a little of the brand's hue and the UI feels
+     designed rather than assembled; leave chroma at 0 for pure neutral grey. */
+  --neutral-hue: 175;
+  --neutral-chroma: 0.008;
+
+  /* Status hues. Keep these recognisable — a green "danger" helps nobody. */
+  --danger-hue: 27;
+  --success-hue: 155;
+  --warning-hue: 75;
+  --info-hue: 230;
+  --status-chroma: 0.14;
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     2. SHAPE
+
+     radius       0 = sharp/brutalist · 0.375rem = crisp · 0.5rem = default
+                  1rem = soft · 1.5rem = pillowy
+     border-width 1px = standard · 2px = bold outline · 0 = borderless
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-radius: 0.5rem;
+  --brand-border-width: 1px;
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     3. TYPOGRAPHY
+
+     type-ratio is the modular scale: each step up multiplies by this.
+     1.125 = restrained · 1.2 = balanced · 1.333 = dramatic editorial
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-font:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --brand-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  /* Headings default to the body font. Point this at a display face for
+     contrast between headings and prose. */
+  --brand-font-heading: var(--brand-font);
+
+  --brand-text-base: 0.875rem;
+  --brand-type-ratio: 1.2;
+  --brand-heading-weight: 600;
+  /* Negative tightens headings, which large type usually wants. */
+  --brand-heading-tracking: -0.02em;
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     4. DENSITY
+
+     Scales every control height AND the whole spacing scale at once, so the
+     proportions stay right.
+
+     0.875 = compact (dashboards, data tools)
+     1     = default
+     1.15  = roomy (marketing, reading-heavy apps)
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-density: 1;
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     5. ELEVATION
+
+     0 = completely flat (pairs well with visible borders)
+     1 = default
+     2 = pronounced, floating
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-shadow-strength: 1;
+
+  /* ───────────────────────────────────────────────────────────────────────────
+     6. MOTION
+
+     motion  0 = OFF — every transition becomes instant, app-wide
+             1 = default · 1.5 = languid · 0.6 = snappy
+
+     Note: a user with "reduce motion" enabled gets 0 regardless of this
+     value. That override lives in tokens.css and is not negotiable.
+
+     ease    the character of movement:
+             cubic-bezier(0.16, 1, 0.3, 1)     confident ease-out (default)
+             cubic-bezier(0.4, 0, 0.2, 1)      neutral material
+             cubic-bezier(0.34, 1.56, 0.64, 1) overshoot / playful
+             linear                            mechanical
+     ───────────────────────────────────────────────────────────────────────── */
+
+  --brand-motion: 1;
+  --brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}

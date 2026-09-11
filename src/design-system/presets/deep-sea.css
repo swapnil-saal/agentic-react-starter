@@ -1,0 +1,28 @@
+/* Deep Sea — the default. Teal, crisp, calm. */
+:root {
+  --brand-hue: 175;
+  --brand-chroma: 0.13;
+  --neutral-hue: 175;
+  --neutral-chroma: 0.008;
+  --danger-hue: 27;
+  --success-hue: 155;
+  --warning-hue: 75;
+  --info-hue: 230;
+  --status-chroma: 0.14;
+
+  --brand-radius: 0.5rem;
+  --brand-border-width: 1px;
+
+  --brand-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --brand-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --brand-font-heading: var(--brand-font);
+  --brand-text-base: 0.875rem;
+  --brand-type-ratio: 1.2;
+  --brand-heading-weight: 600;
+  --brand-heading-tracking: -0.02em;
+
+  --brand-density: 1;
+  --brand-shadow-strength: 1;
+  --brand-motion: 1;
+  --brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
