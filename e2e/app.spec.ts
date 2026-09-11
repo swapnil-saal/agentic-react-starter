@@ -209,3 +209,57 @@ test('every animated element obeys the single motion knob', async ({
 
   expect(await countAnimating()).toBe(0)
 })
+
+test.describe('data layer', () => {
+  test('list loads, and a rejected mutation rolls back optimistically', async ({
+    page,
+  }) => {
+    await page.goto('/users')
+    await expect(page.getByRole('table')).toBeVisible()
+    await expect(page.locator('tbody tr')).toHaveCount(4)
+
+    // The mock API rejects this record on purpose, so the optimistic update
+    // must visibly apply and then revert.
+    const toggle = page
+      .locator('tr', { hasText: 'Grace Hopper' })
+      .getByRole('switch')
+
+    await expect(toggle).toHaveAttribute('aria-checked', 'false')
+    await toggle.click()
+    await expect(toggle).toHaveAttribute('aria-checked', 'true') // optimistic
+    await expect(toggle).toHaveAttribute('aria-checked', 'false') // rolled back
+    await expect(page.getByText('Change reverted')).toBeVisible()
+  })
+
+  test('detail route loads a single user', async ({ page }) => {
+    await page.goto('/users')
+    await page.getByRole('link', { name: 'Ada Lovelace' }).click()
+    await expect(page).toHaveURL(/\/users\/1$/)
+    await expect(page.getByText('ada@example.com')).toBeVisible()
+  })
+})
+
+test.describe('resilience', () => {
+  test('an unknown route renders the not-found page, not a blank screen', async ({
+    page,
+  }) => {
+    await page.goto('/definitely-not-a-route')
+    await expect(page.getByText('Page not found')).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Go home' })).toBeVisible()
+  })
+
+  test('navigation is reachable on a phone', async ({ page }) => {
+    // The rail is hidden below md; without the drawer there would be no way
+    // to navigate at all on a small screen.
+    await page.setViewportSize({ width: 390, height: 780 })
+    await page.goto('/')
+
+    await expect(page.locator('aside')).toBeHidden()
+    await page.getByRole('button', { name: 'Open navigation' }).click()
+
+    const link = page.getByRole('link', { name: 'Components' })
+    await expect(link).toBeVisible()
+    await link.click()
+    await expect(page).toHaveURL(/\/components$/)
+  })
+})

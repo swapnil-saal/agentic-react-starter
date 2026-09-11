@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrandRouteImport } from './routes/brand'
 import { Route as ComponentsRouteImport } from './routes/components'
 import { Route as FormDemoRouteImport } from './routes/form-demo'
+import { Route as UsersIndexRouteImport } from './routes/users.index'
+import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +36,32 @@ const FormDemoRoute = FormDemoRouteImport.update({
   path: '/form-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersIndexRoute = UsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsersUserIdRoute = UsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users': typeof UsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +69,24 @@ export interface FileRoutesById {
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
   '/form-demo': typeof FormDemoRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/users/': typeof UsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/brand' | '/components' | '/form-demo'
+  fullPaths:
+    '/' | '/brand' | '/components' | '/form-demo' | '/users/$userId' | '/users/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/brand' | '/components' | '/form-demo'
-  id: '__root__' | '/' | '/brand' | '/components' | '/form-demo'
+  to:
+    '/' | '/brand' | '/components' | '/form-demo' | '/users/$userId' | '/users'
+  id:
+    | '__root__'
+    | '/'
+    | '/brand'
+    | '/components'
+    | '/form-demo'
+    | '/users/$userId'
+    | '/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +94,8 @@ export interface RootRouteChildren {
   BrandRoute: typeof BrandRoute
   ComponentsRoute: typeof ComponentsRoute
   FormDemoRoute: typeof FormDemoRoute
+  UsersUserIdRoute: typeof UsersUserIdRoute
+  UsersIndexRoute: typeof UsersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +128,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FormDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users/': {
+      id: '/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof UsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/users/$userId': {
+      id: '/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof UsersUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +150,8 @@ const rootRouteChildren: RootRouteChildren = {
   BrandRoute: BrandRoute,
   ComponentsRoute: ComponentsRoute,
   FormDemoRoute: FormDemoRoute,
+  UsersUserIdRoute: UsersUserIdRoute,
+  UsersIndexRoute: UsersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

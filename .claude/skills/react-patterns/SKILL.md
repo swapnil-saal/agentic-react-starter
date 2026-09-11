@@ -56,10 +56,26 @@ TanStack Query owns all server state. `src/lib/query-client.ts` holds the
 shared defaults (60s `staleTime`, no refetch on window focus).
 
 - Query keys are arrays, ordered general → specific: `['users', userId]`.
+- Define queries with `queryOptions()` so a route loader and a component cannot
+  disagree about the key or the fetcher.
 - Mutations invalidate the keys they affect; don't hand-patch the cache unless
   you need an optimistic update.
 - Prefer Suspense or the `isPending`/`isError` flags over manual loading
   booleans.
+
+**Copy `src/features/users/api.ts`** — it is the reference implementation for
+typed queries and an optimistic mutation. The optimistic shape is three phases
+and all three matter: snapshot in `onMutate`, restore in `onError`, invalidate
+in `onSettled`. Without the snapshot there is nothing to roll back to when the
+server rejects the change.
+
+`src/routes/users.index.tsx` shows every state a real list has — pending,
+error with retry, empty, and loaded. A screen that only handles the happy path
+is not finished.
+
+The mock API in `src/mocks/` backs all of this, so the patterns are runnable
+with no backend. It deliberately rejects one record so the rollback path is
+demonstrable rather than theoretical.
 
 ## Components
 

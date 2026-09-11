@@ -37,6 +37,9 @@ it to build your design system on top; there is nothing to fight.
 - Light, dark and follow-the-OS themes from a single set of declarations
 - TanStack Router (file-based, fully typed) + TanStack Query
 - React Hook Form + Zod, including boot-time environment validation
+- A worked data layer: typed queries, an optimistic mutation with rollback,
+  and an MSW mock API so it runs with no backend
+- Route-level error and not-found pages, and a drawer nav on small screens
 - Vitest + Testing Library + Playwright
 - ESLint 10, Prettier, Husky, lint-staged
 

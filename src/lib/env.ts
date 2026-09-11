@@ -13,6 +13,12 @@ import { z } from 'zod'
  */
 const envSchema = z.object({
   VITE_API_URL: z.url('VITE_API_URL must be a valid URL'),
+
+  // Vite exposes env vars as strings, so coerce rather than trusting the type.
+  VITE_ENABLE_MOCKS: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((v) => v === 'true'),
 })
 
 export type Env = z.infer<typeof envSchema>

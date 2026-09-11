@@ -47,7 +47,9 @@ src/
   routes/          file-based routes; __root.tsx is the app shell
   routeTree.gen.ts GENERATED — never edit
   styles/index.css layer 3: semantic tokens → Tailwind utilities
-  lib/             env.ts (validated), query-client.ts
+  features/        feature modules — queries, mutations, domain types
+  mocks/           MSW mock API, so the data layer runs with no backend
+  lib/             env.ts (validated), app.ts (APP_NAME), query-client.ts
 e2e/               Playwright specs
 scripts/           doctor.mjs
 .claude/skills/    project skills (see below)

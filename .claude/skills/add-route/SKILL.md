@@ -94,8 +94,24 @@ and let the tree regenerate.
 ## Data loading
 
 For server data, use TanStack Query inside the component (see the
-`react-patterns` skill). Use the router's `loader` only when the data must be
-resolved before the route renders.
+`react-patterns` skill). Use the router's `loader` when the data must resolve
+before the route renders — the loader receives `context.queryClient`, so it can
+prefetch into the same cache the component reads:
+
+```tsx
+loader: ({ context, params }) =>
+  context.queryClient.ensureQueryData(userQuery(params.userId)),
+```
+
+## Error and empty states
+
+`__root.tsx` supplies an `errorComponent` and a `notFoundComponent`, so a
+thrown error or an unknown URL renders a real page instead of a blank screen.
+Add a route-level `errorComponent` when a specific screen needs a more useful
+message than the generic one.
+
+`errorComponent` receives `error` typed as **`unknown`** — anything can be
+thrown. Narrow it with `error instanceof Error` rather than assuming.
 
 ## Adding a page to the nav
 
