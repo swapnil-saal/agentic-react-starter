@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest something this project should do
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project is a React starter whose differentiator is a closed
+        verification loop for coding agents. It is deliberately not a
+        full-stack framework — proposals adding auth, an ORM, a server runtime
+        or a second component library are likely to be declined.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you unable to do today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: Including whether it can already be done by composing what exists.

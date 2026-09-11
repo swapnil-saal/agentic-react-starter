@@ -1,0 +1,79 @@
+# Contributing
+
+Thanks for considering it. This project has a narrow thesis, so the most
+useful thing you can do first is read [what it is](#what-this-project-is) —
+a good change here is one that strengthens the loop rather than widening
+the surface.
+
+## What this project is
+
+A React starter whose differentiator is a **closed verification loop for
+coding agents**: components you own, design rules enforced mechanically, and
+tests an agent can run to check its own work.
+
+It is deliberately **not** a full-stack framework. Proposals that add auth,
+an ORM, a server runtime or a second component library are likely to be
+declined — not because they are bad, but because they are someone else's
+project.
+
+## Getting set up
+
+```bash
+pnpm install
+cp .env.example .env
+pnpm doctor          # installs/verifies the agent toolchain
+pnpm dev
+```
+
+`pnpm doctor` restores the things `pnpm install` cannot: the global CodeGraph
+binary, the Claude plugin, the code index and Playwright's browsers.
+
+## Before you open a pull request
+
+```bash
+pnpm check           # types, lint, design tokens, unit tests
+pnpm e2e             # anything visual
+```
+
+Both run in CI, so a PR that fails them will not merge. Running them locally
+first is faster than finding out from the runner.
+
+## The rules that are enforced, not suggested
+
+`pnpm check:tokens` fails the build on the six ways a component quietly stops
+responding to the brand:
+
+| Rule                                      | Why                                         |
+| ----------------------------------------- | ------------------------------------------- |
+| hex codes, `rgb()`/`hsl()` literals       | bypass the semantic tokens                  |
+| Tailwind palette classes (`bg-slate-800`) | same, and they never retheme                |
+| arbitrary pixel values (`p-[13px]`)       | bypass the density and type scales          |
+| literal durations (`duration-150`)        | ignore `--brand-motion`                     |
+| `duration-[--x]`                          | Tailwind v3 syntax; emits invalid CSS in v4 |
+
+If the checker flags your change, reach for a token. Do not add an exemption
+unless the file is genuinely measurement machinery rather than UI.
+
+## Adding a component
+
+Follow [`src/design-system/ADDING-A-COMPONENT.md`](src/design-system/ADDING-A-COMPONENT.md).
+The short version: check whether it already exists, check Base UI for a
+primitive, read that primitive's real API rather than guessing at prop names,
+copy the shape of a neighbouring component, and import motion from
+`ui/_motion.ts`.
+
+Then sanity-check it against the brand: open `/brand`, set radius to 0, motion
+to 0 and density to 1.3. Your component should follow all three. If it does
+not, something is hardcoded.
+
+## Commit messages
+
+Explain _why_, not just _what_ — the diff already shows what changed. If you
+fixed something subtle, say what the symptom was and what actually caused it.
+The history here is meant to be readable a year later.
+
+## Reporting a bug
+
+Please include what you expected, what happened, and the smallest way to
+reproduce it. For anything visual, a screenshot and your `brand.css` values
+are usually enough to identify it immediately.

@@ -1,4 +1,4 @@
-# AI Space — project guide
+# Agentic React Starter — project guide
 
 Vite + React 19 + TypeScript front-end with a design system you **own**, set up
 so an agent can navigate the repo structurally, extend the UI safely, and verify

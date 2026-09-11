@@ -1,4 +1,7 @@
-# AI Space
+# Agentic React Starter
+
+[![CI](https://github.com/swapnil-saal/agentic-react-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/swapnil-saal/agentic-react-starter/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A Vite + React 19 + TypeScript starter with a design system you **own**, wired
 for Claude-powered agentic development.
@@ -197,3 +200,14 @@ CLAUDE.md            project guide the agent reads first
 ```
 
 See [CLAUDE.md](./CLAUDE.md) for the conventions this project follows.
+
+## Contributing
+
+Issues and pull requests are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md)
+for how the project is scoped and what CI will check. Participation is covered
+by our [Code of Conduct](CODE_OF_CONDUCT.md), and security reports have their
+own [private channel](SECURITY.md).
+
+## License
+
+[MIT](LICENSE) © Swapnil Shukla

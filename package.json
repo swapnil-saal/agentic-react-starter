@@ -3,6 +3,30 @@
   "description": "Vite + React + TypeScript starter wired for Claude-powered agentic development",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
+  "author": "Swapnil Shukla",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swapnil-saal/agentic-react-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/swapnil-saal/agentic-react-starter/issues"
+  },
+  "homepage": "https://github.com/swapnil-saal/agentic-react-starter#readme",
+  "keywords": [
+    "react",
+    "vite",
+    "typescript",
+    "design-system",
+    "base-ui",
+    "tailwindcss",
+    "design-tokens",
+    "starter",
+    "template",
+    "claude",
+    "agentic",
+    "ai-agents"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",

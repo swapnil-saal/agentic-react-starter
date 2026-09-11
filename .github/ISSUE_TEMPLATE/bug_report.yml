@@ -1,0 +1,42 @@
+name: Bug report
+description: Something does not work as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: The smallest sequence of steps that shows it.
+      placeholder: |
+        1. pnpm dev
+        2. Open /components
+        3. Hover the primary button
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it happen
+      description: Dev and production builds resolve CSS differently, so this matters.
+      options:
+        - Dev only (pnpm dev)
+        - Production only (pnpm build && pnpm preview)
+        - Both
+    validations:
+      required: true
+
+  - type: textarea
+    id: brand
+    attributes:
+      label: Your brand.css values
+      description: For anything visual, paste the :root block. Most visual issues are reproducible from these alone.
+      render: css
