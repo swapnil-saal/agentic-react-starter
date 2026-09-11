@@ -4,8 +4,9 @@ test.describe('app shell', () => {
   test('renders the home page and navigates', async ({ page }) => {
     await page.goto('/')
 
+    // The name comes from package.json via APP_NAME, so assert the real one.
     await expect(
-      page.getByRole('heading', { name: 'AI Space', level: 1 }),
+      page.getByRole('heading', { name: 'Agentic React Starter', level: 1 }),
     ).toBeVisible()
 
     await page.getByRole('link', { name: 'Components', exact: true }).click()
@@ -170,4 +171,40 @@ test.describe('brand system', () => {
     await expect.poll(radius).not.toBe('0px')
     expect(await radius()).not.toBe(deepSea)
   })
+})
+
+test('every animated element obeys the single motion knob', async ({
+  page,
+}) => {
+  // Components must import from ui/_motion rather than writing literal
+  // durations. A hand-written `duration-150` would survive this and keep
+  // animating in a brand that asked for none.
+  await page.goto('/components')
+  // Wait for hydration — counting computed styles before React mounts finds
+  // nothing and would pass the "silenced" assertion vacuously.
+  await expect(
+    page.getByRole('button', { name: 'Solid', exact: true }),
+  ).toBeVisible()
+
+  const countAnimating = () =>
+    page.evaluate(() => {
+      const els = [
+        ...document.querySelectorAll(
+          'button,input,tr,a,[role=switch],[role=tab],[role=checkbox]',
+        ),
+      ]
+      return els.filter((el) => {
+        const d = getComputedStyle(el).transitionDuration
+        return d && !d.split(', ').every((x) => x === '0s')
+      }).length
+    })
+
+  expect(await countAnimating()).toBeGreaterThan(10)
+
+  await page.evaluate(() =>
+    document.documentElement.style.setProperty('--brand-motion', '0'),
+  )
+  await page.waitForTimeout(150)
+
+  expect(await countAnimating()).toBe(0)
 })

@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { pressable, transitionColors, transitionTransform } from './_motion'
 
 export const buttonVariants = cva(
   // Base: layout, typography, focus and disabled behaviour shared by every
@@ -9,7 +10,9 @@ export const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2 whitespace-nowrap',
     'rounded-md font-medium select-none',
-    'transition-colors duration-(--duration-fast) ease-(--ease-out)',
+    transitionColors,
+    transitionTransform,
+    pressable,
     'focus-ring',
     'disabled:pointer-events-none disabled:opacity-50',
     '[&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:pointer-events-none',

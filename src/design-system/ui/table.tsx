@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { transitionColors } from './_motion'
 
 /** Plain semantic table styling. Wrapped in an overflow container so a wide
  *  table scrolls itself instead of making the whole page scroll sideways. */
@@ -39,6 +40,7 @@ export function TableRow({
     <tr
       className={cn(
         'border-b border-border last:border-0 hover:bg-surface-hover',
+        transitionColors,
         className,
       )}
       {...props}

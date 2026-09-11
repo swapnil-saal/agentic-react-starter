@@ -3,10 +3,13 @@ import { Minus, Plus } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { pressable, transitionColors } from './_motion'
 
 const stepper = [
   'flex h-control-md w-9 items-center justify-center text-fg-muted',
-  'transition-colors duration-(--duration-fast) focus-ring',
+  'focus-ring',
+  transitionColors,
+  pressable,
   'hover:bg-surface-hover hover:text-fg',
   'disabled:pointer-events-none disabled:opacity-50',
 ]

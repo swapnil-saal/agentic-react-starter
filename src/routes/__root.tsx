@@ -16,7 +16,7 @@ import {
   ThemeToggle,
   sidebarLinkClasses,
 } from '@/design-system'
-import { env } from '@/lib/env'
+import { APP_NAME } from '@/lib/app'
 
 const NAV = [
   { to: '/', label: 'Home', icon: LayoutDashboard },
@@ -33,7 +33,7 @@ function RootLayout() {
   return (
     <AppShell>
       <AppSidebar>
-        <AppSidebarBrand>{env.VITE_APP_NAME}</AppSidebarBrand>
+        <AppSidebarBrand>{APP_NAME}</AppSidebarBrand>
         <nav className="flex flex-col gap-0.5">
           {NAV.map(({ to, label, icon: Icon }) => (
             <Link
@@ -50,7 +50,7 @@ function RootLayout() {
 
       <AppMain>
         <AppHeader>
-          <Text weight="medium">{env.VITE_APP_NAME}</Text>
+          <Text weight="medium">{APP_NAME}</Text>
           <ThemeToggle />
         </AppHeader>
         <div className="mx-auto w-full max-w-5xl p-6 md:p-8">

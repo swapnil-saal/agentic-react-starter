@@ -31,7 +31,8 @@ it to build your design system on top; there is nothing to fight.
 **Application**
 
 - Vite 8, React 19, TypeScript 6
-- ~30 owned components on Base UI primitives, styled with Tailwind v4 + CVA
+- ~37 owned components on Base UI primitives, styled with Tailwind v4 + CVA
+- A shared motion vocabulary, so one knob can slow or disable every animation
 - A brand layer: ~17 knobs in one file restyle the entire app
 - Light, dark and follow-the-OS themes from a single set of declarations
 - TanStack Router (file-based, fully typed) + TanStack Query
@@ -79,6 +80,11 @@ Same components, a different product.
 **Playground.** Run `pnpm dev` and open **`/brand`** to drag the knobs against
 the real component library, then copy the result out as CSS.
 
+**Enforced, not just documented.** `pnpm check:tokens` fails the build on hex
+codes, Tailwind palette classes, arbitrary pixel values, literal durations and
+Tailwind v3 variable syntax — the five ways components quietly stop responding
+to the brand. It runs as part of `pnpm check`.
+
 ### How it layers
 
 | Layer          | File                       | Holds                                     |
@@ -97,9 +103,10 @@ classes like `bg-slate-800` — they bypass the tokens and won't retheme.
 
 ## Adding a component
 
-Check Base UI for a primitive first, then follow the pattern in any existing
-`src/design-system/ui/*.tsx`. The `design-system` skill documents the whole
-recipe, including the Base UI specifics that are easy to get wrong.
+Follow **`src/design-system/ADDING-A-COMPONENT.md`** — the full recipe, with a
+template, the Base UI primitive list, the motion table and the rules. A new
+component written to it retheres with `brand.css` and respects motion settings
+automatically.
 
 Not covered by Base UI, if you need them: date picker, colour picker, rich
 text editor, charts, data tables.
@@ -110,7 +117,8 @@ text editor, charts, data tables.
 | ------------------------------- | ------------------------------------- |
 | `pnpm dev`                      | Dev server                            |
 | `pnpm build`                    | Typecheck + production build          |
-| `pnpm check`                    | Typecheck + lint + unit tests         |
+| `pnpm check`                    | Typecheck + lint + tokens + tests     |
+| `pnpm check:tokens`             | Design-system rule enforcement        |
 | `pnpm test`                     | Vitest in watch mode                  |
 | `pnpm e2e`                      | Playwright against a production build |
 | `pnpm lint:fix` / `pnpm format` | Autofix / format                      |

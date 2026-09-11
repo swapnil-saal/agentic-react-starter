@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: How to build and extend the UI in this repo — the owned component library on Base UI, the three-layer token system, and how to add or restyle a component. Use before writing any JSX or CSS.
+description: How to build and extend the UI in this repo — the brand file, the token layers, the motion vocabulary, and the rules every new component must follow. Use before writing or editing any JSX or CSS.
 ---
 
 # The design system
@@ -9,180 +9,129 @@ This repo has **no third-party component library**. Every component is source
 in `src/design-system/`, built on [Base UI](https://base-ui.com) headless
 primitives. You own all of it — read it, change it, delete it.
 
-That is the whole point: a component library you consume can only be pushed on
-from the outside. This one is meant to be edited.
+## Decide what you are doing
 
-## Where things live
+| I want to…                                                  | Edit                                                               | Never touch     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------ | --------------- |
+| Change colours, radius, fonts, density, motion              | `design-system/brand.css`                                          | anything else   |
+| Adopt a ready-made look                                     | copy a file from `design-system/presets/` over brand.css's `:root` | —               |
+| Change what a token _means_ (cards use a different surface) | `design-system/theme.css`                                          | `tokens.css`    |
+| Add a new semantic token                                    | `theme.css`, then expose it in `styles/index.css`                  | components      |
+| Add or edit a component                                     | `design-system/ui/<name>.tsx`                                      | the token files |
+| Build a screen                                              | `src/routes/*`, importing from `@/design-system`                   | `ui/*` directly |
+
+`tokens.css` is **derived output**. Putting a literal value there defeats the
+whole system — if you need a new knob, add it to `brand.css` and consume it in
+`tokens.css`.
+
+## Layers
 
 ```
-src/design-system/
-  brand.css       layer 0 — THE knobs. Edit this to change how the app looks.
-  presets/        ready-made brand.css blocks (brutalist, soft, technical, mono)
-  tokens.css      layer 1 — primitive scales, DERIVED from brand.css
-  theme.css       layer 2 — semantic meaning (--ds-bg, --ds-accent, --ds-fg)
-  cn.ts           class merger
-  theme-provider.tsx
-  ui/*.tsx        the components
-  index.ts        public surface — import from '@/design-system'
-src/styles/index.css
-                  layer 3 — exposes semantic tokens as Tailwind utilities
+brand.css          layer 0: ~17 knobs. THE file a project edits.
+tokens.css         layer 1: scales computed from the knobs
+theme.css          layer 2: semantic meaning (--ds-surface, --ds-accent)
+styles/index.css   layer 3: semantic tokens → Tailwind utilities
+ui/*.tsx           components, which only ever use layer 3
 ```
 
-Always import from the barrel, never from `ui/*` directly:
+Each layer references only the one above it. That discipline is what lets one
+number reshape the whole app.
 
-```tsx
-import { Button, Card, Stack } from '@/design-system'
-```
+## The brand file
 
-## The brand layer — start here
+`brand.css` holds brand hue and chroma, neutral tint, status hues, radius,
+border width, fonts, base text size, type ratio, heading weight and tracking,
+density, shadow strength, motion speed and easing.
 
-`brand.css` is the single override file. It holds ~17 knobs — brand hue and
-chroma, radius, border width, fonts, type scale, density, shadow strength,
-motion speed and easing — and **everything else is computed from them**.
+How far some of them reach is not obvious:
 
-Changing `--brand-radius` reshapes every component. Changing `--brand-density`
-rescales every control height _and_ the entire Tailwind spacing scale, because
-Tailwind derives `p-4`, `gap-6` and friends from one `--spacing` base that we
-feed from this number. Setting `--brand-motion: 0` makes every transition in
-the app instant.
+- **Colour** is generated in OKLCH from a hue plus a chroma — two numbers
+  produce eleven perceptually even stops. Do not hand-pick hex ramps.
+- **Density** scales control heights _and_ Tailwind's entire spacing scale,
+  because `--spacing` is fed from it. `p-4` changes when density changes.
+- **Motion `0`** makes every transition in the app instant.
+  `prefers-reduced-motion` overrides any brand value — that is deliberate and
+  must not be "fixed".
+- **Border width** works because `styles/index.css` redefines Tailwind's border
+  utilities from the token; Tailwind hardcodes `1px` and exposes no variable.
 
-Colour ramps are generated in OKLCH from a hue plus a chroma, so you choose two
-numbers and get eleven perceptually even stops — no hand-picked hex codes.
-
-**To restyle a project, edit `brand.css` and nothing else.** Copy a file from
-`presets/` over its `:root` block to start from a ready-made look. Open `/brand`
-in the running app to try values live against the real components and copy the
-result out as CSS.
-
-Do not add literal colours or sizes to `tokens.css` — it is derived output.
-If you need a new knob, add it to `brand.css` and consume it in `tokens.css`.
-
-## The token layers
-
-Each layer may only reference the one above it. Keeping that discipline is what
-lets you retheme without touching a single component.
-
-0. **Brand** (`brand.css`) — the knobs. The only file a new project edits.
-1. **Primitives** (`tokens.css`) — scales computed from the knobs.
-   `--neutral-800` is a colour, not a purpose. Nothing outside `theme.css`
-   may reference these.
-2. **Semantics** (`theme.css`) — what a colour is _for_. `--ds-surface`,
-   `--ds-fg-muted`, `--ds-danger-subtle`. This is the layer you retheme.
-3. **Utilities** (`styles/index.css`) — the `@theme inline` block turns the
-   semantic tokens into Tailwind classes: `bg-surface`, `text-fg-muted`,
-   `border-border`.
-
-So `bg-accent` on a `<div>` and `<Button>`'s solid variant resolve to the _same_
-variable. They cannot drift.
-
-**Never hardcode a colour, size, radius or shadow.** No hex codes, no
-`rgb()`, no magic pixel values, and no raw Tailwind palette classes like
-`bg-slate-800` or `text-red-500` — those bypass the token system entirely and
-will not respond to a retheme.
-
-### Retheming
-
-Edit `brand.css`. Only reach into `theme.css` when you need to change what a
-token _means_ (e.g. make cards use a different surface), not what colour it is.
-
-Semantic values is a CSS `light-dark(light, dark)` pair, and `color-scheme` is set
-for all three states, so one declaration covers light mode, dark mode and
-"follow the OS". Keep the light value first. Do not add
-`@media (prefers-color-scheme)` blocks — that is what `light-dark()` is for.
+Try values live at `/brand` in the running app, then copy the result out.
 
 ## Adding a component
 
-1. **Check Base UI first.** It ships the behaviourally hard parts — focus
-   management, keyboard nav, positioning, ARIA wiring. If it has a primitive,
-   build on it rather than reimplementing. Available: accordion, alert-dialog,
-   autocomplete, avatar, checkbox, collapsible, combobox, context-menu, dialog,
-   drawer, field, fieldset, form, input, menu, menubar, meter, navigation-menu,
-   number-field, otp-field, popover, preview-card, progress, radio-group,
-   scroll-area, select, separator, slider, switch, tabs, toast, toggle,
-   toggle-group, toolbar, tooltip.
-   **Not** in Base UI: date picker, colour picker, rich text, charts, tables.
-2. **Read the real API** before writing — `node_modules/@base-ui/react/<name>/`.
-   Parts are namespaced (`Select.Root`, `Select.Trigger`). Do not guess prop
-   names; several differ from what you would expect (the toggle group's
-   multi-select prop is `multiple`, not `toggleMultiple`).
-3. Create `src/design-system/ui/<name>.tsx`, copying the shape of a neighbour.
-4. Export it from `src/design-system/index.ts`.
-5. Add it to the showcase in `src/routes/components.tsx`.
+**Read `src/design-system/ADDING-A-COMPONENT.md`** — the full recipe, with a
+template, the Base UI primitive list, and the motion table. Short version:
 
-### The component pattern
+1. Check `ui/` first — most new things are a composition of what exists.
+2. Check Base UI for a primitive, and read its real API before writing.
+3. Copy the shape of a neighbouring component: `cva` for variants,
+   `cn(..., className)` with `className` last, `...props` spread.
+4. Import motion from `./_motion`. Never write a literal duration.
+5. Export from `index.ts`, add it to `routes/components.tsx`.
+6. `pnpm check`.
 
-```tsx
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '../cn'
+## The rules, and why
 
-const thingVariants = cva(
-  // base: everything shared by all variants
-  ['inline-flex items-center rounded-md focus-ring', 'disabled:opacity-50'],
-  {
-    variants: {
-      tone: {
-        neutral: 'bg-surface text-fg',
-        accent: 'bg-accent text-on-accent',
-      },
-      size: { sm: 'h-control-sm px-3 text-sm', md: 'h-control-md px-4' },
-    },
-    defaultVariants: { tone: 'neutral', size: 'md' },
-  },
-)
+Every rule below exists because breaking it produces a component that looks
+correct today and silently stops responding when the brand changes.
 
-export interface ThingProps
-  extends
-    React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof thingVariants> {}
+- **No hex codes, no `rgb()`, no Tailwind palette classes** (`bg-slate-800`,
+  `text-red-500`). Use semantic utilities: `bg-surface`, `bg-bg-subtle`,
+  `text-fg`, `text-fg-muted`, `text-fg-subtle`, `border-border`,
+  `border-border-strong`, `bg-accent`, `text-on-accent`, and the status sets
+  (`bg-danger-subtle`, `text-danger-fg`, `border-danger-border`, …).
+- **No arbitrary pixel values** (`p-[13px]`, `text-[15px]`). Use the scale, or
+  density and the type ratio stop reaching your component.
+- **No literal durations** (`duration-150`). Import from `ui/_motion`.
+- **Interactive controls use `h-control-sm|md|lg`** so they align on a row.
+- **Use `focus-ring`**, and never remove a focus outline without replacing it
+  with something at least as visible.
+- **Tailwind v4 variables use parentheses:** `duration-(--duration-fast)`, not
+  `duration-[--duration-fast]`. The bracket form is v3 syntax; in v4 it emits
+  invalid CSS that the browser drops, so the style silently does nothing.
 
-export function Thing({ className, tone, size, ...props }: ThingProps) {
-  return (
-    <div className={cn(thingVariants({ tone, size }), className)} {...props} />
-  )
-}
-```
+These are enforced mechanically by `pnpm check:tokens`, which runs as part of
+`pnpm check`. If it flags your code, reach for a token — do not add an
+exception.
 
-Rules this encodes, all of which matter:
+## Motion
 
-- **`className` goes last in `cn()`.** That is what lets a caller override a
-  default — `cn` uses `tailwind-merge`, so later utilities beat earlier ones.
-  Plain string concatenation would leave both classes and let source order
-  decide.
-- **Spread `...props`** so every native attribute, `aria-*`, and `ref` works.
-- **Variants over booleans.** `tone="danger"` scales; `isDanger` does not.
-- Use the shared `focus-ring` utility rather than inventing a focus style.
-- Interactive controls use the `h-control-*` heights so a button, input and
-  select line up on a row without fudging.
-- Floating surfaces (menu, select, combobox, autocomplete) share
-  `ui/_popup.ts`. Use it — duplicating those classes is how they drift apart.
+All movement composes from `ui/_motion.ts`, so it stays consistent and so the
+brand's motion knobs actually reach everything.
+
+| Need                                 | Use                                 |
+| ------------------------------------ | ----------------------------------- |
+| hover/focus colour change            | `transitionColors`                  |
+| a thumb, chevron or indicator moving | `transitionTransform`               |
+| multi-property change                | `transitionAll`                     |
+| fade only                            | `transitionOpacity`                 |
+| press feedback                       | `pressable`                         |
+| floating surface appearing           | `popSurface`                        |
+| modal appearing                      | `modalSurface`                      |
+| backdrop                             | `scrim`                             |
+| tick or dot popping in               | `indicator`                         |
+| expanding panel                      | `collapsePanel('--x-panel-height')` |
+
+Base UI drives enter/exit with `data-starting-style` and `data-ending-style`;
+the surface helpers already handle both, which is what lets an exit animation
+finish before the element unmounts.
 
 ## Base UI specifics
 
 - **Triggers use `render`, not `asChild`:**
   `<DialogTrigger render={<Button>Open</Button>} />`
-- **State is exposed as data attributes**, styled with Tailwind variants:
-  `data-[checked]`, `data-[highlighted]`, `data-[disabled]`,
-  `data-[panel-open]`, `data-[starting-style]`, `data-[ending-style]`.
-  The last two drive enter/exit transitions.
-- To style a child based on a parent's state, put `group` on the parent and use
+- **State arrives as data attributes:** `data-[checked]`, `data-[highlighted]`,
+  `data-[disabled]`, `data-[panel-open]`, `data-[starting-style]`,
+  `data-[ending-style]`.
+- To style a child from a parent's state, put `group` on the parent and use
   `group-data-[…]` on the child. Forgetting `group` fails silently.
-
-## Tailwind v4 gotcha: variables use parentheses
-
-To reference a CSS variable in a utility, use `(--var)`, **not** `[--var]`:
-
-```
-duration-(--duration-fast)   ✓  emits transition-duration: var(--duration-fast)
-duration-[--duration-fast]   ✗  emits transition-duration: --duration-fast
-```
-
-The bracket form is Tailwind v3 syntax. In v4 it is treated as a literal value,
-producing invalid CSS that the browser drops — so the style silently does
-nothing. This is easy to miss because nothing errors.
+- Base UI's Checkbox, Switch and Radio render **buttons, not inputs**, so
+  wrapping them in a bare `<label>` associates nothing. Use `<Field>` +
+  `<FieldLabel>`, which wires `id` and `aria-describedby` for you.
 
 ## Forms
 
-Our `Input` and `Textarea` keep the **native, event-first `onChange`**. That is
+`Input` and `Textarea` keep the **native, event-first `onChange`**. That is
 deliberate: a value-first callback breaks `register()` from React Hook Form and
 every other uncontrolled form library. Do not change it.
 
@@ -190,12 +139,21 @@ every other uncontrolled form library. Do not change it.
 <Input {...register('email')} aria-invalid={Boolean(errors.email)} />
 ```
 
-Wrap fields in `<Field>` / `<FieldLabel>` — Base UI wires up `id` and
-`aria-describedby`, which is easy to get subtly wrong by hand and which screen
-readers depend on. See `src/routes/form-demo.tsx` for the full pattern.
+See `src/routes/form-demo.tsx` for the full pattern.
+
+## The app's name
+
+Comes from the `name` field in `package.json`, injected at build time (see
+`vite.config.ts`) and read via `APP_NAME` from `@/lib/app`. Rename the package
+and the sidebar, header and browser title all follow. Never hardcode it.
 
 ## Verify
 
-`pnpm check` for types, lint and unit tests. `pnpm e2e` for anything visual —
-it includes a test asserting that a Tailwind utility and a component variant
-resolve to the identical colour, which is the guard on the token bridge.
+```bash
+pnpm check    # types, lint, design tokens, unit tests
+pnpm e2e      # anything visual
+```
+
+Then check your work against the brand: open `/brand`, set radius to 0, motion
+to 0 and density to 1.3. Everything you built should follow all three. If it
+does not, something is hardcoded.

@@ -2,6 +2,7 @@ import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { popSurface } from './_motion'
 
 /** Mount once near the app root; it coordinates delay across all tooltips so
  *  moving between adjacent targets doesn't re-trigger the open delay. */
@@ -21,9 +22,7 @@ export function TooltipContent({
         <BaseTooltip.Popup
           className={cn(
             'z-50 rounded-md bg-fg px-2 py-1 text-xs font-medium text-fg-inverted shadow-md',
-            'transition-all duration-(--duration-fast) ease-(--ease-out)',
-            'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-            'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
+            ...popSurface,
             className,
           )}
           {...props}

@@ -17,10 +17,11 @@
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "e2e": "playwright test",
-    "check": "pnpm typecheck && pnpm lint && pnpm test:run",
+    "check": "pnpm typecheck && pnpm lint && pnpm check:tokens && pnpm test:run",
     "doctor": "node scripts/doctor.mjs",
     "doctor:check": "node scripts/doctor.mjs --check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "check:tokens": "node scripts/check-tokens.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

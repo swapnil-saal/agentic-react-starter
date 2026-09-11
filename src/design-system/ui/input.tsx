@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { transitionColors } from './_motion'
 
 /**
  * Plain native input. Deliberately keeps the DOM `onChange` (event-first)
@@ -10,7 +11,7 @@ import { cn } from '../cn'
 export const inputClasses = [
   'flex h-control-md w-full rounded-md border border-border bg-surface px-3',
   'text-base text-fg placeholder:text-fg-subtle',
-  'transition-colors duration-(--duration-fast)',
+  transitionColors,
   'focus-ring hover:border-border-strong',
   'disabled:cursor-not-allowed disabled:opacity-50',
   'aria-invalid:border-danger aria-invalid:focus-visible:outline-danger',

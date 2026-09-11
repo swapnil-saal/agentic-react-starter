@@ -2,6 +2,7 @@ import { Toast as BaseToast } from '@base-ui/react/toast'
 import { X } from 'lucide-react'
 
 import { cn } from '../cn'
+import { transitionAll } from './_motion'
 
 /** Mount <ToastProvider> once at the app root, and <Toaster/> alongside it.
  *  Fire toasts with `useToast().add({ title, description })`. */
@@ -14,7 +15,7 @@ function ToastItem({ toast }: { toast: BaseToast.Root.ToastObject }) {
       toast={toast}
       className={cn(
         'flex w-80 items-start gap-3 rounded-lg border border-border bg-raised p-4 shadow-lg',
-        'transition-all duration-(--duration-base) ease-(--ease-out)',
+        transitionAll,
         'data-[starting-style]:translate-x-4 data-[starting-style]:opacity-0',
         'data-[ending-style]:translate-x-4 data-[ending-style]:opacity-0',
       )}

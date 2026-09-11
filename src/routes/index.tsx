@@ -11,7 +11,7 @@ import {
   Stack,
   Text,
 } from '@/design-system'
-import { env } from '@/lib/env'
+import { APP_NAME } from '@/lib/app'
 
 const FEATURES = [
   {
@@ -38,7 +38,7 @@ function Home() {
       <Stack gap={3}>
         <Badge tone="accent">Starter</Badge>
         <Text as="h1" size="3xl" weight="bold">
-          {env.VITE_APP_NAME}
+          {APP_NAME}
         </Text>
         <Text size="md" tone="muted" className="max-w-2xl">
           A Vite + React + TypeScript starter with a design system you own,

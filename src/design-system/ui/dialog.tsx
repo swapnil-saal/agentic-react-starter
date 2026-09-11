@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { modalSurface, scrim, transitionColors } from './_motion'
 
 export const Dialog = BaseDialog.Root
 export const DialogTrigger = BaseDialog.Trigger
@@ -18,19 +19,13 @@ export function DialogContent({
   return (
     <BaseDialog.Portal>
       <BaseDialog.Backdrop
-        className={cn(
-          'fixed inset-0 z-50 bg-overlay',
-          'transition-opacity duration-(--duration-base)',
-          'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
-        )}
+        className={cn('fixed inset-0 z-50 bg-overlay', ...scrim)}
       />
       <BaseDialog.Popup
         className={cn(
           'fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2',
           'rounded-xl border border-border bg-surface p-6 shadow-lg',
-          'transition-all duration-(--duration-base) ease-(--ease-out)',
-          'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-          'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
+          ...modalSurface,
           className,
         )}
         {...props}
@@ -42,6 +37,7 @@ export function DialogContent({
             className={cn(
               'absolute right-4 top-4 rounded-md p-1 text-fg-muted',
               'hover:bg-surface-hover hover:text-fg focus-ring',
+              transitionColors,
             )}
           >
             <X className="size-4" />

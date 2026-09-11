@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { transitionColors } from './_motion'
 
 /**
  * Sidebar + header + content layout.
@@ -63,7 +64,8 @@ export interface SidebarLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorE
 export const sidebarLinkClasses = (active?: boolean) =>
   cn(
     'flex items-center gap-2.5 rounded-md px-2.5 py-2 text-base no-underline',
-    'transition-colors duration-(--duration-fast) focus-ring',
+    'focus-ring',
+    transitionColors,
     active
       ? 'bg-surface font-medium text-fg shadow-sm'
       : 'text-fg-muted hover:bg-surface-hover hover:text-fg',

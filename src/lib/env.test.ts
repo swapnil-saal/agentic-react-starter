@@ -8,43 +8,35 @@ import { z } from 'zod'
  * exercise the schema shape itself.
  */
 const envSchema = z.object({
-  VITE_APP_NAME: z.string().min(1, 'VITE_APP_NAME must not be empty'),
   VITE_API_URL: z.url('VITE_API_URL must be a valid URL'),
 })
 
 describe('env schema', () => {
   it('accepts a valid environment', () => {
     const result = envSchema.safeParse({
-      VITE_APP_NAME: 'AI Space',
       VITE_API_URL: 'http://localhost:3000',
     })
     expect(result.success).toBe(true)
   })
 
-  it('rejects a missing app name', () => {
-    const result = envSchema.safeParse({
-      VITE_APP_NAME: '',
-      VITE_API_URL: 'http://localhost:3000',
-    })
-    expect(result.success).toBe(false)
-    expect(result.error?.issues[0]?.message).toBe(
-      'VITE_APP_NAME must not be empty',
-    )
-  })
-
   it('rejects a malformed API url', () => {
-    const result = envSchema.safeParse({
-      VITE_APP_NAME: 'AI Space',
-      VITE_API_URL: 'not-a-url',
-    })
+    const result = envSchema.safeParse({ VITE_API_URL: 'not-a-url' })
     expect(result.success).toBe(false)
     expect(result.error?.issues[0]?.message).toBe(
       'VITE_API_URL must be a valid URL',
     )
   })
 
+  it('rejects a missing API url', () => {
+    const result = envSchema.safeParse({})
+    expect(result.success).toBe(false)
+  })
+
   it('reports every problem at once rather than stopping at the first', () => {
-    const result = envSchema.safeParse({ VITE_APP_NAME: '', VITE_API_URL: 'x' })
+    const wider = envSchema.extend({
+      VITE_OTHER: z.string().min(1, 'VITE_OTHER must not be empty'),
+    })
+    const result = wider.safeParse({ VITE_API_URL: 'x', VITE_OTHER: '' })
     expect(result.error?.issues).toHaveLength(2)
   })
 })

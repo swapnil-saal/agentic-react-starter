@@ -2,6 +2,7 @@ import { ScrollArea as BaseScrollArea } from '@base-ui/react/scroll-area'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { transitionOpacity } from './_motion'
 
 /** Use for any pane that scrolls independently of the page, so the scrollbar
  *  matches the theme instead of the OS default. */
@@ -17,7 +18,11 @@ export function ScrollArea({
       </BaseScrollArea.Viewport>
       <BaseScrollArea.Scrollbar
         orientation="vertical"
-        className="flex w-2 justify-center p-0.5 opacity-0 transition-opacity data-[hovering]:opacity-100 data-[scrolling]:opacity-100"
+        className={cn(
+          'flex w-2 justify-center p-0.5 opacity-0',
+          transitionOpacity,
+          'data-[hovering]:opacity-100 data-[scrolling]:opacity-100',
+        )}
       >
         <BaseScrollArea.Thumb className="w-full rounded-full bg-border-strong" />
       </BaseScrollArea.Scrollbar>

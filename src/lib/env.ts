@@ -12,7 +12,6 @@ import { z } from 'zod'
  * Add a variable: extend the schema below AND document it in `.env.example`.
  */
 const envSchema = z.object({
-  VITE_APP_NAME: z.string().min(1, 'VITE_APP_NAME must not be empty'),
   VITE_API_URL: z.url('VITE_API_URL must be a valid URL'),
 })
 

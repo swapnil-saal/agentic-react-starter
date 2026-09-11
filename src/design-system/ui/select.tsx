@@ -3,6 +3,7 @@ import { Check, ChevronDown } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { transitionColors } from './_motion'
 import { popupItem, popupSurface } from './_popup'
 
 export const Select = BaseSelect.Root
@@ -18,7 +19,8 @@ export function SelectTrigger({
       className={cn(
         'flex h-control-md w-full items-center justify-between gap-2 rounded-md',
         'border border-border bg-surface px-3 text-base text-fg',
-        'transition-colors duration-(--duration-fast) focus-ring hover:border-border-strong',
+        'focus-ring hover:border-border-strong',
+        transitionColors,
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
         className,
       )}

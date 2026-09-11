@@ -2,6 +2,7 @@ import { Drawer as BaseDrawer } from '@base-ui/react/drawer'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { scrim, transitionTransform } from './_motion'
 
 export const Drawer = BaseDrawer.Root
 export const DrawerTrigger = BaseDrawer.Trigger
@@ -18,15 +19,12 @@ export function DrawerContent({
   return (
     <BaseDrawer.Portal>
       <BaseDrawer.Backdrop
-        className={cn(
-          'fixed inset-0 z-50 bg-overlay transition-opacity duration-(--duration-base)',
-          'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
-        )}
+        className={cn('fixed inset-0 z-50 bg-overlay', ...scrim)}
       />
       <BaseDrawer.Popup
         className={cn(
           'fixed z-50 border-border bg-surface shadow-lg',
-          'transition-transform duration-(--duration-base) ease-(--ease-out)',
+          transitionTransform,
           side === 'right' &&
             'inset-y-0 right-0 w-80 max-w-[90vw] border-l data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full',
           side === 'left' &&

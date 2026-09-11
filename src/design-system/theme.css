@@ -82,8 +82,12 @@
      it with something at least as visible. */
   --ds-ring: var(--ds-accent);
 
-  /* Scrim behind modals and drawers. */
-  --ds-overlay: light-dark(rgb(11 22 20 / 0.4), rgb(0 0 0 / 0.6));
+  /* Scrim behind modals and drawers. Mixed from the neutral ramp rather than
+     a literal black, so it picks up the brand's neutral tint. */
+  --ds-overlay: light-dark(
+    color-mix(in oklch, var(--neutral-1000) 45%, transparent),
+    color-mix(in oklch, var(--neutral-1000) 70%, transparent)
+  );
 }
 
 /* Explicit user choice overrides the OS. The ThemeProvider sets data-theme. */

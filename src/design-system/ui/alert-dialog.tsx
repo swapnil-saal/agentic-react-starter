@@ -2,6 +2,7 @@ import { AlertDialog as BaseAlertDialog } from '@base-ui/react/alert-dialog'
 import * as React from 'react'
 
 import { cn } from '../cn'
+import { modalSurface, scrim } from './_motion'
 
 /**
  * A dialog that demands a decision: no backdrop dismiss, no close button, no
@@ -20,18 +21,13 @@ export function AlertDialogContent({
   return (
     <BaseAlertDialog.Portal>
       <BaseAlertDialog.Backdrop
-        className={cn(
-          'fixed inset-0 z-50 bg-overlay transition-opacity duration-(--duration-base)',
-          'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0',
-        )}
+        className={cn('fixed inset-0 z-50 bg-overlay', ...scrim)}
       />
       <BaseAlertDialog.Popup
         className={cn(
           'fixed left-1/2 top-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2',
           'rounded-xl border border-border bg-surface p-6 shadow-lg',
-          'transition-all duration-(--duration-base) ease-(--ease-out)',
-          'data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-          'data-[ending-style]:scale-95 data-[ending-style]:opacity-0',
+          ...modalSurface,
           className,
         )}
         {...props}

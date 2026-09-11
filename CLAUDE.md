@@ -7,7 +7,7 @@ its own work.
 ## Verify with one command
 
 ```bash
-pnpm check     # typecheck + lint + unit tests — run before calling work done
+pnpm check     # typecheck + lint + design tokens + unit tests
 ```
 
 For anything visual, also `pnpm e2e`. If the environment itself looks broken
@@ -38,8 +38,10 @@ src/
   design-system/   the UI library — you own every line
     brand.css        layer 0: THE knobs — edit this to restyle the app
     presets/         ready-made brand looks
-    tokens.css       layer 1: scales, derived from brand.css
+    tokens.css       layer 1: scales, derived from brand.css (do not edit)
     theme.css        layer 2: semantic tokens
+    ui/_motion.ts    the motion vocabulary every component composes from
+    ADDING-A-COMPONENT.md   the recipe for new components
     ui/*.tsx         components
     index.ts         import from '@/design-system'
   routes/          file-based routes; __root.tsx is the app shell
@@ -81,6 +83,16 @@ Try brand values live at `/brand` in the running app.
 7. **Tailwind v4 variables use parentheses:** `duration-(--x)`, not
    `duration-[--x]`. The bracket form emits invalid CSS and silently does
    nothing.
+8. **All motion comes from `design-system/ui/_motion.ts`.** A literal duration
+   ignores `--brand-motion`, so the component keeps animating in a brand that
+   asked for none.
+9. **The app's name comes from `package.json`** via `APP_NAME` in `@/lib/app`.
+   Never hardcode it.
+
+`pnpm check:tokens` enforces rules 1, 7 and 8 mechanically — hex codes,
+Tailwind palette classes, arbitrary pixel values, literal durations and the v3
+variable syntax all fail the build. When it flags something, reach for a token
+rather than adding an exception.
 
 ## Tools available to you
 
@@ -101,7 +113,8 @@ accessibility are explicitly never traded away.
 ```bash
 pnpm dev           # dev server
 pnpm build         # typecheck + production build
-pnpm check         # typecheck + lint + tests
+pnpm check         # typecheck + lint + design tokens + tests
+pnpm check:tokens  # design-system rule enforcement on its own
 pnpm test          # vitest watch
 pnpm e2e           # Playwright against a production build
 pnpm lint:fix      # autofix
@@ -115,3 +128,6 @@ pnpm doctor:check  # report only (CI); exits non-zero on required failures
 `.env` is validated by `src/lib/env.ts` at boot; a missing or malformed value
 fails immediately with a readable message rather than surfacing as `undefined`
 later. Add a variable in **both** the Zod schema and `.env.example`.
+
+The app's display name is **not** an env var — it is derived from the `name`
+field in `package.json` so the project has exactly one name.
