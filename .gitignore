@@ -33,3 +33,8 @@ data/
 
 # claude local overrides
 .claude/settings.local.json
+
+# editor swap files
+*.swp
+*.swo
+*~
