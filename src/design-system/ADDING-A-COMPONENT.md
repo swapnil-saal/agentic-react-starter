@@ -69,41 +69,16 @@ export function Thing({ className, tone, size, ...props }: ThingProps) {
 
 ## 3. The rules
 
-Each of these exists because breaking it produces a component that looks fine
-today and stops responding when someone edits `brand.css`.
+The full rule list and the motion table live in
+[`.claude/skills/design-system/SKILL.md`](../../.claude/skills/design-system/SKILL.md)
+— **that file is the single source of truth**, so this one does not restate
+them and cannot drift out of step with it. Read it before writing the file.
 
-**Colour** — only semantic utilities: `bg-surface`, `bg-bg-subtle`,
-`text-fg`, `text-fg-muted`, `text-fg-subtle`, `border-border`,
-`border-border-strong`, `bg-accent`, `text-on-accent`, and the status sets
-(`bg-danger-subtle`, `text-danger-fg`, `border-danger-border`, …).
+The short version: semantic colour utilities only, `h-control-sm|md|lg` for
+anything interactive, spacing and type from the scale, `rounded-*` for radius,
+and every transition imported from `./_motion`.
 
-Never a hex code, never `rgb()`, never a Tailwind palette class like
-`bg-slate-800`.
-
-**Size** — `h-control-sm|md|lg` for anything interactive, so it lines up with
-buttons and inputs on a row. Spacing from the scale (`p-4`, `gap-2`), never
-`p-[13px]`. Type from `text-xs…text-3xl`, never `text-[15px]`.
-
-**Radius** — `rounded-sm|md|lg|xl`. These derive from `--brand-radius`, so a
-sharp brand flattens your component automatically.
-
-**Motion** — import from `./_motion`. Never write `transition-colors
-duration-150` by hand: a literal duration ignores `--brand-motion`, so your
-component keeps animating in a brand that asked for no animation.
-
-| Need                                 | Use                                 |
-| ------------------------------------ | ----------------------------------- |
-| hover/focus colour change            | `transitionColors`                  |
-| a thumb, chevron or indicator moving | `transitionTransform`               |
-| press feedback                       | `pressable`                         |
-| a floating surface appearing         | `popSurface`                        |
-| a modal appearing                    | `modalSurface`                      |
-| a backdrop                           | `scrim`                             |
-| a tick or dot popping in             | `indicator`                         |
-| an expanding panel                   | `collapsePanel('--x-panel-height')` |
-
-**Focus** — use the `focus-ring` utility. Never remove a focus outline without
-replacing it with something at least as visible.
+What is specific to _writing the component_, and not covered there:
 
 **Composition** — `className` goes last in `cn()` so callers can override
 defaults; spread `...props` so native attributes, `aria-*` and `ref` work;
@@ -113,6 +88,9 @@ prefer variants (`tone="danger"`) over booleans (`isDanger`).
 own the outside: icon-only controls need `aria-label`, and anything conveying
 state needs more than colour (see the `dot` prop on Badge, or the icons in
 Alert).
+
+**Tests** — a new component gets a test next to it. Follow the archetype
+closest to what you built; see the `testing` skill for which is which.
 
 ## 4. Export and show it
 

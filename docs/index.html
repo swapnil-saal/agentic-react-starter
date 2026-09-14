@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A Vite + React 19 + TypeScript starter with a design system you own, wired so a coding agent can verify its own work."
+    />
+    <link
+      rel="canonical"
+      href="https://swapnil-saal.github.io/agentic-react-starter/"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%9B%EF%B8%8F%3C/text%3E%3C/svg%3E"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://swapnil-saal.github.io/agentic-react-starter/"
+    />
+    <meta property="og:title" content="Agentic React Starter" />
+    <meta
+      property="og:description"
+      content="A Vite + React 19 + TypeScript starter with a design system you own, wired so a coding agent can verify its own work."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Agentic React Starter" />
+    <meta
+      name="twitter:description"
+      content="A Vite + React 19 + TypeScript starter with a design system you own, wired so a coding agent can verify its own work."
+    />
+
+    <style>
+      html {
+        color-scheme: light dark;
+      }
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+    <title>Agentic React Starter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    />
+
+    <style>
+      /* ══ Layer 0 — the knobs. The same names the starter ships in brand.css. ══
+     Everything below is derived from these ten values. The console in the
+     hero writes to them, which is why the whole page moves at once. */
+      :root {
+        --brand-hue: 123;
+        --brand-chroma: 0.065;
+        --neutral-hue: 77;
+        --neutral-chroma: 0.012;
+        --brand-radius: 0.625rem;
+        --brand-border-width: 1px;
+        --brand-density: 1;
+        --brand-shadow-strength: 0.4;
+        --brand-motion: 1;
+        --brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+        /* ══ Layer 1 — ramps, derived. Chroma tapers at the extremes because
+       near-white and near-black cannot hold full saturation. ══ */
+        --accent-50: oklch(
+          0.97 calc(var(--brand-chroma) * 0.18) var(--brand-hue)
+        );
+        --accent-100: oklch(
+          0.94 calc(var(--brand-chroma) * 0.32) var(--brand-hue)
+        );
+        --accent-200: oklch(
+          0.88 calc(var(--brand-chroma) * 0.55) var(--brand-hue)
+        );
+        --accent-300: oklch(
+          0.82 calc(var(--brand-chroma) * 0.78) var(--brand-hue)
+        );
+        --accent-400: oklch(
+          0.75 calc(var(--brand-chroma) * 0.94) var(--brand-hue)
+        );
+        --accent-500: oklch(0.68 var(--brand-chroma) var(--brand-hue));
+        --accent-700: oklch(
+          0.52 calc(var(--brand-chroma) * 0.94) var(--brand-hue)
+        );
+        --accent-800: oklch(
+          0.44 calc(var(--brand-chroma) * 0.82) var(--brand-hue)
+        );
+        --accent-950: oklch(
+          0.26 calc(var(--brand-chroma) * 0.5) var(--brand-hue)
+        );
+
+        --n-0: oklch(1 0 0);
+        --n-50: oklch(0.985 var(--neutral-chroma) var(--neutral-hue));
+        --n-100: oklch(0.96 var(--neutral-chroma) var(--neutral-hue));
+        --n-200: oklch(
+          0.92 calc(var(--neutral-chroma) * 1.4) var(--neutral-hue)
+        );
+        --n-300: oklch(
+          0.86 calc(var(--neutral-chroma) * 1.8) var(--neutral-hue)
+        );
+        --n-500: oklch(
+          0.55 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+        );
+        --n-600: oklch(0.5 calc(var(--neutral-chroma) * 2) var(--neutral-hue));
+        --n-800: oklch(
+          0.31 calc(var(--neutral-chroma) * 1.6) var(--neutral-hue)
+        );
+        --n-900: oklch(
+          0.24 calc(var(--neutral-chroma) * 1.4) var(--neutral-hue)
+        );
+        --n-950: oklch(
+          0.19 calc(var(--neutral-chroma) * 1.2) var(--neutral-hue)
+        );
+        --n-1000: oklch(0.15 var(--neutral-chroma) var(--neutral-hue));
+
+        /* Derived measures — density drives spacing AND control heights. */
+        --step: calc(0.25rem * var(--brand-density));
+        --control-h: calc(2.25rem * var(--brand-density));
+        --fast: calc(140ms * var(--brand-motion));
+        --slow: calc(260ms * var(--brand-density) * var(--brand-motion));
+        --shadow:
+          0 1px 2px oklch(0.2 0 0 / calc(0.05 * var(--brand-shadow-strength))),
+          0 calc(4px * var(--brand-shadow-strength))
+            calc(14px * var(--brand-shadow-strength))
+            oklch(0.2 0 0 / calc(0.07 * var(--brand-shadow-strength)));
+
+        /* ══ Layer 2 — semantics. Light values live here on bare :root. ══ */
+        --bg: var(--n-50);
+        --surface: var(--n-0);
+        --surface-sunk: var(--n-100);
+        --fg: var(--n-900);
+        --fg-muted: var(--n-600);
+        --fg-subtle: var(--n-500);
+        --border: var(--n-200);
+        --border-strong: var(--n-300);
+        --accent: var(--accent-700);
+        --accent-quiet: var(--accent-50);
+        --accent-line: var(--accent-200);
+        --on-accent: var(--n-0);
+        --console-bg: var(--n-950);
+        --console-fg: var(--n-100);
+        --console-line: oklch(1 0 0 / 0.1);
+        --console-accent: var(--accent-400);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: var(--n-1000);
+          --surface: var(--n-950);
+          --surface-sunk: var(--n-900);
+          --fg: var(--n-50);
+          --fg-muted: oklch(
+            0.72 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+          );
+          --fg-subtle: oklch(
+            0.62 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+          );
+          --border: var(--n-800);
+          --border-strong: oklch(
+            0.38 calc(var(--neutral-chroma) * 1.6) var(--neutral-hue)
+          );
+          --accent: var(--accent-400);
+          --accent-quiet: var(--accent-950);
+          --accent-line: var(--accent-800);
+          --on-accent: var(--accent-950);
+          --console-bg: oklch(0.12 var(--neutral-chroma) var(--neutral-hue));
+          --console-line: oklch(1 0 0 / 0.08);
+        }
+      }
+
+      :root[data-theme='dark'] {
+        --bg: var(--n-1000);
+        --surface: var(--n-950);
+        --surface-sunk: var(--n-900);
+        --fg: var(--n-50);
+        --fg-muted: oklch(
+          0.72 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+        );
+        --fg-subtle: oklch(
+          0.62 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+        );
+        --border: var(--n-800);
+        --border-strong: oklch(
+          0.38 calc(var(--neutral-chroma) * 1.6) var(--neutral-hue)
+        );
+        --accent: var(--accent-400);
+        --accent-quiet: var(--accent-950);
+        --accent-line: var(--accent-800);
+        --on-accent: var(--accent-950);
+        --console-bg: oklch(0.12 var(--neutral-chroma) var(--neutral-hue));
+        --console-line: oklch(1 0 0 / 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        transition:
+          background-color var(--slow) var(--brand-ease),
+          color var(--slow) var(--brand-ease);
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin-inline: auto;
+        padding-inline: 24px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family:
+          'Bricolage Grotesque', 'Public Sans', system-ui, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        text-wrap: balance;
+        margin: 0;
+      }
+
+      p {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+      }
+
+      .mono {
+        font-family:
+          'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .eyebrow {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-subtle);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      /* ── Masthead ─────────────────────────────────────────────────────── */
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-block: calc(var(--step) * 5);
+        border-bottom: 1px solid var(--border);
+      }
+      .wordmark {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        font-size: 1.0625rem;
+      }
+      .glyph {
+        width: 22px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        border-radius: calc(var(--brand-radius) * 0.4);
+        background: var(--accent);
+        color: var(--on-accent);
+        font-size: 12px;
+        transition:
+          background-color var(--slow) var(--brand-ease),
+          border-radius var(--slow) var(--brand-ease);
+      }
+      .mast-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .mast-links a {
+        font-size: 0.875rem;
+        color: var(--fg-muted);
+        text-decoration: none;
+      }
+      .mast-links a:hover {
+        color: var(--fg);
+      }
+
+      /* ── Hero ─────────────────────────────────────────────────────────── */
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 56px;
+        align-items: start;
+        padding-block: calc(var(--step) * 18) calc(var(--step) * 16);
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 6.2vw, 4.25rem);
+        margin-block: 18px 22px;
+      }
+      .lede {
+        font-size: 1.125rem;
+        color: var(--fg-muted);
+        max-width: 34em;
+      }
+      .lede em {
+        font-style: normal;
+        color: var(--fg);
+        box-shadow: inset 0 -0.45em 0 var(--accent-quiet);
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: var(--control-h);
+        padding-inline: calc(var(--step) * 4.5);
+        border-radius: calc(var(--brand-radius) * 0.55);
+        border: var(--brand-border-width) solid transparent;
+        font: inherit;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background-color var(--fast) var(--brand-ease),
+          border-color var(--fast) var(--brand-ease),
+          color var(--fast) var(--brand-ease),
+          border-radius var(--slow) var(--brand-ease),
+          transform var(--fast) var(--brand-ease);
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn-solid {
+        background: var(--accent);
+        color: var(--on-accent);
+        box-shadow: var(--shadow);
+      }
+      .btn-quiet {
+        background: transparent;
+        color: var(--fg);
+        border-color: var(--border-strong);
+        border-width: max(1px, var(--brand-border-width));
+      }
+      .btn-quiet:hover {
+        background: var(--surface-sunk);
+      }
+
+      /* ── The console ──────────────────────────────────────────────────── */
+      .console {
+        background: var(--console-bg);
+        color: var(--console-fg);
+        border-radius: var(--brand-radius);
+        padding: calc(var(--step) * 6);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 24px;
+        transition:
+          border-radius var(--slow) var(--brand-ease),
+          background-color var(--slow) var(--brand-ease);
+      }
+      .console-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: calc(var(--step) * 4);
+        border-bottom: 1px solid var(--console-line);
+      }
+      .console-head .eyebrow {
+        color: var(--console-accent);
+      }
+      .console-file {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6875rem;
+        color: oklch(1 0 0 / 0.42);
+      }
+
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding-block: calc(var(--step) * 4);
+        border-bottom: 1px solid var(--console-line);
+      }
+      .chip {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--console-line);
+        background: transparent;
+        color: oklch(1 0 0 / 0.62);
+        cursor: pointer;
+        transition:
+          color var(--fast) linear,
+          border-color var(--fast) linear,
+          background-color var(--fast) linear;
+      }
+      .chip:hover {
+        color: #fff;
+        border-color: oklch(1 0 0 / 0.32);
+      }
+      .chip[aria-pressed='true'] {
+        background: var(--console-accent);
+        border-color: var(--console-accent);
+        color: var(--accent-950);
+        font-weight: 700;
+      }
+
+      .knobs {
+        display: grid;
+        gap: calc(var(--step) * 3.5);
+        padding-block: calc(var(--step) * 5);
+      }
+      .knob {
+        display: grid;
+        gap: 7px;
+      }
+      .knob-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .knob-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        color: oklch(1 0 0 / 0.72);
+      }
+      .knob-val {
+        font-family: 'JetBrains Mono', monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--console-accent);
+      }
+
+      input[type='range'] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: ew-resize;
+        margin: 0;
+      }
+      input[type='range']::-webkit-slider-runnable-track {
+        height: 3px;
+        border-radius: 999px;
+        background: oklch(1 0 0 / 0.16);
+      }
+      input[type='range']::-moz-range-track {
+        height: 3px;
+        border-radius: 999px;
+        background: oklch(1 0 0 / 0.16);
+      }
+      input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        margin-top: -5.5px;
+        border-radius: 50%;
+        background: var(--console-accent);
+        border: 2px solid var(--console-bg);
+      }
+      input[type='range']::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--console-accent);
+        border: 2px solid var(--console-bg);
+      }
+      #hue::-webkit-slider-runnable-track {
+        background: linear-gradient(
+          to right,
+          oklch(0.68 0.19 0),
+          oklch(0.68 0.19 60),
+          oklch(0.68 0.19 120),
+          oklch(0.68 0.19 180),
+          oklch(0.68 0.19 240),
+          oklch(0.68 0.19 300),
+          oklch(0.68 0.19 360)
+        );
+      }
+      #hue::-moz-range-track {
+        background: linear-gradient(
+          to right,
+          oklch(0.68 0.19 0),
+          oklch(0.68 0.19 60),
+          oklch(0.68 0.19 120),
+          oklch(0.68 0.19 180),
+          oklch(0.68 0.19 240),
+          oklch(0.68 0.19 300),
+          oklch(0.68 0.19 360)
+        );
+      }
+
+      .console-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding-top: calc(var(--step) * 4);
+        border-top: 1px solid var(--console-line);
+      }
+      .copy-btn {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6875rem;
+        padding: 7px 12px;
+        border-radius: calc(var(--brand-radius) * 0.35);
+        border: 1px solid var(--console-line);
+        background: transparent;
+        color: oklch(1 0 0 / 0.72);
+        cursor: pointer;
+      }
+      .copy-btn:hover {
+        color: #fff;
+        border-color: oklch(1 0 0 / 0.32);
+      }
+      .copy-note {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6875rem;
+        color: oklch(1 0 0 / 0.42);
+      }
+
+      /* ── Sections ─────────────────────────────────────────────────────── */
+      section {
+        padding-block: calc(var(--step) * 16);
+        border-top: 1px solid var(--border);
+      }
+      .sec-head {
+        max-width: 40em;
+        margin-bottom: calc(var(--step) * 10);
+      }
+      .sec-head h2 {
+        font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+        margin-block: 14px 16px;
+      }
+      .sec-head p {
+        color: var(--fg-muted);
+        font-size: 1.0625rem;
+        max-width: 36em;
+      }
+
+      /* Loop timings — the numbers are the argument, so they lead. */
+      .loop {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: var(--brand-radius);
+        overflow: hidden;
+      }
+      .loop-cell {
+        background: var(--surface);
+        padding: calc(var(--step) * 6);
+        display: grid;
+        gap: 6px;
+        align-content: start;
+      }
+      .loop-num {
+        font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 2.75rem;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+      }
+      .loop-num span {
+        font-size: 1.125rem;
+        letter-spacing: -0.02em;
+      }
+      .loop-cmd {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+        font-weight: 500;
+      }
+      .loop-note {
+        font-size: 0.875rem;
+        color: var(--fg-muted);
+      }
+
+      /* Layers — numbering is honest here: each references only the one above. */
+      .layers {
+        display: grid;
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: var(--brand-radius);
+        overflow: hidden;
+      }
+      .layer {
+        background: var(--surface);
+        display: grid;
+        grid-template-columns: 3rem minmax(0, 13rem) minmax(0, 1fr);
+        gap: calc(var(--step) * 5);
+        align-items: baseline;
+        padding: calc(var(--step) * 5) calc(var(--step) * 6);
+      }
+      .layer-n {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .layer-file {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+      }
+      .layer-what {
+        color: var(--fg-muted);
+        font-size: 0.9375rem;
+      }
+      .layer:first-child {
+        background: var(--accent-quiet);
+      }
+
+      /* Rules — a dense table, not cards. */
+      .table-scroll {
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 520px;
+      }
+      caption {
+        text-align: left;
+        color: var(--fg-subtle);
+        font-size: 0.8125rem;
+        padding-bottom: 12px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 14px 20px 14px 0;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      thead th {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.6875rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--fg-subtle);
+        font-weight: 500;
+        border-bottom-color: var(--border-strong);
+      }
+      td.rule {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+        white-space: nowrap;
+      }
+      td.why {
+        color: var(--fg-muted);
+        font-size: 0.9375rem;
+      }
+
+      /* Agent layer list */
+      .kit {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: calc(var(--step) * 8) calc(var(--step) * 10);
+      }
+      .kit-item {
+        display: grid;
+        gap: 7px;
+        align-content: start;
+      }
+      .kit-item h3 {
+        font-size: 1.0625rem;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+      }
+      .kit-item h3 code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .kit-item p {
+        color: var(--fg-muted);
+        font-size: 0.9375rem;
+      }
+
+      /* Terminal */
+      .term {
+        background: var(--console-bg);
+        color: var(--console-fg);
+        border-radius: var(--brand-radius);
+        padding: calc(var(--step) * 6);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+        line-height: 1.9;
+        overflow-x: auto;
+        box-shadow: var(--shadow);
+      }
+      .term .c {
+        color: oklch(1 0 0 / 0.38);
+      }
+      .term .p {
+        color: var(--console-accent);
+      }
+
+      .closer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 56px;
+        align-items: center;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding-block: calc(var(--step) * 10);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        color: var(--fg-subtle);
+        font-size: 0.8125rem;
+      }
+      footer a {
+        color: var(--fg-muted);
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .closer {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 40px;
+        }
+        .console {
+          position: static;
+        }
+        .layer {
+          grid-template-columns: 2rem minmax(0, 1fr);
+        }
+        .layer-what {
+          grid-column: 2;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition-duration: 1ms !important;
+          animation-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <div class="wordmark">
+          <span class="glyph" aria-hidden="true">◐</span>
+          agentic-react-starter
+        </div>
+        <nav class="mast-links">
+          <a href="#loop">The loop</a>
+          <a href="#layers">Layers</a>
+          <a href="#rules">Rules</a>
+          <a href="https://github.com/swapnil-saal/agentic-react-starter"
+            >GitHub</a
+          >
+        </nav>
+      </header>
+
+      <div class="hero">
+        <div>
+          <p class="eyebrow">React 19 · Vite 8 · TypeScript 6 · MIT</p>
+          <h1>Turn a knob. The whole page follows.</h1>
+          <p class="lede">
+            This page is wired to the same three-layer token system the starter
+            ships — nineteen values in one file drive every colour, radius,
+            duration and control height you can see,
+            <em>including this sentence</em>. Drag something. Nothing here is a
+            screenshot.
+          </p>
+          <div class="hero-cta">
+            <a
+              class="btn btn-solid"
+              href="https://github.com/swapnil-saal/agentic-react-starter"
+              >View on GitHub</a
+            >
+            <a class="btn btn-quiet" href="#loop">Why it matters for agents</a>
+          </div>
+        </div>
+
+        <div class="console">
+          <div class="console-head">
+            <span class="eyebrow">Layer 0 — the knobs</span>
+            <span class="console-file">brand.css</span>
+          </div>
+
+          <div class="presets" role="group" aria-label="Brand presets">
+            <button
+              class="chip"
+              type="button"
+              data-preset="sage"
+              aria-pressed="true"
+            >
+              sage
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="verdant"
+              aria-pressed="false"
+            >
+              verdant
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="deep-sea"
+              aria-pressed="false"
+            >
+              deep-sea
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="brutalist"
+              aria-pressed="false"
+            >
+              brutalist
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="soft"
+              aria-pressed="false"
+            >
+              soft
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="technical"
+              aria-pressed="false"
+            >
+              technical
+            </button>
+            <button
+              class="chip"
+              type="button"
+              data-preset="mono"
+              aria-pressed="false"
+            >
+              mono
+            </button>
+          </div>
+
+          <div class="knobs">
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="hue">--brand-hue</label>
+                <output class="knob-val" id="hue-val" for="hue">123</output>
+              </div>
+              <input
+                type="range"
+                id="hue"
+                min="0"
+                max="360"
+                step="1"
+                value="123"
+              />
+            </div>
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="chroma">--brand-chroma</label>
+                <output class="knob-val" id="chroma-val" for="chroma"
+                  >0.065</output
+                >
+              </div>
+              <input
+                type="range"
+                id="chroma"
+                min="0"
+                max="0.3"
+                step="0.005"
+                value="0.065"
+              />
+            </div>
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="radius">--brand-radius</label>
+                <output class="knob-val" id="radius-val" for="radius"
+                  >0.625rem</output
+                >
+              </div>
+              <input
+                type="range"
+                id="radius"
+                min="0"
+                max="1.5"
+                step="0.125"
+                value="0.625"
+              />
+            </div>
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="density">--brand-density</label>
+                <output class="knob-val" id="density-val" for="density"
+                  >1</output
+                >
+              </div>
+              <input
+                type="range"
+                id="density"
+                min="0.85"
+                max="1.3"
+                step="0.05"
+                value="1"
+              />
+            </div>
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="shadow"
+                  >--brand-shadow-strength</label
+                >
+                <output class="knob-val" id="shadow-val" for="shadow"
+                  >0.4</output
+                >
+              </div>
+              <input
+                type="range"
+                id="shadow"
+                min="0"
+                max="2"
+                step="0.1"
+                value="0.4"
+              />
+            </div>
+            <div class="knob">
+              <div class="knob-row">
+                <label class="knob-name" for="motion">--brand-motion</label>
+                <output class="knob-val" id="motion-val" for="motion">1</output>
+              </div>
+              <input
+                type="range"
+                id="motion"
+                min="0"
+                max="2"
+                step="0.1"
+                value="1"
+              />
+            </div>
+          </div>
+
+          <div class="console-foot">
+            <button class="copy-btn" type="button" id="copy">
+              Copy brand.css
+            </button>
+            <span class="copy-note" id="copy-note">6 of 19 knobs shown</span>
+          </div>
+        </div>
+      </div>
+
+      <section id="loop">
+        <div class="sec-head">
+          <p class="eyebrow">The differentiator</p>
+          <h2>An agent that cannot verify is an agent that guesses.</h2>
+          <p>
+            Most starters hand an agent a component library it can only use from
+            the outside. This one closes the loop: every rule that matters is
+            machine checkable, and the whole suite runs in about eleven seconds
+            — short enough that there is no excuse to skip it.
+          </p>
+        </div>
+        <div class="loop">
+          <div class="loop-cell">
+            <span class="loop-num">6<span>s</span></span>
+            <span class="loop-cmd">pnpm check</span>
+            <span class="loop-note"
+              >Types, lint, design tokens and 27 unit tests.</span
+            >
+          </div>
+          <div class="loop-cell">
+            <span class="loop-num">5<span>s</span></span>
+            <span class="loop-cmd">pnpm e2e</span>
+            <span class="loop-note"
+              >20 Playwright tests against a production build.</span
+            >
+          </div>
+          <div class="loop-cell">
+            <span class="loop-num">0.17<span>s</span></span>
+            <span class="loop-cmd">pnpm check:tokens</span>
+            <span class="loop-note"
+              >Also fires from an editor hook on every file the agent
+              edits.</span
+            >
+          </div>
+          <div class="loop-cell">
+            <span class="loop-num">0</span>
+            <span class="loop-cmd">axe violations</span>
+            <span class="loop-note"
+              >Every route in the nav, scanned in both themes. It found four
+              real ones.</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="layers">
+        <div class="sec-head">
+          <p class="eyebrow">How it holds together</p>
+          <h2>Four layers, each referencing only the one above it.</h2>
+          <p>
+            That constraint is the whole trick. A literal value anywhere below
+            layer&nbsp;0 is a leak, and a leak is why most design systems stop
+            responding to their own theme file.
+          </p>
+        </div>
+        <div class="layers">
+          <div class="layer">
+            <span class="layer-n">00</span>
+            <span class="layer-file">design-system/brand.css</span>
+            <span class="layer-what"
+              >The 19 knobs you edit. The only file a new project needs to
+              touch.</span
+            >
+          </div>
+          <div class="layer">
+            <span class="layer-n">01</span>
+            <span class="layer-file">design-system/tokens.css</span>
+            <span class="layer-what"
+              >OKLCH ramps, control heights and durations — derived, never
+              authored.</span
+            >
+          </div>
+          <div class="layer">
+            <span class="layer-n">02</span>
+            <span class="layer-file">design-system/theme.css</span>
+            <span class="layer-what"
+              >Meaning: <code class="mono">--ds-surface</code>,
+              <code class="mono">--ds-accent</code>. One
+              <code class="mono">light-dark()</code> pair covers both themes and
+              follow-the-OS.</span
+            >
+          </div>
+          <div class="layer">
+            <span class="layer-n">03</span>
+            <span class="layer-file">styles/index.css</span>
+            <span class="layer-what"
+              >Tailwind v4 utilities: <code class="mono">bg-surface</code>,
+              <code class="mono">text-fg-muted</code>.</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="rules">
+        <div class="sec-head">
+          <p class="eyebrow">Enforced, not documented</p>
+          <h2>Six ways a component quietly stops responding to the brand.</h2>
+          <p>
+            Each one produces UI that looks correct today and silently ignores
+            <code class="mono">brand.css</code> tomorrow. Prose in a style guide
+            cannot catch them, so <code class="mono">check:tokens</code> fails
+            the build instead.
+          </p>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <caption>
+              Exit code 1, with file, line, column and the token to reach for
+              instead.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Rejected</th>
+                <th scope="col">Because</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rule">#3f8f5e</td>
+                <td class="why">
+                  A hex literal bypasses the semantic tokens entirely.
+                </td>
+              </tr>
+              <tr>
+                <td class="rule">rgb() · hsl()</td>
+                <td class="why">Same, and it will not follow a hue change.</td>
+              </tr>
+              <tr>
+                <td class="rule">bg-slate-800</td>
+                <td class="why">Tailwind's built-in palette never rethemes.</td>
+              </tr>
+              <tr>
+                <td class="rule">p-[13px]</td>
+                <td class="why">
+                  An arbitrary pixel value escapes the density and type scales.
+                </td>
+              </tr>
+              <tr>
+                <td class="rule">duration-150</td>
+                <td class="why">
+                  A literal duration ignores
+                  <code class="mono">--brand-motion</code>, so it still animates
+                  in a brand that asked for none.
+                </td>
+              </tr>
+              <tr>
+                <td class="rule">duration-[--x]</td>
+                <td class="why">
+                  Tailwind v3 syntax. In v4 it emits invalid CSS the browser
+                  drops, and the style silently does nothing.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-head">
+          <p class="eyebrow">The agent layer</p>
+          <h2>Context an agent reads before it writes.</h2>
+        </div>
+        <div class="kit">
+          <div class="kit-item">
+            <h3>Five project skills</h3>
+            <p>
+              The design system, UI standards, React patterns, testing, and the
+              routing workflow — each written to be loaded at the moment it
+              applies.
+            </p>
+          </div>
+          <div class="kit-item">
+            <h3>A <code>PostToolUse</code> hook</h3>
+            <p>
+              Checks design tokens on every file the agent edits, so a violation
+              lands in the tool result rather than at the end of the task.
+            </p>
+          </div>
+          <div class="kit-item">
+            <h3><code>/new-component</code></h3>
+            <p>
+              Runs the component recipe end to end — checks it should exist,
+              builds on a Base UI primitive, writes the test, then verifies.
+            </p>
+          </div>
+          <div class="kit-item">
+            <h3>Four test archetypes</h3>
+            <p>
+              A CVA component, a portalled Base UI wrapper, a form field with
+              Zod, and a query with optimistic rollback. Meant to be copied, not
+              reinvented.
+            </p>
+          </div>
+          <div class="kit-item">
+            <h3>CodeGraph over MCP</h3>
+            <p>
+              The repo indexed as a queryable graph, so the agent traces callers
+              and blast radius instead of grepping.
+            </p>
+          </div>
+          <div class="kit-item">
+            <h3>One mock API, two consumers</h3>
+            <p>
+              MSW handlers serve the running app and Vitest from a single
+              source, so a test and the real screen cannot disagree.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="closer">
+          <div class="sec-head" style="margin-bottom: 0">
+            <p class="eyebrow">Clone to your own app</p>
+            <h2>No component library to fight.</h2>
+            <p>
+              Every component is source in the repo, built on Base UI headless
+              primitives — they supply focus management, keyboard navigation and
+              ARIA wiring; the styling and the API are yours. When the examples
+              have served their purpose, <code class="mono">pnpm reset</code>
+              strips them and leaves the infrastructure.
+            </p>
+          </div>
+          <div class="term">
+            <div>
+              <span class="c">$</span> git clone
+              https://github.com/swapnil-saal/agentic-react-starter
+            </div>
+            <div>
+              <span class="c">$</span> pnpm install &amp;&amp; cp .env.example
+              .env
+            </div>
+            <div>
+              <span class="c">$</span> pnpm doctor
+              <span class="c">// verifies the agent toolchain</span>
+            </div>
+            <div><span class="c">$</span> pnpm dev</div>
+            <div>&nbsp;</div>
+            <div><span class="c">$</span> pnpm check</div>
+            <div><span class="p">✔</span> design tokens: no violations</div>
+            <div>
+              <span class="p">✔</span> 27 passed
+              <span class="c">(5 files)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>MIT licensed. Free, offline, no account and no API key.</span>
+        <span
+          ><a href="https://github.com/swapnil-saal/agentic-react-starter"
+            >github.com/swapnil-saal/agentic-react-starter</a
+          ></span
+        >
+      </footer>
+    </div>
+
+    <script>
+      // The six knobs the console exposes, and how each formats its readout.
+      // `unit` is what goes into the copied brand.css, which must be valid CSS.
+      var KNOBS = {
+        hue: { prop: '--brand-hue', unit: '', dp: 0 },
+        chroma: { prop: '--brand-chroma', unit: '', dp: 3 },
+        radius: { prop: '--brand-radius', unit: 'rem', dp: 3 },
+        density: { prop: '--brand-density', unit: '', dp: 2 },
+        shadow: { prop: '--brand-shadow-strength', unit: '', dp: 1 },
+        motion: { prop: '--brand-motion', unit: '', dp: 1 },
+      }
+
+      // Real values, lifted from design-system/presets/*.css.
+      var PRESETS = {
+        sage: {
+          hue: 123,
+          chroma: 0.065,
+          radius: 0.625,
+          density: 1,
+          shadow: 0.4,
+          motion: 1,
+          neutralHue: 77,
+          neutralChroma: 0.012,
+          border: '1px',
+          ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        },
+        verdant: {
+          hue: 112,
+          chroma: 0.195,
+          radius: 1.125,
+          density: 1,
+          shadow: 0.6,
+          motion: 1.2,
+          neutralHue: 250,
+          neutralChroma: 0.003,
+          border: '0px',
+          ease: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        },
+        'deep-sea': {
+          hue: 175,
+          chroma: 0.13,
+          radius: 0.5,
+          density: 1,
+          shadow: 1,
+          motion: 1,
+          neutralHue: 175,
+          neutralChroma: 0.008,
+          border: '1px',
+          ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        },
+        brutalist: {
+          hue: 55,
+          chroma: 0.19,
+          radius: 0,
+          density: 1,
+          shadow: 0,
+          motion: 0,
+          neutralHue: 0,
+          neutralChroma: 0,
+          border: '2px',
+          ease: 'linear',
+        },
+        soft: {
+          hue: 300,
+          chroma: 0.14,
+          radius: 1,
+          density: 1.15,
+          shadow: 1.6,
+          motion: 1.3,
+          neutralHue: 300,
+          neutralChroma: 0.012,
+          border: '1px',
+          ease: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        },
+        technical: {
+          hue: 245,
+          chroma: 0.15,
+          radius: 0.25,
+          density: 0.9,
+          shadow: 0.5,
+          motion: 0.7,
+          neutralHue: 250,
+          neutralChroma: 0.01,
+          border: '1px',
+          ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        mono: {
+          hue: 0,
+          chroma: 0,
+          radius: 0.125,
+          density: 0.95,
+          shadow: 0,
+          motion: 0.6,
+          neutralHue: 0,
+          neutralChroma: 0,
+          border: '1px',
+          ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+      }
+
+      var root = document.documentElement
+      var note = document.getElementById('copy-note')
+
+      function format(id, value) {
+        var k = KNOBS[id]
+        var n = parseFloat(value)
+        // Trim trailing zeros so the readout matches how you'd write it by hand.
+        var text = k.dp === 0 ? String(n) : String(parseFloat(n.toFixed(k.dp)))
+        return text + k.unit
+      }
+
+      function apply(id, value) {
+        var k = KNOBS[id]
+        root.style.setProperty(k.prop, format(id, value))
+        document.getElementById(id + '-val').textContent = format(id, value)
+      }
+
+      Object.keys(KNOBS).forEach(function (id) {
+        var input = document.getElementById(id)
+        input.addEventListener('input', function () {
+          apply(id, input.value)
+          clearPresets()
+        })
+      })
+
+      function clearPresets() {
+        document.querySelectorAll('.chip').forEach(function (c) {
+          c.setAttribute('aria-pressed', 'false')
+        })
+      }
+
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var p = PRESETS[chip.dataset.preset]
+          Object.keys(KNOBS).forEach(function (id) {
+            document.getElementById(id).value = p[id]
+            apply(id, p[id])
+          })
+          // The knobs the console does not expose still move — that is the point
+          // of the preset files.
+          root.style.setProperty('--neutral-hue', p.neutralHue)
+          root.style.setProperty('--neutral-chroma', p.neutralChroma)
+          root.style.setProperty('--brand-border-width', p.border)
+          root.style.setProperty('--brand-ease', p.ease)
+          clearPresets()
+          chip.setAttribute('aria-pressed', 'true')
+          note.textContent = chip.dataset.preset + ' applied'
+        })
+      })
+
+      document.getElementById('copy').addEventListener('click', function () {
+        var lines = [':root {']
+        Object.keys(KNOBS).forEach(function (id) {
+          lines.push(
+            '  ' +
+              KNOBS[id].prop +
+              ': ' +
+              format(id, document.getElementById(id).value) +
+              ';',
+          )
+        })
+        lines.push('}')
+        var css = lines.join('\n')
+
+        // Clipboard access can be blocked outright; never leave the button silent.
+        try {
+          navigator.clipboard.writeText(css).then(
+            function () {
+              note.textContent = 'copied to clipboard'
+            },
+            function () {
+              note.textContent = 'copy blocked — read the values above'
+            },
+          )
+        } catch (e) {
+          note.textContent = 'copy blocked — read the values above'
+        }
+      })
+    </script>
+  </body>
+</html>

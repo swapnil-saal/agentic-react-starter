@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query'
 
 import type { User } from '@/mocks/handlers'
-import { env } from '@/lib/env'
+import { api } from '@/lib/api'
 
 /**
  * EXAMPLE — not part of the starter proper.
@@ -13,24 +13,6 @@ import { env } from '@/lib/env'
  * Example feature module — the reference for typed queries and optimistic
  * mutations. Removed by `pnpm reset`; copy the shape into your own features.
  */
-
-const base = env.VITE_API_URL.replace(/\/$/, '')
-
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  })
-  if (!res.ok) {
-    // Surface the server's message so the UI can say what actually failed
-    // rather than "something went wrong".
-    const body = (await res.json().catch(() => null)) as {
-      message?: string
-    } | null
-    throw new Error(body?.message ?? `Request failed (${res.status})`)
-  }
-  return res.json() as Promise<T>
-}
 
 /**
  * Query keys are arrays ordered general → specific, so invalidating
@@ -42,13 +24,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const usersQuery = () =>
   queryOptions({
     queryKey: ['users'] as const,
-    queryFn: () => request<User[]>('/users'),
+    queryFn: () => api<User[]>('/users'),
   })
 
 export const userQuery = (id: string) =>
   queryOptions({
     queryKey: ['users', id] as const,
-    queryFn: () => request<User>(`/users/${id}`),
+    queryFn: () => api<User>(`/users/${id}`),
   })
 
 /**
@@ -63,7 +45,7 @@ export function useToggleUserActive() {
 
   return useMutation({
     mutationFn: ({ id, active }: { id: string; active: boolean }) =>
-      request<User>(`/users/${id}`, {
+      api<User>(`/users/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({ active }),
       }),

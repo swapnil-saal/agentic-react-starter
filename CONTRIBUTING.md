@@ -66,6 +66,21 @@ Then sanity-check it against the brand: open `/brand`, set radius to 0, motion
 to 0 and density to 1.3. Your component should follow all three. If it does
 not, something is hardcoded.
 
+`/new-component` runs this whole recipe if you would rather have the agent
+do it.
+
+## Tests
+
+A change to behaviour comes with a test. There are four unit archetypes in the
+repo — a component with variants, a portalled Base UI wrapper, a form field,
+and a query against the mock API — and the closest one is meant to be copied
+rather than reinvented. `.claude/skills/testing/SKILL.md` says which is which
+and how the MSW handlers work.
+
+Anything visual or routed also needs an e2e spec, and every route is scanned by
+axe in `e2e/a11y.spec.ts`. A new route should be added to the list there.
+Accessibility failures are treated as build failures, not as backlog.
+
 ## Commit messages
 
 Explain _why_, not just _what_ — the diff already shows what changed. If you

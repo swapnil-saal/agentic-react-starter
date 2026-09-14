@@ -48,4 +48,37 @@ test.describe('example form', () => {
       page.getByText('Message must be at least 10 characters'),
     ).toBeVisible()
   })
+
+  test('a server-side field error lands on the field it belongs to', async ({
+    page,
+  }) => {
+    await page.goto('/form-demo')
+
+    // Passes client validation, so only the server can reject it.
+    await page.getByLabel('Name').fill('Ada Lovelace')
+    await page.getByLabel('Email').fill('taken@example.com')
+    await page.getByLabel('Message').fill('This address is already in use.')
+    await page.getByRole('button', { name: 'Send' }).click()
+
+    await expect(
+      page.getByText('That email is already registered.'),
+    ).toBeVisible()
+    await expect(page.getByLabel('Email')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
+    // A field-level rejection must not also show the form-wide banner.
+    await expect(page.getByText('Could not send')).toBeHidden()
+  })
+
+  test('a valid submission succeeds', async ({ page }) => {
+    await page.goto('/form-demo')
+
+    await page.getByLabel('Name').fill('Ada Lovelace')
+    await page.getByLabel('Email').fill('ada@example.com')
+    await page.getByLabel('Message').fill('Looking forward to building this.')
+    await page.getByRole('button', { name: 'Send' }).click()
+
+    await expect(page.getByText('Your message was submitted.')).toBeVisible()
+  })
 })

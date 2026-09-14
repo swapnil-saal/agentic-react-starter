@@ -83,4 +83,28 @@ export const handlers = [
     users = users.map((u) => (u.id === params.id ? { ...u, ...patch } : u))
     return HttpResponse.json(users.find((u) => u.id === params.id))
   }),
+
+  /**
+   * Submitting the contact form.
+   *
+   * Rejects one address with a 422 and a per-field error map, so the
+   * server-validation path — mapping field errors back onto the form — is
+   * demonstrable rather than theoretical.
+   */
+  http.post(`${base}/contact`, async ({ request }) => {
+    await delay(500)
+    const body = (await request.json()) as { email?: string }
+
+    if (body.email === 'taken@example.com') {
+      return HttpResponse.json(
+        {
+          message: 'Please fix the highlighted fields.',
+          errors: { email: 'That email is already registered.' },
+        },
+        { status: 422 },
+      )
+    }
+
+    return HttpResponse.json({ ok: true }, { status: 201 })
+  }),
 ]

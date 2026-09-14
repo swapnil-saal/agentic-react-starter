@@ -110,31 +110,55 @@ function stripComments(text) {
     .replace(/(^|[^:])\/\/[^\n]*/g, (m) => m.replace(/\S/g, ' '))
 }
 
+/**
+ * Files to check.
+ *
+ * With no arguments this walks `src/`, which is what `pnpm check` wants. Given
+ * paths, it checks only those — that is what makes it usable from a PostToolUse
+ * hook, where the agent should hear about a hex code in the tool result rather
+ * than minutes later at the end of a full verification.
+ */
+function targets() {
+  const args = process.argv.slice(2).filter((a) => !a.startsWith('-'))
+  if (args.length === 0) {
+    return SCAN_DIRS.flatMap((dir) => [...walk(join(ROOT, dir))])
+  }
+  return args
+    .map((a) => (a.startsWith('/') ? a : join(ROOT, a)))
+    .filter((f) => SCAN_EXT.has(extname(f)))
+    .filter((f) => {
+      try {
+        return statSync(f).isFile()
+      } catch {
+        // A path that no longer exists (renamed, deleted) is not a violation.
+        return false
+      }
+    })
+}
+
 const findings = []
+const scanned = targets()
 
-for (const dir of SCAN_DIRS) {
-  for (const file of walk(join(ROOT, dir))) {
-    const rel = relative(ROOT, file)
-    if (isExempt(rel)) continue
+for (const file of scanned) {
+  const rel = relative(ROOT, file)
+  if (isExempt(rel)) continue
 
-    const raw = readFileSync(file, 'utf8')
-    const source = stripComments(raw)
-    const lines = source.split('\n')
+  const raw = readFileSync(file, 'utf8')
+  const source = stripComments(raw)
+  const lines = source.split('\n')
 
-    for (const rule of RULES) {
-      lines.forEach((line, i) => {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const match of line.matchAll(rule.re)) {
-          findings.push({
-            file: rel,
-            line: i + 1,
-            col: (match.index ?? 0) + 1,
-            text: match[0],
-            rule,
-          })
-        }
-      })
-    }
+  for (const rule of RULES) {
+    lines.forEach((line, i) => {
+      for (const match of line.matchAll(rule.re)) {
+        findings.push({
+          file: rel,
+          line: i + 1,
+          col: (match.index ?? 0) + 1,
+          text: match[0],
+          rule,
+        })
+      }
+    })
   }
 }
 
@@ -147,7 +171,11 @@ const c = {
 }
 
 if (findings.length === 0) {
-  console.log(`${c.green}✔${c.reset} design tokens: no violations`)
+  // Silent when checking specific files: a hook that prints on every edit
+  // trains the agent to ignore it.
+  if (process.argv.length <= 2) {
+    console.log(`${c.green}✔${c.reset} design tokens: no violations`)
+  }
   process.exit(0)
 }
 

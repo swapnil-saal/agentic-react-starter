@@ -7,7 +7,9 @@ The components never change — only these numbers do.
 
 | Preset          | Feel                                                           |
 | --------------- | -------------------------------------------------------------- |
-| `deep-sea.css`  | The default. Teal, crisp corners, calm motion.                 |
+| `sage.css`      | **The default.** Muted olive on warm paper, visible hairlines. |
+| `verdant.css`   | Vivid green, pillowy corners, borderless, playful overshoot.   |
+| `deep-sea.css`  | Teal, crisp corners, calm motion.                              |
 | `brutalist.css` | Sharp corners, heavy borders, zero shadow, instant motion.     |
 | `soft.css`      | Rounded, roomy, warm, gentle. Marketing and consumer apps.     |
 | `technical.css` | Dense, small radius, cool blue. Dashboards and data tools.     |

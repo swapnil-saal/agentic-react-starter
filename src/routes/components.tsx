@@ -188,7 +188,11 @@ function Components() {
           </RadioGroup>
         </Stack>
 
-        <Slider defaultValue={40} className="mt-2 max-w-sm" />
+        <Slider
+          aria-label="Example slider"
+          defaultValue={40}
+          className="mt-2 max-w-sm"
+        />
       </Section>
 
       <Section title="Overlays">
@@ -254,7 +258,7 @@ function Components() {
           <Alert tone="danger" title="Something failed">
             Say what broke, in plain language, and offer the next step.
           </Alert>
-          <Progress value={62} />
+          <Progress aria-label="Example progress" value={62} />
           <Stack direction="row" gap={3} align="center">
             <Skeleton className="size-9 rounded-full" />
             <Skeleton className="h-4 w-48" />

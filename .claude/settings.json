@@ -4,22 +4,49 @@
       "Bash(pnpm install)",
       "Bash(pnpm dev)",
       "Bash(pnpm build)",
+      "Bash(pnpm preview)",
       "Bash(pnpm check)",
+      "Bash(pnpm check:tokens)",
       "Bash(pnpm lint)",
       "Bash(pnpm lint:fix)",
       "Bash(pnpm typecheck)",
       "Bash(pnpm test:run)",
       "Bash(pnpm e2e)",
+      "Bash(pnpm e2e:*)",
       "Bash(pnpm format)",
+      "Bash(pnpm format:check)",
+      "Bash(pnpm reset)",
+      "Bash(pnpm reset --dry-run)",
       "Bash(pnpm doctor)",
       "Bash(pnpm doctor:check)",
-      "Bash(pnpm gen:catalog)",
+      "Bash(pnpm exec playwright:*)",
+      "Bash(node scripts/check-tokens.mjs:*)",
       "Bash(codegraph status)",
       "Bash(codegraph query:*)",
       "Bash(codegraph explore:*)",
       "Bash(git status)",
       "Bash(git diff:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git stash:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hook-check-tokens.mjs"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
