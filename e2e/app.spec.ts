@@ -1,12 +1,32 @@
+import { readFileSync } from 'node:fs'
+
 import { expect, test } from '@playwright/test'
+
+/**
+ * The app's display name, derived from package.json exactly as
+ * `vite.config.ts` derives it for `APP_NAME`.
+ *
+ * Hardcoding the starter's own name here would turn this suite red the moment
+ * someone renames the project — which is step one of using this repo as a
+ * boilerplate, and a spec that survives `pnpm reset` must survive that too.
+ * If the transform in vite.config.ts ever changes, this fails loudly rather
+ * than drifting quietly.
+ */
+const { name } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+) as { name: string }
+
+const APP_NAME = name
+  .split('-')
+  .map((word) => word[0].toUpperCase() + word.slice(1))
+  .join(' ')
 
 test.describe('app shell', () => {
   test('renders the home page and navigates', async ({ page }) => {
     await page.goto('/')
 
-    // The name comes from package.json via APP_NAME, so assert the real one.
     await expect(
-      page.getByRole('heading', { name: 'Agentic React Starter', level: 1 }),
+      page.getByRole('heading', { name: APP_NAME, level: 1 }),
     ).toBeVisible()
 
     await page.getByRole('link', { name: 'Components', exact: true }).click()

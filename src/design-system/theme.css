@@ -40,7 +40,7 @@
      subtle   metadata only; never for text that must be read */
   --ds-fg: light-dark(var(--neutral-900), var(--neutral-50));
   --ds-fg-muted: light-dark(var(--neutral-600), var(--neutral-400));
-  --ds-fg-subtle: light-dark(var(--neutral-500), var(--neutral-500));
+  --ds-fg-subtle: light-dark(var(--neutral-500), var(--neutral-450));
   --ds-fg-inverted: light-dark(var(--neutral-0), var(--neutral-950));
 
   /* ── Borders ─────────────────────────────────────────────────────────────  */

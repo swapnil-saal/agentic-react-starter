@@ -41,9 +41,18 @@
   --neutral-400: oklch(
     0.72 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
   );
-  /* The text stop behind --ds-fg-subtle, so it is bound by contrast rather
-     than by sitting evenly between 400 and 600. At L 0.6 it measured 3.92:1
-     on white and failed AA; L 0.55 gives ~4.9:1. */
+  /* Two text stops for --ds-fg-subtle, one per theme, both bound by contrast
+     rather than by sitting evenly in the ramp. A single stop cannot serve
+     both: dimming it for a white page brightens nothing on a dark one.
+
+     500 is the light-mode stop. At L 0.6 it measured 3.92:1 on white and
+     failed AA; 0.55 gives ~4.9:1.
+     450 is the dark-mode stop. It has to clear 4.5:1 against the L 0.19-0.24
+     dark grounds, which needs roughly L 0.62; 0.65 leaves headroom and still
+     reads dimmer than --ds-fg-muted at 0.72. */
+  --neutral-450: oklch(
+    0.65 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+  );
   --neutral-500: oklch(
     0.55 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
   );

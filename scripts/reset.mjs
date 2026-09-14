@@ -35,9 +35,7 @@ const EXAMPLES = [
   'src/routes/users.index.tsx',
   'src/routes/users.$userId.tsx',
   'src/routes/form-demo.tsx',
-  'src/routes/feed.tsx',
   'src/features/users',
-  'src/features/posts',
   'e2e/examples.spec.ts',
 ]
 
@@ -93,11 +91,9 @@ const rootPath = 'src/routes/__root.tsx'
 const rootSrc = readFileSync(join(ROOT, rootPath), 'utf8')
 const trimmedNav = rootSrc
   .replace(/\n\s*\{ to: '\/users'[^\n]*\n/, '\n')
-  .replace(/\n\s*\{ to: '\/feed'[^\n]*\n/, '\n')
   .replace(/\n\s*\{ to: '\/form-demo'[^\n]*\n/, '\n')
   .replace(/,?\s*SquarePen,?\n/, '\n')
   .replace(/,?\s*Users,?\n/, '\n')
-  .replace(/,?\s*Rss,?\n/, '\n')
 if (trimmedNav !== rootSrc) {
   willWrite(rootPath, trimmedNav, 'nav trimmed')
 }
@@ -165,6 +161,9 @@ if (DRY) {
       `  ${c.dim}1.${c.reset} Rename the project in package.json — the app name follows it\n` +
       `  ${c.dim}2.${c.reset} Set your brand at /brand, export, save over design-system/brand.css\n` +
       `  ${c.dim}3.${c.reset} pnpm check && pnpm e2e\n\n` +
+      `${c.dim}routeTree.gen.ts still lists the removed routes until the next
+` +
+      `vite run regenerates it — pnpm dev, build or e2e all do.${c.reset}\n\n` +
       `${c.dim}Undo: git checkout .${c.reset}\n`,
   )
 }

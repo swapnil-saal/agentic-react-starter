@@ -31,10 +31,9 @@ pnpm reset --dry-run   # see exactly what it would change
 pnpm reset             # do it
 ```
 
-That removes the example routes (`/users`, `/feed`, `/form-demo`), the
-marketing home page, the feature modules behind them, and the tests that cover
-them — then leaves you a blank home. It keeps the parts that are
-infrastructure:
+That removes the example routes (`/users`, `/form-demo`), the marketing home
+page, the feature module behind them, and the tests that cover them — then
+leaves you a blank home. It keeps the parts that are infrastructure:
 
 | Kept                 | Why                                                |
 | -------------------- | -------------------------------------------------- |
@@ -79,9 +78,9 @@ it to build your design system on top; there is nothing to fight.
 - Light, dark and follow-the-OS themes from a single set of declarations
 - TanStack Router (file-based, fully typed) + TanStack Query
 - React Hook Form + Zod, including boot-time environment validation
-- A worked data layer: typed queries, an optimistic mutation with rollback,
-  cursor paging with `useInfiniteQuery`, and an MSW mock API so it runs with no
-  backend — served to the browser and to Vitest from one set of handlers
+- A worked data layer: typed queries, an optimistic mutation with rollback, and
+  an MSW mock API so it runs with no backend — served to the browser and to
+  Vitest from one set of handlers
 - Forms that handle both halves: Zod client validation and server-side field
   errors mapped back onto the field that caused them
 - Route-level error and not-found pages, and a drawer nav on small screens

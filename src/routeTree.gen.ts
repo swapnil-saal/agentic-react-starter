@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrandRouteImport } from './routes/brand'
 import { Route as ComponentsRouteImport } from './routes/components'
-import { Route as FeedRouteImport } from './routes/feed'
 import { Route as FormDemoRouteImport } from './routes/form-demo'
 import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
@@ -30,11 +29,6 @@ const BrandRoute = BrandRouteImport.update({
 const ComponentsRoute = ComponentsRouteImport.update({
   id: '/components',
   path: '/components',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedRoute = FeedRouteImport.update({
-  id: '/feed',
-  path: '/feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FormDemoRoute = FormDemoRouteImport.update({
@@ -57,7 +51,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
-  '/feed': typeof FeedRoute
   '/form-demo': typeof FormDemoRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users/': typeof UsersIndexRoute
@@ -66,7 +59,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
-  '/feed': typeof FeedRoute
   '/form-demo': typeof FormDemoRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
@@ -76,7 +68,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/components': typeof ComponentsRoute
-  '/feed': typeof FeedRoute
   '/form-demo': typeof FormDemoRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users/': typeof UsersIndexRoute
@@ -84,28 +75,15 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/brand'
-    | '/components'
-    | '/feed'
-    | '/form-demo'
-    | '/users/$userId'
-    | '/users/'
+    '/' | '/brand' | '/components' | '/form-demo' | '/users/$userId' | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/brand'
-    | '/components'
-    | '/feed'
-    | '/form-demo'
-    | '/users/$userId'
-    | '/users'
+    '/' | '/brand' | '/components' | '/form-demo' | '/users/$userId' | '/users'
   id:
     | '__root__'
     | '/'
     | '/brand'
     | '/components'
-    | '/feed'
     | '/form-demo'
     | '/users/$userId'
     | '/users/'
@@ -115,7 +93,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BrandRoute: typeof BrandRoute
   ComponentsRoute: typeof ComponentsRoute
-  FeedRoute: typeof FeedRoute
   FormDemoRoute: typeof FormDemoRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
   UsersIndexRoute: typeof UsersIndexRoute
@@ -142,13 +119,6 @@ declare module '@tanstack/react-router' {
       path: '/components'
       fullPath: '/components'
       preLoaderRoute: typeof ComponentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feed': {
-      id: '/feed'
-      path: '/feed'
-      fullPath: '/feed'
-      preLoaderRoute: typeof FeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/form-demo': {
@@ -179,7 +149,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrandRoute: BrandRoute,
   ComponentsRoute: ComponentsRoute,
-  FeedRoute: FeedRoute,
   FormDemoRoute: FormDemoRoute,
   UsersUserIdRoute: UsersUserIdRoute,
   UsersIndexRoute: UsersIndexRoute,

@@ -35,36 +35,6 @@ test.describe('data layer', () => {
   })
 })
 
-test.describe('paged feed', () => {
-  test('loads a page at a time and stops at the end', async ({ page }) => {
-    await page.goto('/feed')
-
-    // First page only — the point of paging is that the rest is not here yet.
-    await expect(page.getByText('showing 10 of 23')).toBeVisible()
-    // Rows must differ, or a paging bug that renders the same page twice
-    // would still look like it worked.
-    await expect(
-      page.getByRole('heading', { name: 'Sage is the default brand' }),
-    ).toBeVisible()
-
-    await page.getByRole('button', { name: 'Load more' }).click()
-    await expect(page.getByText('showing 20 of 23')).toBeVisible()
-
-    // Walk to the end; the button must disappear rather than fetch forever.
-    await page.getByRole('button', { name: 'Load more' }).click()
-    await expect(page.getByText('showing 23 of 23')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Load more' })).toBeHidden()
-    await expect(page.getByText('That is everything.')).toBeVisible()
-
-    // The last page's content is genuinely different from the first.
-    await expect(
-      page.getByRole('heading', {
-        name: 'Vite, React and TypeScript wired for agentic development',
-      }),
-    ).toBeVisible()
-  })
-})
-
 test.describe('example form', () => {
   test('form shows validation errors from the Zod schema', async ({ page }) => {
     await page.goto('/form-demo')

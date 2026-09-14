@@ -141,6 +141,11 @@ If you add an example screen, test it in `examples.spec.ts` and add the file to
 `EXAMPLES` in `scripts/reset.mjs`. If you add real app behaviour, test it in
 `app.spec.ts`.
 
+Never hardcode an example route in a spec that survives `pnpm reset`. After a
+reset that route renders the not-found page, and a not-found page has no
+violations and no broken assertions — so the test keeps passing while covering
+nothing. That is why the a11y scan reads the nav instead.
+
 The most valuable e2e assertions here are the ones that catch a silently broken
 token layer — a component that still renders but has stopped responding to the
 brand. Read the existing "components are actually styled" and "one knob
@@ -148,10 +153,14 @@ restyles the whole app" tests before writing a new one.
 
 ## Accessibility
 
-`pnpm e2e` runs an axe scan over every main route (`e2e/a11y.spec.ts`). It
-catches the runtime problems the `jsx-a11y` lint rules cannot see: contrast,
-ARIA that is wrong only in context, and landmark structure. A new route should
-be added to the list in that spec.
+`pnpm e2e` runs an axe scan in `e2e/a11y.spec.ts`, in both themes. It catches
+the runtime problems the `jsx-a11y` lint rules cannot see: contrast, ARIA that
+is wrong only in context, and landmark structure.
+
+The route list is read from the app's own navigation, so a new page is covered
+as soon as it appears in the nav and there is no list to maintain. A page that
+is deliberately not in the nav is not scanned — add it explicitly if it needs
+covering.
 
 ### The stale preview server
 
