@@ -4,6 +4,7 @@ import { Inbox } from 'lucide-react'
 
 import {
   Alert,
+  Badge,
   Button,
   Card,
   CardBody,
@@ -12,7 +13,21 @@ import {
   Stack,
   Text,
 } from '@/design-system'
+import type { Post } from '@/mocks/handlers'
 import { postsFeedQuery } from '@/features/posts/api'
+
+/** Status colour by kind, so the change type reads before the words do. */
+const TONE: Record<Post['kind'], 'success' | 'info' | 'neutral'> = {
+  added: 'success',
+  fixed: 'info',
+  changed: 'neutral',
+}
+
+const formatDate = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format
 
 /**
  * EXAMPLE — not part of the starter proper.
@@ -97,8 +112,8 @@ function Feed() {
           Feed
         </Text>
         <Text tone="muted">
-          Cursor-paged with useInfiniteQuery — showing {posts.length} of {total}
-          .
+          This project's own release notes, cursor-paged with useInfiniteQuery —
+          showing {posts.length} of {total}.
         </Text>
       </Stack>
 
@@ -106,8 +121,20 @@ function Feed() {
         {posts.map((post) => (
           <Card key={post.id}>
             <CardBody>
-              <Stack gap={1}>
-                <Text weight="semibold">{post.title}</Text>
+              <Stack gap={2}>
+                <Stack direction="row" gap={2} align="center">
+                  <Badge tone={TONE[post.kind]}>{post.kind}</Badge>
+                  <Text tone="subtle" size="sm">
+                    <time dateTime={post.date}>
+                      {formatDate(new Date(post.date))}
+                    </time>
+                  </Text>
+                </Stack>
+                {/* A real heading: the page is a list of entries, and this is
+                    how a screen reader jumps between them. */}
+                <Text as="h2" weight="semibold">
+                  {post.title}
+                </Text>
                 <Text tone="muted" size="sm">
                   {post.body}
                 </Text>

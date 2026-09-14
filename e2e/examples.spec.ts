@@ -40,18 +40,28 @@ test.describe('paged feed', () => {
     await page.goto('/feed')
 
     // First page only — the point of paging is that the rest is not here yet.
-    await expect(page.getByText('showing 10 of 47')).toBeVisible()
+    await expect(page.getByText('showing 10 of 23')).toBeVisible()
+    // Rows must differ, or a paging bug that renders the same page twice
+    // would still look like it worked.
+    await expect(
+      page.getByRole('heading', { name: 'Sage is the default brand' }),
+    ).toBeVisible()
 
     await page.getByRole('button', { name: 'Load more' }).click()
-    await expect(page.getByText('showing 20 of 47')).toBeVisible()
+    await expect(page.getByText('showing 20 of 23')).toBeVisible()
 
     // Walk to the end; the button must disappear rather than fetch forever.
-    for (let i = 0; i < 3; i++) {
-      await page.getByRole('button', { name: 'Load more' }).click()
-    }
-    await expect(page.getByText('showing 47 of 47')).toBeVisible()
+    await page.getByRole('button', { name: 'Load more' }).click()
+    await expect(page.getByText('showing 23 of 23')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Load more' })).toBeHidden()
     await expect(page.getByText('That is everything.')).toBeVisible()
+
+    // The last page's content is genuinely different from the first.
+    await expect(
+      page.getByRole('heading', {
+        name: 'Vite, React and TypeScript wired for agentic development',
+      }),
+    ).toBeVisible()
   })
 })
 
