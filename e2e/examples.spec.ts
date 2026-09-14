@@ -35,6 +35,26 @@ test.describe('data layer', () => {
   })
 })
 
+test.describe('paged feed', () => {
+  test('loads a page at a time and stops at the end', async ({ page }) => {
+    await page.goto('/feed')
+
+    // First page only — the point of paging is that the rest is not here yet.
+    await expect(page.getByText('showing 10 of 47')).toBeVisible()
+
+    await page.getByRole('button', { name: 'Load more' }).click()
+    await expect(page.getByText('showing 20 of 47')).toBeVisible()
+
+    // Walk to the end; the button must disappear rather than fetch forever.
+    for (let i = 0; i < 3; i++) {
+      await page.getByRole('button', { name: 'Load more' }).click()
+    }
+    await expect(page.getByText('showing 47 of 47')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Load more' })).toBeHidden()
+    await expect(page.getByText('That is everything.')).toBeVisible()
+  })
+})
+
 test.describe('example form', () => {
   test('form shows validation errors from the Zod schema', async ({ page }) => {
     await page.goto('/form-demo')
@@ -47,5 +67,38 @@ test.describe('example form', () => {
     await expect(
       page.getByText('Message must be at least 10 characters'),
     ).toBeVisible()
+  })
+
+  test('a server-side field error lands on the field it belongs to', async ({
+    page,
+  }) => {
+    await page.goto('/form-demo')
+
+    // Passes client validation, so only the server can reject it.
+    await page.getByLabel('Name').fill('Ada Lovelace')
+    await page.getByLabel('Email').fill('taken@example.com')
+    await page.getByLabel('Message').fill('This address is already in use.')
+    await page.getByRole('button', { name: 'Send' }).click()
+
+    await expect(
+      page.getByText('That email is already registered.'),
+    ).toBeVisible()
+    await expect(page.getByLabel('Email')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
+    // A field-level rejection must not also show the form-wide banner.
+    await expect(page.getByText('Could not send')).toBeHidden()
+  })
+
+  test('a valid submission succeeds', async ({ page }) => {
+    await page.goto('/form-demo')
+
+    await page.getByLabel('Name').fill('Ada Lovelace')
+    await page.getByLabel('Email').fill('ada@example.com')
+    await page.getByLabel('Message').fill('Looking forward to building this.')
+    await page.getByRole('button', { name: 'Send' }).click()
+
+    await expect(page.getByText('Your message was submitted.')).toBeVisible()
   })
 })

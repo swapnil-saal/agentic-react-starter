@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Menu as MenuIcon,
   Palette,
+  Rss,
   SquarePen,
   Users,
 } from 'lucide-react'
@@ -38,6 +39,7 @@ import { APP_NAME } from '@/lib/app'
 const NAV = [
   { to: '/', label: 'Home', icon: LayoutDashboard },
   { to: '/users', label: 'Users', icon: Users },
+  { to: '/feed', label: 'Feed', icon: Rss },
   { to: '/components', label: 'Components', icon: Component },
   { to: '/form-demo', label: 'Form demo', icon: SquarePen },
   { to: '/brand', label: 'Brand', icon: Palette },

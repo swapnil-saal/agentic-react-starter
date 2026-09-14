@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -15,11 +16,14 @@ import {
   Text,
   Textarea,
 } from '@/design-system'
+import { api, type ApiError } from '@/lib/api'
 
 /**
  * EXAMPLE — not part of the starter proper.
  *
- * A worked example of React Hook Form + Zod. Removed by `pnpm reset`.
+ * A worked example of React Hook Form + Zod, including the half most forms
+ * get wrong: what to do when the *server* rejects a field. Removed by
+ * `pnpm reset`.
  */
 
 /**
@@ -40,22 +44,51 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
+const submitContact = (values: FormValues) =>
+  api<{ ok: true }>('/contact', {
+    method: 'POST',
+    body: JSON.stringify(values),
+  })
+
 function FormDemo() {
   const {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', email: '', message: '' },
   })
 
+  const submit = useMutation({ mutationFn: submitContact })
+
+  /**
+   * Client validation has already passed by the time this runs, so everything
+   * here is the server's verdict.
+   *
+   * Field-level rejections go back onto the field with `setError`, so the
+   * message lands where the user is looking. Anything else goes to `root`,
+   * which is React Hook Form's slot for a form-wide error — using a separate
+   * piece of state for it would drift out of sync with `isSubmitting`.
+   */
   const onSubmit = async (values: FormValues) => {
-    // Stands in for a real mutation — swap for a TanStack Query useMutation.
-    await new Promise((resolve) => setTimeout(resolve, 400))
-    console.info('submitted', values)
-    reset()
+    try {
+      await submit.mutateAsync(values)
+      reset()
+    } catch (err) {
+      const { fieldErrors, message } = err as ApiError
+
+      if (fieldErrors) {
+        for (const [field, msg] of Object.entries(fieldErrors)) {
+          setError(field as keyof FormValues, { message: msg })
+        }
+        return
+      }
+
+      setError('root', { message })
+    }
   }
 
   return (
@@ -65,13 +98,20 @@ function FormDemo() {
           Form demo
         </Text>
         <Text tone="muted">
-          React Hook Form + Zod. Submit while empty to see validation.
+          React Hook Form + Zod. Submit while empty to see client validation, or
+          use <code>taken@example.com</code> to see the server reject a field.
         </Text>
       </Stack>
 
       {isSubmitSuccessful && (
         <Alert tone="success" title="Sent">
           Your message was submitted.
+        </Alert>
+      )}
+
+      {errors.root && (
+        <Alert tone="danger" title="Could not send">
+          {errors.root.message}
         </Alert>
       )}
 

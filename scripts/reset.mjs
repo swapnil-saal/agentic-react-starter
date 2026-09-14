@@ -35,7 +35,9 @@ const EXAMPLES = [
   'src/routes/users.index.tsx',
   'src/routes/users.$userId.tsx',
   'src/routes/form-demo.tsx',
+  'src/routes/feed.tsx',
   'src/features/users',
+  'src/features/posts',
   'e2e/examples.spec.ts',
 ]
 
@@ -91,9 +93,11 @@ const rootPath = 'src/routes/__root.tsx'
 const rootSrc = readFileSync(join(ROOT, rootPath), 'utf8')
 const trimmedNav = rootSrc
   .replace(/\n\s*\{ to: '\/users'[^\n]*\n/, '\n')
+  .replace(/\n\s*\{ to: '\/feed'[^\n]*\n/, '\n')
   .replace(/\n\s*\{ to: '\/form-demo'[^\n]*\n/, '\n')
   .replace(/,?\s*SquarePen,?\n/, '\n')
   .replace(/,?\s*Users,?\n/, '\n')
+  .replace(/,?\s*Rss,?\n/, '\n')
 if (trimmedNav !== rootSrc) {
   willWrite(rootPath, trimmedNav, 'nav trimmed')
 }

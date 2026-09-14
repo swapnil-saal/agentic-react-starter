@@ -8,6 +8,12 @@ import { env } from '@/lib/env'
  * Replace these with your real endpoints — the components, queries and
  * mutations that consume them do not change.
  */
+export interface Post {
+  id: string
+  title: string
+  body: string
+}
+
 export interface User {
   id: string
   name: string
@@ -50,6 +56,15 @@ const seed: User[] = [
 // Module-level so mutations persist across navigations within a session.
 let users = [...seed]
 
+/** 47 rows, so a cursor-paged feed actually has several pages to walk. */
+const posts: Post[] = Array.from({ length: 47 }, (_, i) => ({
+  id: String(i + 1),
+  title: `Release note ${i + 1}`,
+  body: 'What changed, and why it mattered to the people using it.',
+}))
+
+const PAGE_SIZE = 10
+
 const base = env.VITE_API_URL.replace(/\/$/, '')
 
 export const handlers = [
@@ -82,5 +97,45 @@ export const handlers = [
 
     users = users.map((u) => (u.id === params.id ? { ...u, ...patch } : u))
     return HttpResponse.json(users.find((u) => u.id === params.id))
+  }),
+
+  /**
+   * Cursor-paged feed. Returns the next cursor, or null on the last page —
+   * which is what `getNextPageParam` reads to know when to stop.
+   */
+  http.get(`${base}/posts`, async ({ request }) => {
+    await delay(350)
+    const cursor = Number(new URL(request.url).searchParams.get('cursor') ?? 0)
+    const items = posts.slice(cursor, cursor + PAGE_SIZE)
+    const next = cursor + PAGE_SIZE
+    return HttpResponse.json({
+      items,
+      nextCursor: next < posts.length ? next : null,
+      total: posts.length,
+    })
+  }),
+
+  /**
+   * Submitting the contact form.
+   *
+   * Rejects one address with a 422 and a per-field error map, so the
+   * server-validation path — mapping field errors back onto the form — is
+   * demonstrable rather than theoretical.
+   */
+  http.post(`${base}/contact`, async ({ request }) => {
+    await delay(500)
+    const body = (await request.json()) as { email?: string }
+
+    if (body.email === 'taken@example.com') {
+      return HttpResponse.json(
+        {
+          message: 'Please fix the highlighted fields.',
+          errors: { email: 'That email is already registered.' },
+        },
+        { status: 422 },
+      )
+    }
+
+    return HttpResponse.json({ ok: true }, { status: 201 })
   }),
 ]
