@@ -25,20 +25,28 @@
      chroma  0–0.3.   0 = grey · 0.06 = muted · 0.13 = vivid · 0.2+ = neon
      ───────────────────────────────────────────────────────────────────────── */
 
-  --brand-hue: 112;
-  --brand-chroma: 0.195;
+  /* Sage. Derived from #8B9A6E — at L 0.68 the ramp's accent-500 stop lands
+     on that colour almost exactly, so the source swatch is a real member of
+     the scale rather than an approximation of it. */
+  --brand-hue: 123;
+  --brand-chroma: 0.065;
 
-  /* The greys. Give them a little of the brand's hue and the UI feels
-     designed rather than assembled; leave chroma at 0 for pure neutral grey. */
-  --neutral-hue: 250;
-  --neutral-chroma: 0.003;
+  /* Warm paper greys, from #F7F2EB (cream) and #EAE2D6 (beige). Both sit near
+     hue 77 in OKLCH, and a chroma of 0.012 puts neutral-100 on the cream and
+     neutral-200 on the beige. The palette's #EEEEEE is achromatic and cannot
+     belong to a warm ramp — the two warm tones carry the identity, so the
+     ramp follows them. Set chroma to 0 for pure grey instead. */
+  --neutral-hue: 77;
+  --neutral-chroma: 0.012;
 
   /* Status hues. Keep these recognisable — a green "danger" helps nobody. */
   --danger-hue: 27;
   --success-hue: 155;
   --warning-hue: 75;
   --info-hue: 230;
-  --status-chroma: 0.15;
+  /* Pulled back from 0.15 so alerts and badges sit inside a muted palette
+     instead of shouting over it. */
+  --status-chroma: 0.13;
 
   /* ───────────────────────────────────────────────────────────────────────────
      2. SHAPE
@@ -48,8 +56,8 @@
      border-width 1px = standard · 2px = bold outline · 0 = borderless
      ───────────────────────────────────────────────────────────────────────── */
 
-  --brand-radius: 1.125rem;
-  --brand-border-width: 0px;
+  --brand-radius: 0.625rem;
+  --brand-border-width: 1px;
 
   /* Form controls can keep a hairline even when everything else is
      borderless. A field's only job is to show where you can type, and with
@@ -101,7 +109,7 @@
      2 = pronounced, floating
      ───────────────────────────────────────────────────────────────────────── */
 
-  --brand-shadow-strength: 0.6;
+  --brand-shadow-strength: 0.4;
 
   /* ───────────────────────────────────────────────────────────────────────────
      6. MOTION
@@ -119,6 +127,6 @@
              linear                            mechanical
      ───────────────────────────────────────────────────────────────────────── */
 
-  --brand-motion: 1.2;
-  --brand-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --brand-motion: 1;
+  --brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }

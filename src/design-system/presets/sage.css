@@ -1,0 +1,42 @@
+/* Sage — muted olive on warm paper.
+
+   Built from a four-colour palette:
+     #8B9A6E  sage      → the accent; lands on accent-500 (L 0.68)
+     #F7F2EB  cream     → neutral-100
+     #EAE2D6  beige     → neutral-200
+     #EEEEEE  grey      → achromatic, so it sits outside this warm ramp
+
+   A low brand chroma (0.065) keeps the green earthy rather than vivid, and
+   status chroma comes down with it so an alert reads as part of the same
+   palette. Visible 1px borders and a low shadow do the separating instead of
+   elevation, which suits a flat, papery surface.
+
+   This is the shipped default — copy another file over brand.css's :root to
+   move away from it. */
+
+:root {
+  --brand-hue: 123;
+  --brand-chroma: 0.065;
+  --neutral-hue: 77;
+  --neutral-chroma: 0.012;
+  --status-chroma: 0.13;
+
+  --brand-radius: 0.625rem;
+  --brand-border-width: 1px;
+  --brand-field-border-width: var(--brand-border-width);
+
+  --brand-font:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --brand-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --brand-font-heading: var(--brand-font);
+  --brand-text-base: 0.8125rem;
+  --brand-type-ratio: 1.15;
+  --brand-heading-weight: 600;
+  --brand-heading-tracking: -0.01em;
+
+  --brand-density: 1;
+  --brand-shadow-strength: 0.4;
+  --brand-motion: 1;
+  --brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
