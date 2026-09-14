@@ -41,8 +41,11 @@
   --neutral-400: oklch(
     0.72 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
   );
+  /* The text stop behind --ds-fg-subtle, so it is bound by contrast rather
+     than by sitting evenly between 400 and 600. At L 0.6 it measured 3.92:1
+     on white and failed AA; L 0.55 gives ~4.9:1. */
   --neutral-500: oklch(
-    0.6 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
+    0.55 calc(var(--neutral-chroma) * 2.2) var(--neutral-hue)
   );
   --neutral-600: oklch(0.5 calc(var(--neutral-chroma) * 2) var(--neutral-hue));
   --neutral-700: oklch(
@@ -85,8 +88,11 @@
   );
   --warning-500: oklch(0.75 var(--status-chroma) var(--warning-hue));
   --warning-600: oklch(0.66 var(--status-chroma) var(--warning-hue));
+  /* Yellow is intrinsically light, so this stop sits lower than the other
+     ramps' 700 to keep `text-warning-fg` on `bg-warning-subtle` above 4.5:1.
+     At L 0.56 it measured 3.98:1 and failed AA. */
   --warning-700: oklch(
-    0.56 calc(var(--status-chroma) * 0.9) var(--warning-hue)
+    0.48 calc(var(--status-chroma) * 0.9) var(--warning-hue)
   );
   --warning-950: oklch(
     0.25 calc(var(--status-chroma) * 0.5) var(--warning-hue)

@@ -638,7 +638,7 @@ function BrandPlayground() {
                   </Field>
                 </Stack>
 
-                <Progress value={62} />
+                <Progress aria-label="Preview progress" value={62} />
 
                 <Alert tone="info" title="Alert">
                   Status hues stay fixed so meaning survives any brand.
