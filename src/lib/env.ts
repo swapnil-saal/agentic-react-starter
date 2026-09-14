@@ -10,8 +10,11 @@ import { z } from 'zod'
  * failure at boot.
  *
  * Add a variable: extend the schema below AND document it in `.env.example`.
+ *
+ * The schema is exported so tests exercise the real thing rather than a copy —
+ * a duplicated schema in a test drifts silently and validates nothing.
  */
-const envSchema = z.object({
+export const envSchema = z.object({
   VITE_API_URL: z.url('VITE_API_URL must be a valid URL'),
 
   // Vite exposes env vars as strings, so coerce rather than trusting the type.

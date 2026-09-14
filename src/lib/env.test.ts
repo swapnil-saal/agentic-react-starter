@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { z } from 'zod'
+
+import { envSchema } from './env'
 
 /**
- * The env module reads `import.meta.env` at import time, which makes the
- * module-level singleton awkward to test directly. What actually matters is
- * that the schema rejects bad configuration with a useful message, so we
- * exercise the schema shape itself.
+ * These exercise the real schema imported from `env.ts`, not a copy of it.
+ * A duplicated schema here would keep passing while the real one drifted,
+ * which is the one failure mode this file exists to prevent.
+ *
+ * Importing the module also runs its boot-time parse against the current
+ * `.env`, so a broken local environment surfaces here too.
  */
-const envSchema = z.object({
-  VITE_API_URL: z.url('VITE_API_URL must be a valid URL'),
-})
-
 describe('env schema', () => {
   it('accepts a valid environment', () => {
     const result = envSchema.safeParse({
       VITE_API_URL: 'http://localhost:3000',
+      VITE_ENABLE_MOCKS: 'true',
     })
     expect(result.success).toBe(true)
   })
@@ -32,11 +32,35 @@ describe('env schema', () => {
     expect(result.success).toBe(false)
   })
 
-  it('reports every problem at once rather than stopping at the first', () => {
-    const wider = envSchema.extend({
-      VITE_OTHER: z.string().min(1, 'VITE_OTHER must not be empty'),
+  it('defaults VITE_ENABLE_MOCKS to true when absent', () => {
+    const result = envSchema.safeParse({
+      VITE_API_URL: 'http://localhost:3000',
     })
-    const result = wider.safeParse({ VITE_API_URL: 'x', VITE_OTHER: '' })
+    expect(result.success).toBe(true)
+    expect(result.data?.VITE_ENABLE_MOCKS).toBe(true)
+  })
+
+  it('coerces VITE_ENABLE_MOCKS from string to boolean', () => {
+    const result = envSchema.safeParse({
+      VITE_API_URL: 'http://localhost:3000',
+      VITE_ENABLE_MOCKS: 'false',
+    })
+    expect(result.data?.VITE_ENABLE_MOCKS).toBe(false)
+  })
+
+  it('rejects a VITE_ENABLE_MOCKS value that is not true or false', () => {
+    const result = envSchema.safeParse({
+      VITE_API_URL: 'http://localhost:3000',
+      VITE_ENABLE_MOCKS: 'yes',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('reports every problem at once rather than stopping at the first', () => {
+    const result = envSchema.safeParse({
+      VITE_API_URL: 'not-a-url',
+      VITE_ENABLE_MOCKS: 'yes',
+    })
     expect(result.error?.issues).toHaveLength(2)
   })
 })

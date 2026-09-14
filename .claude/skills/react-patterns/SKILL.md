@@ -138,17 +138,25 @@ from `@/design-system/ui/button`.
 
 ## Testing
 
-- Vitest + React Testing Library. Files sit next to the source as
-  `*.test.ts(x)`.
+Vitest + React Testing Library, files next to the source as `*.test.ts(x)`.
+
+**The `testing` skill is the source of truth** — it has the four archetypes to
+copy, the MSW handler rules and the e2e guidance. Read it before writing a
+test. The two rules worth repeating here because they shape how you write
+components in the first place:
+
 - Query by **accessible role and name** — `getByRole('button', { name: … })`.
-  Not class names, not test ids. This asserts the component is reachable the
-  way a user reaches it, and survives internal markup changes.
-- Test behaviour, not implementation. Never assert on state variables or call
-  a component's internals.
-- `userEvent` over `fireEvent` — it models real interaction.
-- Cover the states that break: empty, error, disabled, boundary values.
+  A component that is hard to query this way is usually a component that is
+  hard for a screen reader to use.
+- Test behaviour, not implementation. Never assert on state variables or reach
+  into internals.
 
 ## Verify your work
 
-Run `pnpm check` (typecheck + lint + unit tests) before considering a change
-done. For anything visual, also run `pnpm e2e`.
+```bash
+pnpm check    # typecheck + lint + design tokens + unit tests   (~6s)
+pnpm e2e      # Playwright against a production build           (~5s)
+```
+
+Both are cheap. Run `pnpm check` on any change and `pnpm e2e` as well for
+anything visual or routed — there is no reason to guess.
