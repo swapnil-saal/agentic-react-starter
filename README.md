@@ -2,13 +2,18 @@
 
 [![CI](https://github.com/swapnil-saal/agentic-react-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/swapnil-saal/agentic-react-starter/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Use this template](https://img.shields.io/badge/Use%20this%20template-2ea44f?logo=github&logoColor=white)](https://github.com/swapnil-saal/agentic-react-starter/generate)
 
-A Vite + React 19 + TypeScript starter with a design system you **own**, wired
-for Claude-powered agentic development.
+### One file's 19 knobs restyle the entire app. Every component is source you own.
 
-**[See it →](https://swapnil-saal.github.io/agentic-react-starter/)** — the
-landing page is built on the same token system and lets you turn the brand
-knobs live.
+![Dragging --brand-hue and --brand-radius; the entire page re-themes live](.github/assets/hero.gif)
+
+Every frame above is the same build — no rebuild, no theme file, nothing
+swapped out. **[Turn the knobs yourself →](https://swapnil-saal.github.io/agentic-react-starter/)**
+
+A Vite + React 19 + TypeScript starter on [Base UI](https://base-ui.com)
+primitives, with a three-layer token system and a Claude Code agent layer that
+enforces the rules on every edit.
 
 ## Quick start
 
@@ -106,19 +111,19 @@ Everything is free and works offline. No account, no paid tier, no API key.
 ## One file defines the look
 
 `src/design-system/brand.css` is the only file a new project needs to edit.
-19 knobs drive the entire UI. The shipped defaults are the Verdant preset:
+19 knobs drive the entire UI. The shipped defaults are the Sage preset:
 
 ```css
---brand-hue: 112; /* colour ramps generated in OKLCH   */
---brand-chroma: 0.195; /* 0 grey · 0.13 vivid · 0.25 neon   */
---brand-radius: 1.125rem; /* 0 sharp → 1.5rem pillowy          */
---brand-border-width: 0px;
+--brand-hue: 123; /* colour ramps generated in OKLCH   */
+--brand-chroma: 0.065; /* 0 grey · 0.13 vivid · 0.25 neon   */
+--brand-radius: 0.625rem; /* 0 sharp → 1.5rem pillowy          */
+--brand-border-width: 1px;
 --brand-font: 'Inter', …;
 --brand-type-ratio: 1.15; /* modular scale for every heading   */
 --brand-density: 1; /* control heights AND all spacing   */
---brand-shadow-strength: 0.6; /* 0 flat → 2 floating               */
---brand-motion: 1.2; /* 0 disables every transition       */
---brand-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+--brand-shadow-strength: 0.4; /* 0 flat → 2 floating               */
+--brand-motion: 1; /* 0 disables every transition       */
+--brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
 ```
 
 The rest: `--neutral-hue`, `--neutral-chroma`, `--status-chroma`,
@@ -128,9 +133,13 @@ The rest: `--neutral-hue`, `--neutral-chroma`, `--status-chroma`,
 Change one number and the whole app follows — in light and dark together.
 Same components, a different product.
 
-**Presets.** `src/design-system/presets/` ships five complete looks —
-`deep-sea`, `brutalist`, `soft`, `technical`, `mono`. Copy one over the
-`:root` block in `brand.css` to adopt it.
+**Presets.** `src/design-system/presets/` ships seven complete looks —
+`sage` (the default), `verdant`, `deep-sea`, `brutalist`, `soft`, `technical`
+and `mono`. Copy one over the `:root` block in `brand.css` to adopt it, or
+preview them all at `/brand`.
+
+Got a look of your own? **[Contribute a preset](CONTRIBUTING.md#contributing-a-preset)**
+— it is one CSS file and a screenshot.
 
 **Settings page.** Run `pnpm dev` and open **`/brand`**. It drives the real
 component library — not a mock — and includes:
