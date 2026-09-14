@@ -69,6 +69,28 @@ not, something is hardcoded.
 `/new-component` runs this whole recipe if you would rather have the agent
 do it.
 
+## Contributing a preset
+
+The easiest useful contribution here, and the one most likely to be merged.
+
+A preset is one file: a complete replacement for the `:root` block in
+`src/design-system/brand.css`. The components never change — only the numbers.
+
+1. Run `pnpm dev` and open `/brand`.
+2. Turn the knobs until you have a look you would actually ship.
+3. **Copy `brand.css`** from the panel and save it as
+   `src/design-system/presets/<your-name>.css`.
+4. Check the **contrast audit** on that same page passes. A preset that fails
+   WCAG AA will not be merged — that is the whole point of the audit.
+5. Add a row to the table in `src/design-system/presets/README.md` describing
+   the feel in one line.
+6. Open a PR with a screenshot of `/components` under your preset.
+
+Name it after the feeling, not the colour — `brutalist` and `technical` say
+more than `blue-2` does. Wildly different is more interesting than
+tastefully adjacent; the point of the preset set is to show how far the same
+components can travel.
+
 ## Tests
 
 A change to behaviour comes with a test. There are four unit archetypes in the
