@@ -7,11 +7,18 @@ its own work.
 ## Verify with one command
 
 ```bash
-pnpm check     # typecheck + lint + design tokens + unit tests
+pnpm check     # typecheck + lint + design tokens + unit tests  (~6s)
+pnpm e2e       # Playwright against a production build          (~5s)
 ```
 
-For anything visual, also `pnpm e2e`. If the environment itself looks broken
-(missing CLI, stale index), run `pnpm doctor`.
+**Both are cheap — run them.** The whole loop is about ten seconds, so there is
+no reason to skip `pnpm e2e` on anything visual, and no reason to guess whether
+a change worked. If the environment itself looks broken (missing CLI, stale
+index), run `pnpm doctor`.
+
+A `PostToolUse` hook also runs the design-token checker against every file you
+edit under `src/`, so token violations come back in the tool result rather than
+at the end of the task.
 
 ## Stack
 
@@ -49,10 +56,13 @@ src/
   routeTree.gen.ts GENERATED — never edit
   styles/index.css layer 3: semantic tokens → Tailwind utilities
   features/        feature modules — queries, mutations, domain types
-  mocks/           MSW mock API, so the data layer runs with no backend
-  lib/             env.ts (validated), app.ts (APP_NAME), query-client.ts
-e2e/               Playwright specs
-scripts/           doctor.mjs
+  mocks/           MSW mock API — handlers.ts is served to the browser
+                   (browser.ts) and to Vitest (server.ts) from one source
+  lib/             env.ts (validated), api.ts (the only fetch wrapper),
+                   app.ts (APP_NAME), query-client.ts
+e2e/               Playwright specs — app.spec.ts and a11y.spec.ts survive
+                   `pnpm reset`; examples.spec.ts does not
+scripts/           doctor.mjs, check-tokens.mjs, reset.mjs, hook-check-tokens.mjs
 .claude/skills/    project skills (see below)
 ```
 
@@ -63,6 +73,7 @@ scripts/           doctor.mjs
 | `design-system`  | Any UI work. Tokens, component pattern, Base UI usage. |
 | `ui-design`      | Designing or reviewing how a screen looks and behaves. |
 | `react-patterns` | Writing any component, hook, or test.                  |
+| `testing`        | Writing tests, adding a mock endpoint, checking cover. |
 | `add-route`      | Adding a page or wiring navigation.                    |
 
 Try brand values live at `/brand` in the running app.
@@ -74,8 +85,8 @@ Try brand values live at `/brand` in the running app.
    token system and will not respond to a retheme. Use semantic utilities
    (`bg-surface`, `text-fg-muted`) or component variants.
 2. **To restyle the app, edit `src/design-system/brand.css` — that file only.**
-   ~17 knobs (hue, radius, border width, fonts, type scale, density, shadow,
-   motion) drive everything else. `tokens.css` is derived output; do not put
+   19 knobs (hue, chroma, radius, border width, fonts, type scale, density,
+   shadow, motion) drive everything else. `tokens.css` is derived output; do not put
    literal values in it. Never restyle at a call site.
 3. **Never edit `src/routeTree.gen.ts`.**
 4. **Keep `Input`/`Textarea` event-first.** Their native `onChange` is what
@@ -91,11 +102,24 @@ Try brand values live at `/brand` in the running app.
    asked for none.
 9. **The app's name comes from `package.json`** via `APP_NAME` in `@/lib/app`.
    Never hardcode it.
+10. **Every API call goes through `api()` in `@/lib/api`.** It decides the base
+    URL, the headers and the error shape once — including `fieldErrors` from a
+    422, which is what lets a form put each message back on its own field.
+    A second hand-rolled `fetch` is how "something went wrong" reaches the UI.
+11. **A control that renders no text of its own must require a label.** Use the
+    `Labelled` type from `design-system/ui/_a11y.ts`, as `Progress` and
+    `Slider` do, so an unlabelled call site is a compile error rather than an
+    audit finding.
 
 `pnpm check:tokens` enforces rules 1, 7 and 8 mechanically — hex codes,
 Tailwind palette classes, arbitrary pixel values, literal durations and the v3
-variable syntax all fail the build. When it flags something, reach for a token
-rather than adding an exception.
+variable syntax all fail the build. It also runs from a `PostToolUse` hook on
+every file you edit under `src/`, so a violation comes back in the tool result.
+When it flags something, reach for a token rather than adding an exception.
+
+Rule 11 is enforced by the type system, and `e2e/a11y.spec.ts` runs an axe scan
+over every route in both themes — which is what catches the contrast failures a
+brand change can introduce without touching a component.
 
 ## Tools available to you
 

@@ -6,6 +6,10 @@
 A Vite + React 19 + TypeScript starter with a design system you **own**, wired
 for Claude-powered agentic development.
 
+**[See it →](https://swapnil-saal.github.io/agentic-react-starter/)** — the
+landing page is built on the same token system and lets you turn the brand
+knobs live.
+
 ## Quick start
 
 ```bash
@@ -27,9 +31,10 @@ pnpm reset --dry-run   # see exactly what it would change
 pnpm reset             # do it
 ```
 
-That removes the example routes (`/users`, `/form-demo`), the marketing home
-page, the feature module behind them, and the tests that cover them — then
-leaves you a blank home. It keeps the parts that are infrastructure:
+That removes the example routes (`/users`, `/feed`, `/form-demo`), the
+marketing home page, the feature modules behind them, and the tests that cover
+them — then leaves you a blank home. It keeps the parts that are
+infrastructure:
 
 | Kept                 | Why                                                |
 | -------------------- | -------------------------------------------------- |
@@ -70,14 +75,18 @@ it to build your design system on top; there is nothing to fight.
 - Vite 8, React 19, TypeScript 6
 - ~37 owned components on Base UI primitives, styled with Tailwind v4 + CVA
 - A shared motion vocabulary, so one knob can slow or disable every animation
-- A brand layer: ~17 knobs in one file restyle the entire app
+- A brand layer: 19 knobs in one file restyle the entire app
 - Light, dark and follow-the-OS themes from a single set of declarations
 - TanStack Router (file-based, fully typed) + TanStack Query
 - React Hook Form + Zod, including boot-time environment validation
 - A worked data layer: typed queries, an optimistic mutation with rollback,
-  and an MSW mock API so it runs with no backend
+  cursor paging with `useInfiniteQuery`, and an MSW mock API so it runs with no
+  backend — served to the browser and to Vitest from one set of handlers
+- Forms that handle both halves: Zod client validation and server-side field
+  errors mapped back onto the field that caused them
 - Route-level error and not-found pages, and a drawer nav on small screens
-- Vitest + Testing Library + Playwright
+- Vitest + Testing Library + Playwright, with four unit-test archetypes to copy
+- An axe accessibility scan over every route, in light and dark
 - ESLint 10, Prettier, Husky, lint-staged
 
 **Agent layer**
@@ -87,28 +96,35 @@ it to build your design system on top; there is nothing to fight.
   grepping
 - [Ponytail](https://github.com/DietrichGebert/ponytail) — a Claude Code plugin
   that biases toward writing minimal, necessary code
-- Four project skills in `.claude/skills/`: the design system, UI design
-  standards, React patterns, and the routing workflow
+- Five project skills in `.claude/skills/`: the design system, UI design
+  standards, React patterns, testing, and the routing workflow
+- A `PostToolUse` hook that checks design tokens on every file the agent edits,
+  so a violation lands in the tool result instead of at the end of the task
+- `/new-component` — scaffolds a component against the recipe and verifies it
 
 Everything is free and works offline. No account, no paid tier, no API key.
 
 ## One file defines the look
 
 `src/design-system/brand.css` is the only file a new project needs to edit.
-Around 17 knobs drive the entire UI:
+19 knobs drive the entire UI. The shipped defaults are the Verdant preset:
 
 ```css
---brand-hue: 175; /* colour ramps generated in OKLCH */
---brand-chroma: 0.13; /* 0 grey · 0.13 vivid · 0.25 neon  */
---brand-radius: 0.5rem; /* 0 sharp → 1.5rem pillowy         */
---brand-border-width: 1px;
---brand-font: …;
---brand-type-ratio: 1.2; /* modular scale for every heading  */
---brand-density: 1; /* control heights AND all spacing  */
---brand-shadow-strength: 1; /* 0 flat → 2 floating              */
---brand-motion: 1; /* 0 disables every transition      */
---brand-ease: cubic-bezier(0.16, 1, 0.3, 1);
+--brand-hue: 112; /* colour ramps generated in OKLCH   */
+--brand-chroma: 0.195; /* 0 grey · 0.13 vivid · 0.25 neon   */
+--brand-radius: 1.125rem; /* 0 sharp → 1.5rem pillowy          */
+--brand-border-width: 0px;
+--brand-font: 'Inter', …;
+--brand-type-ratio: 1.15; /* modular scale for every heading   */
+--brand-density: 1; /* control heights AND all spacing   */
+--brand-shadow-strength: 0.6; /* 0 flat → 2 floating               */
+--brand-motion: 1.2; /* 0 disables every transition       */
+--brand-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
 ```
+
+The rest: `--neutral-hue`, `--neutral-chroma`, `--status-chroma`,
+`--brand-field-border-width`, `--brand-font-mono`, `--brand-font-heading`,
+`--brand-text-base`, `--brand-heading-weight`, `--brand-heading-tracking`.
 
 Change one number and the whole app follows — in light and dark together.
 Same components, a different product.
@@ -131,9 +147,14 @@ component library — not a mock — and includes:
   one.
 
 **Enforced, not just documented.** `pnpm check:tokens` fails the build on hex
-codes, Tailwind palette classes, arbitrary pixel values, literal durations and
-Tailwind v3 variable syntax — the five ways components quietly stop responding
-to the brand. It runs as part of `pnpm check`.
+codes, `rgb()`/`hsl()` literals, Tailwind palette classes, arbitrary pixel
+values, literal durations and Tailwind v3 variable syntax — the six ways
+components quietly stop responding to the brand. It runs as part of `pnpm check`, and again from an editor hook on
+every file an agent touches.
+
+`e2e/a11y.spec.ts` covers the other half: an axe scan of every route in both
+themes, which catches the contrast failures a brand change can introduce
+without any component being edited. It found three real ones in this repo.
 
 ### How it layers
 
@@ -192,11 +213,12 @@ src/
                      /brand is a live playground for the knobs
   routeTree.gen.ts   generated — never edit
   styles/index.css   semantic tokens → Tailwind utilities
-  lib/               validated env, query client
+  lib/               validated env, the api() wrapper, query client
 e2e/                 Playwright specs
-scripts/             doctor
+scripts/             doctor, token checker, reset, the editor hook
 .claude/skills/      project skills for the agent
 CLAUDE.md            project guide the agent reads first
+.claude/commands/    /new-component
 ```
 
 See [CLAUDE.md](./CLAUDE.md) for the conventions this project follows.
