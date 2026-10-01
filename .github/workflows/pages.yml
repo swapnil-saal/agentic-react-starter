@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       # The page is a single static file with no build step — it is deliberately
       # not the app, so it cannot break when the app does.
