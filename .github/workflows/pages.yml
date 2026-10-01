@@ -37,7 +37,7 @@ jobs:
 
       # The page is a single static file with no build step — it is deliberately
       # not the app, so it cannot break when the app does.
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs
 
